@@ -10,7 +10,7 @@ interface ReadOnlyFieldGroupProps {
 
 export default function ReadOnlyFieldGroup({ title, fields }: ReadOnlyFieldGroupProps) {
   return (
-    <div className="flex flex-col gap-[15px] w-full">
+    <div className="flex flex-col gap-[15px] w-full px-[17px] py-[9px]">
       <p className="pretendard-sb-18 text-main-black">{title}</p>
       <div className="flex items-center justify-between gap-[11px]">
         {fields.map(({ label, value }) => (
