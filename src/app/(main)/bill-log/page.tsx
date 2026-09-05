@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 
 // components
@@ -10,28 +11,18 @@ import ProgressBar from "@/features/bill-log/components/ProgressBar";
 import TabBar from "@/components/ui/TabBar";
 import SettlementStatusItem from "@/features/bill-log/components/SettlementStatusItem";
 import TextLayout from "@/components/ui/TextLayout";
+import DailyPaymentGroup from "@/features/bill-log/components/DailyPaymentGroup";
 import Button from "@/components/ui/Button";
-
-type Settlement = {
-  id: number;
-  fromName: string;
-  toName: string;
-  amount: string;
-  status: "request" | "pending" | "completed";
-};
-
-const DUMMY_SETTLEMENTS: Settlement[] = [
-  { id: 1, fromName: "바비", toName: "정바미", amount: "7,500원", status: "request" },
-  { id: 2, fromName: "김민준", toName: "정바미", amount: "12,000원", status: "pending" },
-  { id: 3, fromName: "이수아", toName: "정바미", amount: "5,000원", status: "completed" },
-];
+import { DUMMY_SETTLEMENTS, DUMMY_DAILY_PAYMENTS } from "@/features/bill-log/constants/dummy";
 
 export default function BillLogPage() {
+  const [activeTab, setActiveTab] = useState<number>(0);
+
   return (
     <main>
       <BackHeader title="Bill-log" />
       <Divider />
-      <div className="flex flex-col items-center justify-center px-4">
+      <div className="flex flex-col items-center justify-center">
         <div className="w-full flex flex-col gap-4">
           {DUMMY_SETTLEMENTS.length === 0 ? (
             <div className="flex min-h-[calc(100vh-180px)] flex-col items-center justify-center gap-[15px]">
@@ -55,18 +46,36 @@ export default function BillLogPage() {
                 ]}
               />
               <ProgressBar current={1} total={4} />
-              <TabBar tabs={["정산 현황", "결제 내역"]} activeIndex={0} onChange={() => {}} />
-              <TextLayout left="정산 진행중인 인원 (3명)" right="20,000원" />
-              {DUMMY_SETTLEMENTS.map((item) => (
-                <SettlementStatusItem
-                  key={item.id}
-                  fromName={item.fromName}
-                  toName={item.toName}
-                  amount={item.amount}
-                  status={item.status}
-                  onSendNotification={() => {}}
-                />
-              ))}
+              <TabBar tabs={["정산 현황", "결제 내역"]} activeIndex={activeTab} onChange={setActiveTab} />
+              {activeTab === 0 ? (
+                <div>
+                  <TextLayout left="정산 진행중인 인원 (3명)" right="20,000원" />
+                  <div className="flex flex-col gap-4 px-4">
+                    {DUMMY_SETTLEMENTS.map((item) => (
+                    <SettlementStatusItem
+                      key={item.id}
+                      fromName={item.fromName}
+                      toName={item.toName}
+                      amount={item.amount}
+                      status={item.status}
+                      onSendNotification={() => {}}
+                    />
+                  ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col">
+                  {DUMMY_DAILY_PAYMENTS.map((group) => (
+                    <DailyPaymentGroup
+                      key={group.date}
+                      date={group.date}
+                      totalAmount={group.totalAmount}
+                      items={group.items}
+                      onItemClick={(id) => console.log(id)}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
