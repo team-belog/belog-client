@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 // components
@@ -13,10 +14,14 @@ import SettlementStatusItem from "@/features/bill-log/components/SettlementStatu
 import TextLayout from "@/components/ui/TextLayout";
 import DailyPaymentGroup from "@/features/bill-log/components/DailyPaymentGroup";
 import Button from "@/components/ui/Button";
+import Receipt from "@/features/bill-log/components/Receipt";
+
+// data
 import { DUMMY_SETTLEMENTS, DUMMY_DAILY_PAYMENTS } from "@/features/bill-log/constants/dummy";
 
 export default function BillLogPage() {
   const [activeTab, setActiveTab] = useState<number>(0);
+  const router = useRouter();
 
   return (
     <main>
@@ -71,7 +76,7 @@ export default function BillLogPage() {
                       date={group.date}
                       totalAmount={group.totalAmount}
                       items={group.items}
-                      onItemClick={(id) => console.log(id)}
+                      onItemClick={(id) => router.push(`/bill-log/${id}`)}
                     />
                   ))}
                 </div>
