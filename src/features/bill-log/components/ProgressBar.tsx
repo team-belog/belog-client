@@ -18,7 +18,7 @@ export default function ProgressBar({ current, total }: ProgressBarProps) {
   };
 
   return (
-    <div className="w-full py-[14px]">
+    <div className="w-full py-[14px] px-4">
       <div className="relative mb-2 h-[26px]">
         <div
           className={`absolute bottom-0 inline-flex items-center bg-[rgba(73,212,182,0.1)] px-[15px] py-[6px] rounded-tl-[12px] rounded-tr-[12px] ${isFlipped ? "rounded-bl-[12px]" : "rounded-br-[12px]"}`}
