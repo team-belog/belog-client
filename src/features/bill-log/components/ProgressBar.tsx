@@ -1,4 +1,5 @@
 import Image from "next/image";
+import BelogIcon from "@/components/ui/BelogIcon";
 
 interface ProgressBarProps {
   current: number;
@@ -42,12 +43,7 @@ export default function ProgressBar({ current, total }: ProgressBarProps) {
           }}
         />
         <div className="absolute top-[-4px]" style={{ left: mascotLeft }}>
-          <Image
-            src="/icons/bill-log/progress-indicator.svg"
-            alt="인디케이터 아이콘"
-            width={24}
-            height={22}
-          />
+          <BelogIcon width={24} height={22}/>
         </div>
       </div>
     </div>
