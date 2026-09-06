@@ -14,7 +14,6 @@ import SettlementStatusItem from "@/features/bill-log/components/SettlementStatu
 import TextLayout from "@/components/ui/TextLayout";
 import DailyPaymentGroup from "@/features/bill-log/components/DailyPaymentGroup";
 import Button from "@/components/ui/Button";
-import Receipt from "@/features/bill-log/components/Receipt";
 
 // data
 import { DUMMY_SETTLEMENTS, DUMMY_DAILY_PAYMENTS } from "@/features/bill-log/constants/dummy";
