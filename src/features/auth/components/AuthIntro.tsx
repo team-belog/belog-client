@@ -1,4 +1,4 @@
-export default function LandingIntro() {
+export default function AuthIntro() {
   return (
     <div className="flex flex-col items-center gap-[15px]">
       <h1 className="pretendard-sb-20 text-main-black">
