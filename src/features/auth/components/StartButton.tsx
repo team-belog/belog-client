@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 import Button from "@/components/ui/Button";
 
-export default function LandingCta() {
+export default function StartButton() {
   const router = useRouter();
 
   return (
