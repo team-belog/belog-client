@@ -4,7 +4,7 @@ interface ButtonProps {
   children: React.ReactNode;
   onClick: () => void;
   type?: "button" | "submit" | "reset";
-  variant: "primary" | "secondary" | "tertiary";
+  variant: "primary" | "secondary" | "light" | "tertiary";
   disabled: boolean;
   className?: string;
 }
@@ -12,6 +12,7 @@ interface ButtonProps {
 const variantStyles = {
   primary: "bg-main-black text-main-white pretendard-m-16",
   secondary: "bg-main-mint text-main-white pretendard-sb-16",
+  light: "bg-[#F7F8F9] text-sub-gray-2 pretendard-m-16",
   tertiary:
     "bg-main-white text-main-black border border-sub-gray-3 pretendard-sb-16",
 };
