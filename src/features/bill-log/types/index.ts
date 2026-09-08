@@ -19,3 +19,19 @@ export type DailyPayment = {
   totalAmount: string;
   items: PaymentItem[];
 };
+
+export type MenuItem = {
+  title: string;
+  amount: string;
+};
+
+export type Member = {
+  name: string;
+};
+
+export type BillContent = {
+  date: string;
+  totalAmount: string;
+  members: Member[];
+  menu: MenuItem[];
+};

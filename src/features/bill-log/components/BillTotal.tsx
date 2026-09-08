@@ -5,7 +5,7 @@ interface BillTotalProps {
 
 export default function BillTotal({ label = "합계", amount }: BillTotalProps) {
   return (
-    <div className="flex w-full flex-col gap-[24px]">
+    <div className="flex relative mx-4 flex-col gap-[24px]">
       <div className="h-px w-full"
         style={{
           backgroundImage: "repeating-linear-gradient(to right, #A6A6A6 0, #A6A6A6 6px, transparent 6px, transparent 14px)",
