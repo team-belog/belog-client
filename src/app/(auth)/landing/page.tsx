@@ -1,7 +1,7 @@
-import AuthIntro from "@/features/auth/components/AuthIntro";
-import BelogLogo from "@/features/auth/components/BelogLogo";
-import StartButton from "@/features/auth/components/StartButton";
-import LoginPrompt from "@/features/auth/components/LoginPrompt";
+import AuthIntro from "@/features/auth/components/shared/AuthIntro";
+import BelogLogo from "@/features/auth/components/shared/BelogLogo";
+import StartButton from "@/features/auth/components/landing/StartButton";
+import LoginPrompt from "@/features/auth/components/shared/LoginPrompt";
 
 export default function LandingPage() {
   return (

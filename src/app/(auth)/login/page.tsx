@@ -1,9 +1,9 @@
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
-import AuthIntro from "@/features/auth/components/AuthIntro";
-import BelogLogo from "@/features/auth/components/BelogLogo";
-import GoogleAuthButton from "@/features/auth/components/GoogleAuthButton";
-import RegisterPrompt from "@/features/auth/components/RegisterPrompt";
+import AuthIntro from "@/features/auth/components/shared/AuthIntro";
+import BelogLogo from "@/features/auth/components/shared/BelogLogo";
+import GoogleAuthButton from "@/features/auth/components/shared/GoogleAuthButton";
+import RegisterPrompt from "@/features/auth/components/login/RegisterPrompt";
 
 export default function LoginPage() {
   return (

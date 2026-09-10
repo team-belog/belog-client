@@ -6,11 +6,11 @@ import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import NicknameField, {
   type NicknameStatus,
-} from "@/features/auth/components/NicknameField";
-import ProfileImagePicker from "@/features/auth/components/ProfileImagePicker";
-import BankSelectField from "@/features/auth/components/BankSelectField";
-import AccountNumberField from "@/features/auth/components/AccountNumberField";
-import AccountHolderField from "@/features/auth/components/AccountHolderField";
+} from "@/features/auth/components/register/NicknameField";
+import ProfileImagePicker from "@/features/auth/components/register/ProfileImagePicker";
+import BankSelectField from "@/features/auth/components/register/BankSelectField";
+import AccountNumberField from "@/features/auth/components/register/AccountNumberField";
+import AccountHolderField from "@/features/auth/components/register/AccountHolderField";
 import Button from "@/components/ui/Button";
 
 export default function RegisterProfilePage() {
