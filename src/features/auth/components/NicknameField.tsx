@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const NICKNAME_MAX = 5;
 
-type NicknameStatus = "idle" | "available" | "unavailable";
+export type NicknameStatus = "idle" | "available" | "unavailable";
 
 const STATUS_MESSAGE: Record<Exclude<NicknameStatus, "idle">, string> = {
   available: "사용 가능한 닉네임입니다",
@@ -14,19 +14,19 @@ const STATUS_MESSAGE: Record<Exclude<NicknameStatus, "idle">, string> = {
 interface NicknameFieldProps {
   value: string;
   onChange: (value: string) => void;
-  onAvailableChange?: (available: boolean) => void;
+  onStatusChange?: (status: NicknameStatus) => void;
 }
 
 export default function NicknameField({
   value,
   onChange,
-  onAvailableChange,
+  onStatusChange,
 }: NicknameFieldProps) {
   const [status, setStatus] = useState<NicknameStatus>("idle");
 
   const updateStatus = (next: NicknameStatus) => {
     setStatus(next);
-    onAvailableChange?.(next === "available");
+    onStatusChange?.(next);
   };
 
   const handleChange = (next: string) => {
