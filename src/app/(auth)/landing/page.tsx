@@ -1,6 +1,7 @@
-import AuthIntro from "@/features/auth/components/AuthIntro";
-import BelogLogo from "@/features/auth/components/BelogLogo";
-import LandingCta from "@/features/auth/components/LandingCta";
+import AuthIntro from "@/features/auth/components/shared/AuthIntro";
+import BelogLogo from "@/features/auth/components/shared/BelogLogo";
+import StartButton from "@/features/auth/components/landing/StartButton";
+import LoginPrompt from "@/features/auth/components/shared/LoginPrompt";
 
 export default function LandingPage() {
   return (
@@ -9,7 +10,8 @@ export default function LandingPage() {
         <BelogLogo />
         <AuthIntro />
       </div>
-      <LandingCta />
+      <StartButton />
+      <LoginPrompt />
     </main>
   );
 }

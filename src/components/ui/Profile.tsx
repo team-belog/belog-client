@@ -31,9 +31,8 @@ export default function Profile({ src, width, height }: ProfileProps) {
     <img
       src={src}
       alt="프로필"
-      width={width}
-      height={height}
-      className="rounded-full object-cover"
+      style={{ width, height }}
+      className="shrink-0 rounded-full object-cover"
     />
   );
 }
