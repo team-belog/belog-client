@@ -20,7 +20,7 @@ export default function TicketPage() {
       <BackHeader title="티켓" onShare={handleShare} />
       <Divider />
       {/* 티켓 컴포넌트 */}
-      <Button variant="primary" disabled={false} className="fixed bottom-0">
+      <Button variant="primary" disabled={false} onClick={() => {}} className="fixed bottom-0">
         갤러리에 저장
       </Button>
     </main>
