@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import ReadOnlyFieldGroup from "@/components/ui/ReadOnlyFieldGroup";
 import InputField from "@/components/ui/InputField";
@@ -10,6 +11,7 @@ import { DUMMY_MEETING } from "../../constants/dummy";
 const MAX_MEMO = 80;
 
 export default function MeetingInfoTab() {
+  const router = useRouter();
   const [memo, setMemo] = useState("");
   const [date, setDate] = useState(DUMMY_MEETING.date);
   const [location, setLocation] = useState(DUMMY_MEETING.location);
@@ -59,7 +61,7 @@ export default function MeetingInfoTab() {
         <Button bare variant="light" onClick={() => {}} className="w-[114px] shrink-0 border border-[#CDD3DE] bg-sub-white text-main-black">
           저장
         </Button>
-        <Button bare variant="primary" onClick={() => {}} className="flex-1">
+        <Button bare variant="primary" onClick={() => router.push("/post-log/ticket")} className="flex-1">
           티켓 생성
         </Button>
       </div>
