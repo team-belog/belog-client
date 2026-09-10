@@ -62,7 +62,7 @@ export default function Step3({ onNext }: Step3Props) {
           <ReadOnlyField key={item.title} name={item.title} amount={item.amount} tag={settlementMethod === "tag"} />
         ))}
       </div>
-      <Button onClick={onNext} variant="primary" className="absolute bottom-0">
+      <Button onClick={onNext} variant="primary" className="fixed bottom-0 left-0 right-0">
         다음
       </Button>
     </div>
