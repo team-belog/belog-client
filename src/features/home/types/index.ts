@@ -5,7 +5,14 @@ export type Schedule = {
   title: string;
   startDate: string; // "YYYY-MM-DD"
   endDate: string; // "YYYY-MM-DD"
+  description: string;
+  leaderName: string;
+  memberCount: number;
   status: ScheduleStatus;
+  photoUrl?: string;
+  destinationCity?: string;
+  destinationCountry?: string;
+  memberHandles?: string[];
 };
 
 export type RangePosition = "single" | "start" | "middle" | "end";
