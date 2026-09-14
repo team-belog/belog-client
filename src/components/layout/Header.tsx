@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 import BelogIcon from "@/components/ui/BelogIcon";
 
 interface HeaderProps {
+  title?: string;
   onSettingClick?: () => void;
   onAlarmClick?: () => void;
 }
 
-export default function Header({ onSettingClick, onAlarmClick }: HeaderProps) {
+export default function Header({ title, onSettingClick, onAlarmClick }: HeaderProps) {
   const router = useRouter();
 
   const handleSetting = () => {
@@ -30,21 +31,26 @@ export default function Header({ onSettingClick, onAlarmClick }: HeaderProps) {
   };
 
   return (
-    <header className="flex h-[60px] w-full items-center justify-between bg-white px-4">
-      {/* 로고 */}
-      <div className="flex items-center gap-[3px]">
-        <BelogIcon width={16} height={15} />
-        <Image
-          src="/icons/belog-wordmark.svg"
-          alt="BELOG"
-          width={70}
-          height={15}
-          priority
-        />
-      </div>
+    <header className="relative flex h-[60px] w-full items-center bg-white px-4">
+      {title ? (
+        <p className="pretendard-sb-18 absolute left-1/2 -translate-x-1/2 text-main-black">
+          {title}
+        </p>
+      ) : (
+        <div className="flex items-center gap-[3px]">
+          <BelogIcon width={16} height={15} />
+          <Image
+            src="/icons/belog-wordmark.svg"
+            alt="BELOG"
+            width={70}
+            height={15}
+            priority
+          />
+        </div>
+      )}
 
       {/* 설정 / 알림 */}
-      <div className="flex items-center gap-3">
+      <div className="ml-auto flex items-center gap-3">
         <button
           type="button"
           onClick={handleSetting}
