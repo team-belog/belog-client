@@ -8,12 +8,12 @@ import BelogIcon from "@/components/ui/BelogIcon";
 const MENU_ITEMS = [
   {
     label: "그룹 생성하기",
-    href: "/pre-log",
+    href: "/group/new",
     highlighted: true,
   },
   {
     label: "초대코드로 참여",
-    href: "/post-log",
+    href: "/group/join",
     highlighted: false,
   },
 ] as const;
