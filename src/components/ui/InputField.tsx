@@ -6,12 +6,20 @@ interface InputFieldProps {
   value: string;
   onChange: (value: string) => void;
   type?: string;
+  labelClassName?: string;
 }
 
-export default function InputField({ label, placeholder, value, onChange, type = "text" }: InputFieldProps) {
+export default function InputField({
+  label,
+  placeholder,
+  value,
+  onChange,
+  type = "text",
+  labelClassName = "pretendard-sb-18",
+}: InputFieldProps) {
   return (
     <div className="mx-4 flex flex-col gap-[10px]">
-      <p className="pretendard-sb-18 text-main-black">{label}</p>
+      <p className={`${labelClassName} text-main-black`}>{label}</p>
       <input
         type={type}
         value={value}
