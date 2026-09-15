@@ -94,7 +94,7 @@ export default function MemoryCalendar({
 
       {selectedSchedule && (
         <div
-          className="fixed inset-0 z-100000 flex items-center justify-center bg-black/65"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/65"
           onClick={() => setSelectedSchedule(null)}
         >
           <button
