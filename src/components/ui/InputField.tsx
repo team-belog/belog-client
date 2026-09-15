@@ -25,7 +25,7 @@ export default function InputField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="pretendard-m-15 h-[50px] w-full rounded-[12px] bg-[#F7F8F9] px-[15px] text-sub-gray-2 placeholder:text-sub-gray-2 outline-none hover:border hover:border-main-mint"
+        className="pretendard-m-15 h-[50px] w-full rounded-[12px] bg-[#F7F8F9] px-[15px] text-main-black placeholder:text-sub-gray-2 outline-none hover:border hover:border-main-mint"
       />
     </div>
   );
