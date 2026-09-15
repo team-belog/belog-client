@@ -26,6 +26,9 @@
   .pretendard-sb-16 {
     @apply font-pretendard text-[16px] font-semibold leading-normal;
   }
+  .pretendard-sb-15 {
+    @apply font-pretendard text-[15px] font-semibold leading-[22px];
+  }
   .pretendard-m-12 {
     @apply font-pretendard text-[12px] font-medium leading-normal;
   }
@@ -55,13 +58,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  color-scheme: light;
 }
 
 body {

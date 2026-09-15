@@ -1,0 +1,62 @@
+import type { Schedule } from "@/features/home/types";
+
+export const DEFAULT_SELECTED_DATE = "2026-08-18";
+
+export const DUMMY_SCHEDULES: Schedule[] = [
+  {
+    id: 1,
+    title: "당일치기 광주 여행",
+    startDate: "2026-08-03",
+    endDate: "2026-08-03",
+    description: "친구들과 다녀온 첫 여행! 너무 재밌었다!!\n광주는 낭만의 도시야..",
+    leaderName: "이정원",
+    memberCount: 2,
+    status: "done",
+    destinationCity: "Gwangju",
+    destinationCountry: "Korea",
+    memberHandles: ["@thisgarten", "@0omiin_", "@by__byeee"],
+  },
+  {
+    id: 2,
+    title: "2박 3일 광주 여행",
+    startDate: "2026-08-10",
+    endDate: "2026-08-12",
+    description: "친구들과 다녀온 첫 여행! 너무 재밌었다!!\n광주는 낭만의 도시야..",
+    leaderName: "이정원",
+    memberCount: 2,
+    status: "done",
+    destinationCity: "Gwangju",
+    destinationCountry: "Korea",
+    memberHandles: ["@thisgarten", "@0omiin_", "@by__byeee"],
+  },
+  {
+    id: 3,
+    title: "당일치기 광주 여행",
+    startDate: "2026-08-20",
+    endDate: "2026-08-20",
+    description: "피블이와 기니휘기",
+    leaderName: "이정원",
+    memberCount: 2,
+    status: "before",
+  },
+  {
+    id: 4,
+    title: "당일치기 광주 여행",
+    startDate: "2026-08-21",
+    endDate: "2026-08-21",
+    description: "피블이와 기니휘기",
+    leaderName: "이정원",
+    memberCount: 2,
+    status: "before",
+  },
+  {
+    id: 5,
+    title: "당일치기 광주 여행",
+    startDate: "2026-08-30",
+    endDate: "2026-08-30",
+    description: "피블이와 기니휘기",
+    leaderName: "이정원",
+    memberCount: 2,
+    status: "before",
+  },
+];
