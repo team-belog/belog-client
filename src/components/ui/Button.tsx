@@ -7,6 +7,7 @@ interface ButtonProps {
   variant: "primary" | "secondary" | "light" | "tertiary";
   disabled: boolean;
   className?: string;
+  bare?: boolean;
 }
 
 const variantStyles = {
@@ -24,7 +25,25 @@ export default function Button({
   variant = "primary",
   disabled = false,
   className = "",
+  bare = false,
 }: ButtonProps) {
+  const baseClass = `flex h-[58px] items-center justify-center rounded-[12px] ${
+    disabled ? "bg-sub-gray-3 text-main-white pretendard-sb-16" : variantStyles[variant]
+  }`;
+
+  if (bare) {
+    return (
+      <button
+        type={type}
+        onClick={onClick}
+        disabled={disabled}
+        className={`${baseClass} ${className}`}
+      >
+        {children}
+      </button>
+    );
+  }
+
   return (
     <div className={`w-full h-[114px] bg-white px-4 py-[28px] ${className}`}>
       <button
