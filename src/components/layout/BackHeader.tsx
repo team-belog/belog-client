@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 interface BackHeaderProps {
   title: string;
   onBack?: () => void;
+  right?: React.ReactNode;
 }
 
-export default function BackHeader({ title, onBack }: BackHeaderProps) {
+export default function BackHeader({ title, onBack, right }: BackHeaderProps) {
   const router = useRouter();
 
   const handleBack = () => {
@@ -31,6 +32,9 @@ export default function BackHeader({ title, onBack }: BackHeaderProps) {
       <p className="pretendard-sb-18 w-full text-center text-main-black">
         {title}
       </p>
+      {right && (
+        <div className="absolute right-4 flex items-center">{right}</div>
+      )}
     </header>
   );
 }
