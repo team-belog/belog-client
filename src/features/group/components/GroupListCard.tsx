@@ -1,6 +1,8 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import Profile from "@/components/ui/Profile";
+import TrashIcon from "@/components/ui/TrashIcon";
 import type { GroupSummary } from "@/features/group/types";
 
 interface GroupListCardProps {
@@ -39,11 +41,18 @@ export default function GroupListCard({
     memberAvatarUrls,
   } = group;
 
+  const router = useRouter();
   const textColor = coverImageUrl ? "text-main-white" : "text-main-black";
 
   return (
     <div
-      className={`relative mx-4 h-[109px] overflow-hidden rounded-[12px] ${
+      role="button"
+      tabIndex={0}
+      onClick={() => router.push(`/group/${group.id}`)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") router.push(`/group/${group.id}`);
+      }}
+      className={`relative mx-4 h-[109px] cursor-pointer overflow-hidden rounded-[12px] ${
         coverImageUrl ? "" : "bg-main-cool-gray"
       }`}
     >
@@ -67,7 +76,10 @@ export default function GroupListCard({
       <div className="absolute right-5 top-1/2 flex -translate-y-1/2 items-center gap-[15px]">
         <button
           type="button"
-          onClick={() => onTogglePin?.(group)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onTogglePin?.(group);
+          }}
           aria-label={isPinned ? "고정 해제" : "고정"}
           aria-pressed={isPinned}
           className="flex size-[22px] items-center justify-center"
@@ -83,19 +95,17 @@ export default function GroupListCard({
         </button>
         <button
           type="button"
-          onClick={() => onDelete?.(group)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete?.(group);
+          }}
           aria-label="그룹 삭제"
           className="flex size-[22px] items-center justify-center"
         >
-          <Image
-            src={
-              coverImageUrl
-                ? "/icons/group/trash-white.svg"
-                : "/icons/group/trash.svg"
-            }
-            alt=""
+          <TrashIcon
             width={16}
             height={17}
+            className={coverImageUrl ? "text-main-white" : "text-sub-gray-2"}
           />
         </button>
       </div>
