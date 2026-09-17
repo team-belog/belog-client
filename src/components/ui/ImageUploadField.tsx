@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import ImageUploadIcon from "@/components/ui/ImageUploadIcon";
 
 interface ImageUploadFieldProps {
   onUpload?: () => void;
@@ -10,7 +10,7 @@ export default function ImageUploadField({ onUpload }: ImageUploadFieldProps) {
   return (
     <div className="mx-4 flex h-[200px] flex-col items-center justify-center gap-[16px] rounded-[12px] bg-[#F7F8F9]">
       <div className="flex flex-col items-center gap-[8px]">
-        <Image src="/icons/image-upload.svg" alt="이미지 업로드" width={21} height={21} />
+        <ImageUploadIcon width={21} height={21} className="text-sub-gray-2" />
         <div className="text-center text-sub-gray-2">
           <p className="pretendard-m-12 leading-[22px]">영수증 촬영 / 업로드</p>
           <p className="pretendard-m-12 leading-[22px]">OCR이 품목과 금액을 자동으로 채워요</p>
