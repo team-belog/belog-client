@@ -18,7 +18,17 @@ export default function GroupPastMeetupItem({ meetup, onClick }: GroupPastMeetup
     >
       <div className="flex items-center gap-[7px]">
         <div className="relative size-[62px] shrink-0 overflow-hidden rounded-[8px] bg-main-white">
-          {thumbnailUrl && <Image src={thumbnailUrl} alt="" fill className="object-cover" />}
+          {thumbnailUrl ? (
+            <Image src={thumbnailUrl} alt="" fill className="object-cover" />
+          ) : (
+            <Image
+              src="/images/group/empty-meetup.svg"
+              alt=""
+              fill
+              unoptimized
+              className="object-contain p-1"
+            />
+          )}
         </div>
         <div className="flex flex-col items-start gap-[5px]">
           <p className="pretendard-m-15 text-main-black">{title}</p>
