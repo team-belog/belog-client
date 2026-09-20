@@ -66,6 +66,17 @@ export const DUMMY_GROUP_DETAIL: GroupDetail = {
     memberLimit: 15,
     inviteCode: "QCRJNN",
   },
+  ongoingMeetup: {
+    id: 2,
+    title: "1박 2일 광주 여행",
+    members: [
+      { id: 1, name: "이정원", role: "leader" },
+      { id: 2, name: "정다빈", role: "member" },
+      { id: 3, name: "김성연", role: "member" },
+    ],
+    memberLimit: 15,
+    inviteCode: "QCRJNN",
+  },
   pastMeetups: [
     {
       id: 1,
