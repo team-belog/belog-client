@@ -37,5 +37,6 @@ export type GroupDetail = {
   description: string;
   coverImageUrl?: string;
   pendingMeetup?: PendingMeetup;
+  ongoingMeetup?: PendingMeetup;
   pastMeetups: PastMeetup[];
 };
