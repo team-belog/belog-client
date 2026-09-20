@@ -64,6 +64,8 @@ export default function GroupHomeView({ group }: GroupHomeViewProps) {
               actionLabel="일정 확정하기"
             />
           )
+        ) : group.ongoingMeetup ? (
+          <GroupPendingMeetupCard meetup={group.ongoingMeetup} actionLabel="만남 상세" />
         ) : (
           <GroupMeetupEmptyState
             message="아직 진행 중인 만남이 없어요"
