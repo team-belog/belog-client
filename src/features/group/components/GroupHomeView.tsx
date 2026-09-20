@@ -94,7 +94,11 @@ export default function GroupHomeView({ group }: GroupHomeViewProps) {
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 bg-white">
-        <Button variant="primary" onClick={() => {}} disabled={false}>
+        <Button
+          variant="primary"
+          onClick={() => router.push("/meetup/new")}
+          disabled={false}
+        >
           새 만남 시작하기
         </Button>
       </div>
