@@ -9,6 +9,7 @@ import StepProgressBar from "@/components/ui/StepProgressBar";
 import { DUMMY_GROUP_DETAIL } from "@/features/group/constants/dummy";
 import MeetupStep1 from "@/features/meetup/components/steps/MeetupStep1";
 import MeetupStep2 from "@/features/meetup/components/steps/MeetupStep2";
+import MeetupStep3 from "@/features/meetup/components/steps/MeetupStep3";
 
 const TOTAL_STEPS = 4;
 
@@ -40,6 +41,7 @@ export default function MeetupNewView() {
       {step === 2 && (
         <MeetupStep2 members={DUMMY_GROUP_DETAIL.members} onNext={handleNext} />
       )}
+      {step === 3 && <MeetupStep3 onNext={handleNext} />}
     </main>
   );
 }
