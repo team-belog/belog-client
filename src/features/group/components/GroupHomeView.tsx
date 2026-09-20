@@ -9,6 +9,7 @@ import TabBar from "@/components/ui/TabBar";
 import TrashIcon from "@/components/ui/TrashIcon";
 import GroupCoverSection from "@/features/group/components/GroupCoverSection";
 import GroupDeleteModal from "@/features/group/components/GroupDeleteModal";
+import GroupMeetupEmptyState from "@/features/group/components/GroupMeetupEmptyState";
 import GroupPastMeetupEmptyState from "@/features/group/components/GroupPastMeetupEmptyState";
 import GroupPastMeetupItem from "@/features/group/components/GroupPastMeetupItem";
 import GroupPendingMeetupCard from "@/features/group/components/GroupPendingMeetupCard";
@@ -58,14 +59,16 @@ export default function GroupHomeView({ group }: GroupHomeViewProps) {
           group.pendingMeetup ? (
             <GroupPendingMeetupCard meetup={group.pendingMeetup} />
           ) : (
-            <p className="pretendard-m-15 py-10 text-center text-sub-gray-2">
-              조율 중인 만남이 없어요
-            </p>
+            <GroupMeetupEmptyState
+              message="아직 조율 중인 만남이 없어요"
+              actionLabel="일정 확정하기"
+            />
           )
         ) : (
-          <p className="pretendard-m-15 py-10 text-center text-sub-gray-2">
-            진행 중인 만남이 없어요
-          </p>
+          <GroupMeetupEmptyState
+            message="아직 진행 중인 만남이 없어요"
+            actionLabel="만남 상세 보기"
+          />
         )}
       </div>
 
