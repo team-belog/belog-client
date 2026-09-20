@@ -6,12 +6,14 @@ import type { PendingMeetup } from "@/features/group/types";
 
 interface GroupPendingMeetupCardProps {
   meetup: PendingMeetup;
-  onConfirmSchedule?: () => void;
+  actionLabel?: string;
+  onAction?: () => void;
 }
 
 export default function GroupPendingMeetupCard({
   meetup,
-  onConfirmSchedule,
+  actionLabel = "일정 확정하기",
+  onAction,
 }: GroupPendingMeetupCardProps) {
   const [copied, setCopied] = useState(false);
   const { title, members, memberLimit, inviteCode } = meetup;
@@ -61,10 +63,10 @@ export default function GroupPendingMeetupCard({
 
       <button
         type="button"
-        onClick={onConfirmSchedule}
+        onClick={onAction}
         className="pretendard-sb-16 flex h-[56px] items-center justify-center rounded-[12px] border border-main-mint bg-main-mint text-main-white"
       >
-        일정 확정하기
+        {actionLabel}
       </button>
     </div>
   );
