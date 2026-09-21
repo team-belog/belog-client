@@ -38,7 +38,7 @@ export default function ProfileEditPage() {
         </button>
       </div>
       <NicknameField value={nickname} onChange={setNickname} onStatusChange={setNicknameStatus} />
-      <Button variant="primary" disabled={nicknameStatus !== "available"} onClick={() => router.back()}>
+      <Button className="fixed bottom-0" variant="primary" disabled={nicknameStatus !== "available"} onClick={() => router.back()}>
         저장하기
       </Button>
     </main>
