@@ -1,3 +1,5 @@
+export type MeetupStartOption = "coordinate" | "fixedDate";
+
 export type MeetupDetail = {
   id: number;
   title: string;
