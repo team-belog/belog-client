@@ -4,11 +4,10 @@ import { useState } from "react";
 
 import Button from "@/components/ui/Button";
 import MeetupStartOptionCard from "@/features/meetup/components/MeetupStartOptionCard";
-
-type MeetupStartOption = "coordinate" | "fixedDate";
+import type { MeetupStartOption } from "@/features/meetup/types";
 
 interface MeetupStep3Props {
-  onNext: () => void;
+  onNext: (option: MeetupStartOption) => void;
 }
 
 const START_OPTIONS: {
@@ -58,7 +57,7 @@ export default function MeetupStep3({ onNext }: MeetupStep3Props) {
       <Button
         variant="primary"
         disabled={selectedOption === null}
-        onClick={onNext}
+        onClick={() => selectedOption && onNext(selectedOption)}
         className="fixed bottom-0 left-0 right-0"
       >
         다음
