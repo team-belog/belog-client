@@ -65,7 +65,11 @@ export default function GroupHomeView({ group }: GroupHomeViewProps) {
             />
           )
         ) : group.ongoingMeetup ? (
-          <GroupPendingMeetupCard meetup={group.ongoingMeetup} actionLabel="만남 상세" />
+          <GroupPendingMeetupCard
+            meetup={group.ongoingMeetup}
+            actionLabel="만남 상세"
+            onAction={() => router.push(`/meetup/${group.ongoingMeetup!.id}`)}
+          />
         ) : (
           <GroupMeetupEmptyState
             message="아직 진행 중인 만남이 없어요"
@@ -90,7 +94,11 @@ export default function GroupHomeView({ group }: GroupHomeViewProps) {
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 bg-white">
-        <Button variant="primary" onClick={() => {}} disabled={false}>
+        <Button
+          variant="primary"
+          onClick={() => router.push("/meetup/new")}
+          disabled={false}
+        >
           새 만남 시작하기
         </Button>
       </div>
