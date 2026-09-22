@@ -7,9 +7,10 @@ interface BackHeaderProps {
   title: string;
   onBack?: () => void;
   onShare?: () => void;
+  right?: React.ReactNode;
 }
 
-export default function BackHeader({ title, onBack, onShare }: BackHeaderProps) {
+export default function BackHeader({ title, onBack, onShare, right }: BackHeaderProps) {
   const router = useRouter();
 
   const handleBack = () => {
@@ -32,14 +33,18 @@ export default function BackHeader({ title, onBack, onShare }: BackHeaderProps) 
       <p className="pretendard-sb-18 w-full text-center text-main-black">
         {title}
       </p>
-      {onShare && (
-        <button
-          onClick={onShare}
-          className="absolute right-4 flex size-6 items-center justify-center"
-          aria-label="공유"
-        >
-          <Image src="/icons/share.svg" alt="공유" width={24} height={24} />
-        </button>
+      {right ? (
+        <div className="absolute right-4 flex items-center">{right}</div>
+      ) : (
+        onShare && (
+          <button
+            onClick={onShare}
+            className="absolute right-4 flex size-6 items-center justify-center"
+            aria-label="공유"
+          >
+            <Image src="/icons/share.svg" alt="공유" width={24} height={24} />
+          </button>
+         )
       )}
     </header>
   );
