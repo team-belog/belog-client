@@ -10,6 +10,7 @@ import { DUMMY_GROUP_DETAIL } from "@/features/group/constants/dummy";
 import MeetupStep1 from "@/features/meetup/components/steps/MeetupStep1";
 import MeetupStep2 from "@/features/meetup/components/steps/MeetupStep2";
 import MeetupStep3 from "@/features/meetup/components/steps/MeetupStep3";
+import MeetupStep4Coordinate from "@/features/meetup/components/steps/MeetupStep4Coordinate";
 import MeetupStep4FixedDate from "@/features/meetup/components/steps/MeetupStep4FixedDate";
 import type { MeetupStartOption } from "@/features/meetup/types";
 
@@ -43,8 +44,7 @@ export default function MeetupNewView() {
     // TODO: 만남 생성 API 연결
   };
 
-  const headerTitle =
-    step === 4 && startOption === "fixedDate" ? "후보 날짜 등록" : "새 만남";
+  const headerTitle = step === 4 ? "후보 날짜 등록" : "새 만남";
 
   return (
     <main>
@@ -59,6 +59,9 @@ export default function MeetupNewView() {
       {step === 3 && <MeetupStep3 onNext={handleSelectStartOption} />}
       {step === 4 && startOption === "fixedDate" && (
         <MeetupStep4FixedDate onSubmit={handleSubmit} />
+      )}
+      {step === 4 && startOption === "coordinate" && (
+        <MeetupStep4Coordinate onSubmit={handleSubmit} />
       )}
     </main>
   );
