@@ -43,3 +43,19 @@ export const DUMMY_CONTENT: BillContent[] = [
     ]
   }
 ]
+
+export const DUMMY_RECEIPT = {
+  date: "Day 01 (2026.08.06)",
+  title: "아랑이 카페",
+  payer: "정바미",
+  settlementMethod: "3분의 1",
+  items: [
+    { id: 1, name: "아메리카노", amount: "4,000원" },
+    { id: 2, name: "프라푸치노", amount: "7,000원" },
+  ],
+  totalAmount: "11,000원",
+  settlementPersons: [
+    { id: 1, name: "정바미", amount: "4,000원", isPayer: true },
+    { id: 2, name: "바비", amount: "7,000원" },
+  ],
+};
