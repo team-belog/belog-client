@@ -20,6 +20,11 @@ export default function Step2({ onNext }: Step2Props) {
   const [title, setTitle] = useState("");
   const[item, setItem] = useState("")
   const[price, setPrice] = useState("")
+  const [items, setItems] = useState<{ item: string; price: string }[]>([{ item: "", price: "" }]);
+
+  const addItem = () => {
+    setItems((prev) => [...prev, { item: "", price: ""}])
+  }
 
   return (
     <div className="flex flex-col pb-[230px]">
@@ -35,12 +40,15 @@ export default function Step2({ onNext }: Step2Props) {
       <div className="mt-4 flex flex-col gap-[12px]">
         <p className="pretendard-sb-18 ml-4 text-main-black">항목</p>
         <div className="flex flex-col gap-2 overflow-y-auto max-[]:h-[224px]">
-          <SplitInputField
-            left={{ placeholder: "ex) 아메리카노", value: item }}
-            right={{ placeholder: "4,000원", value: price }}
-          />
+          {items.map((it, index) => (
+            <SplitInputField
+              key={index}
+              left={{ placeholder: "ex) 아메리카노", value: it.item }}
+              right={{ placeholder: "4,000원", value: it.price }}
+            />
+          ))}
         </div>
-        <Button variant="secondary" disabled={false}>
+        <Button variant="secondary" disabled={false} onClick={addItem}>
           항목 추가
         </Button>
       </div>

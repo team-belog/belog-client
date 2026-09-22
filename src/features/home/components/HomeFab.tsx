@@ -41,18 +41,14 @@ export default function HomeFab() {
       <div className="fixed bottom-20 right-4 z-50 flex flex-col items-end gap-2">
         {isOpen && (
           <div className="flex w-[161px] flex-col rounded-[20px] bg-main-white p-2 shadow-[0_0_5px_0_rgba(0,0,0,0.1)]">
-            {MENU_ITEMS.map(({ label, href, highlighted }) => (
+            {MENU_ITEMS.map(({ label, href }) => (
               <button
                 key={href}
                 type="button"
                 onClick={() => handleSelect(href)}
-                className={`flex h-[48px] w-full items-center gap-3 rounded-xl px-4 text-left ${
-                  highlighted ? "bg-main-cool-gray" : "bg-transparent"
-                }`}
+                className="flex h-[48px] w-full items-center gap-3 rounded-xl bg-transparent px-4 text-left transition-colors hover:bg-main-mint/20"
               >
-                <span className="pretendard-m-15 whitespace-nowrap text-main-black">
-                  {label}
-                </span>
+                <span className="pretendard-m-15 whitespace-nowrap text-main-black">{label}</span>
               </button>
             ))}
           </div>
