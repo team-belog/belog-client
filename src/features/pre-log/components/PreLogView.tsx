@@ -9,10 +9,12 @@ import TabBar from "@/components/ui/TabBar";
 import MeetupSummary from "@/features/meetup/components/MeetupSummary";
 import type { MeetupDetail } from "@/features/meetup/types";
 import PreLogCategoryTabs from "@/features/pre-log/components/PreLogCategoryTabs";
+import PreLogDateRangeSheet from "@/features/pre-log/components/PreLogDateRangeSheet";
 import PreLogEmptyState from "@/features/pre-log/components/PreLogEmptyState";
 import PreLogPlaceItem from "@/features/pre-log/components/PreLogPlaceItem";
 import { PRE_LOG_FILTER_TABS } from "@/features/pre-log/constants/category";
 import type { PreLogFilter, PreLogPlace } from "@/features/pre-log/types";
+import { formatDotDate, parseDotDate } from "@/features/pre-log/utils/dateRange";
 
 interface PreLogViewProps {
   meetup: MeetupDetail;
@@ -34,6 +36,11 @@ export default function PreLogView({
   const router = useRouter();
   const [mainTabIndex, setMainTabIndex] = useState(0);
   const [categoryFilter, setCategoryFilter] = useState<PreLogFilter>("stay");
+  const [title, setTitle] = useState(meetup.title);
+  const [location, setLocation] = useState(meetup.location);
+  const [dates, setDates] = useState({ startDate: meetup.startDate, endDate: meetup.endDate });
+  const [isEditingSummary, setIsEditingSummary] = useState(false);
+  const [isEditDatesOpen, setIsEditDatesOpen] = useState(false);
 
   const handleAddPlace = () => {
     if (onAddPlace) {
@@ -41,6 +48,14 @@ export default function PreLogView({
     } else {
       router.push("/pre-log/new");
     }
+  };
+
+  const handleConfirmDates = (range: { startDate: Date; endDate: Date }) => {
+    setDates({
+      startDate: formatDotDate(range.startDate),
+      endDate: formatDotDate(range.endDate),
+    });
+    setIsEditDatesOpen(false);
   };
 
   const filteredPlaces = useMemo(() => {
@@ -54,7 +69,14 @@ export default function PreLogView({
       <BackHeader title="Pre-log" />
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
 
-      <MeetupSummary meetup={meetup} />
+      <MeetupSummary
+        meetup={{ ...meetup, title, location, startDate: dates.startDate, endDate: dates.endDate }}
+        isEditing={isEditingSummary}
+        onEdit={() => setIsEditingSummary((prev) => !prev)}
+        onTitleChange={setTitle}
+        onLocationChange={setLocation}
+        onDateClick={() => setIsEditDatesOpen(true)}
+      />
 
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
 
@@ -97,6 +119,15 @@ export default function PreLogView({
       >
         계획 추가
       </Button>
+
+      {isEditDatesOpen && (
+        <PreLogDateRangeSheet
+          startDate={parseDotDate(dates.startDate)}
+          endDate={parseDotDate(dates.endDate)}
+          onCancel={() => setIsEditDatesOpen(false)}
+          onConfirm={handleConfirmDates}
+        />
+      )}
     </main>
   );
 }
