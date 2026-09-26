@@ -3,8 +3,8 @@
 import { addMonths, isBefore, isSameDay, startOfDay, subMonths } from "date-fns";
 import { useMemo, useState } from "react";
 
-import type { CalendarDay } from "@/features/home/types";
-import { getMonthLabel, getMonthMatrix } from "@/features/home/utils/calendar";
+import type { CalendarDay } from "@/lib/calendar";
+import { getMonthLabel, getMonthMatrix } from "@/lib/calendar";
 
 export function useMeetupCandidateDatesPicker(initialMonth: Date = new Date()) {
   const today = useMemo(() => startOfDay(new Date()), []);
@@ -21,7 +21,6 @@ export function useMeetupCandidateDatesPicker(initialMonth: Date = new Date()) {
       isToday: isSameDay(date, today),
       isSelected: false,
       isPast: isBefore(date, today),
-      schedules: [],
       rangePosition: selectedDates.some((selected) => isSameDay(selected, date))
         ? "single"
         : null,

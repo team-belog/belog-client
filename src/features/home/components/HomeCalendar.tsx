@@ -1,8 +1,8 @@
 "use client";
 
-import CalendarGrid from "@/features/home/components/CalendarGrid";
-import CalendarMonthNav from "@/features/home/components/CalendarMonthNav";
-import CalendarWeekdays from "@/features/home/components/CalendarWeekdays";
+import CalendarGrid from "@/components/layout/CalendarGrid";
+import CalendarMonthNav from "@/components/layout/CalendarMonthNav";
+import CalendarWeekdays from "@/components/layout/CalendarWeekdays";
 import { useHomeCalendar } from "@/features/home/hooks/useHomeCalendar";
 import type { Schedule } from "@/features/home/types";
 

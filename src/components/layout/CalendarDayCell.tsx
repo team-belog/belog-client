@@ -1,6 +1,6 @@
 "use client";
 
-import type { CalendarDay } from "@/features/home/types";
+import type { CalendarDay } from "@/lib/calendar";
 
 interface CalendarDayCellProps {
   day: CalendarDay;

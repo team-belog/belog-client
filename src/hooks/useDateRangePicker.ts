@@ -3,8 +3,8 @@
 import { addMonths, isBefore, isSameDay, isWithinInterval, startOfDay, subMonths } from "date-fns";
 import { useMemo, useState } from "react";
 
-import type { CalendarDay, RangePosition } from "@/features/home/types";
-import { getMonthLabel, getMonthMatrix } from "@/features/home/utils/calendar";
+import type { CalendarDay, RangePosition } from "@/lib/calendar";
+import { getMonthLabel, getMonthMatrix } from "@/lib/calendar";
 
 function getRangePosition(date: Date, start: Date, end: Date): RangePosition {
   if (isSameDay(start, end)) return "single";
@@ -13,13 +13,17 @@ function getRangePosition(date: Date, start: Date, end: Date): RangePosition {
   return "middle";
 }
 
-export function useMeetupDateRangePicker(initialMonth: Date = new Date()) {
+export function useDateRangePicker(
+  initialMonth: Date = new Date(),
+  initialRangeStart: Date | null = null,
+  initialRangeEnd: Date | null = null,
+) {
   const today = useMemo(() => startOfDay(new Date()), []);
   const [viewMonth, setViewMonth] = useState(
     () => new Date(initialMonth.getFullYear(), initialMonth.getMonth(), 1),
   );
-  const [rangeStart, setRangeStart] = useState<Date | null>(null);
-  const [rangeEnd, setRangeEnd] = useState<Date | null>(null);
+  const [rangeStart, setRangeStart] = useState<Date | null>(initialRangeStart);
+  const [rangeEnd, setRangeEnd] = useState<Date | null>(initialRangeEnd);
 
   const days = useMemo<CalendarDay[]>(() => {
     const weeks = getMonthMatrix(viewMonth.getFullYear(), viewMonth.getMonth() + 1);
@@ -34,7 +38,6 @@ export function useMeetupDateRangePicker(initialMonth: Date = new Date()) {
         isToday: isSameDay(date, today),
         isSelected: false,
         isPast: isBefore(date, today),
-        schedules: [],
         rangePosition:
           inRange && rangeStart ? getRangePosition(date, rangeStart, rangeEnd ?? rangeStart) : null,
       };
@@ -45,6 +48,7 @@ export function useMeetupDateRangePicker(initialMonth: Date = new Date()) {
 
   const goToPrevMonth = () => setViewMonth((prev) => subMonths(prev, 1));
   const goToNextMonth = () => setViewMonth((prev) => addMonths(prev, 1));
+  const goToMonth = (date: Date) => setViewMonth(new Date(date.getFullYear(), date.getMonth(), 1));
 
   const selectDate = (date: Date) => {
     if (isBefore(date, today)) return;
@@ -65,12 +69,14 @@ export function useMeetupDateRangePicker(initialMonth: Date = new Date()) {
   };
 
   return {
+    viewMonth,
     monthLabel,
     days,
     rangeStart,
     rangeEnd,
     goToPrevMonth,
     goToNextMonth,
+    goToMonth,
     selectDate,
   };
 }
