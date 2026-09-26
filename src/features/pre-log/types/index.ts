@@ -1,4 +1,11 @@
-export type PreLogCategory = "restaurant" | "cafe" | "stay" | "etc";
+export type PreLogCategory =
+  | "restaurant"
+  | "cafe"
+  | "stay"
+  | "activity"
+  | "transport"
+  | "shopping"
+  | "etc";
 
 export type PreLogFilter = "all" | "pinned" | PreLogCategory;
 
