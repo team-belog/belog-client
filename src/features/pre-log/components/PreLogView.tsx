@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
 import Button from "@/components/ui/Button";
@@ -30,8 +31,17 @@ export default function PreLogView({
   onSelectPlace,
   onDeletePlace,
 }: PreLogViewProps) {
+  const router = useRouter();
   const [mainTabIndex, setMainTabIndex] = useState(0);
   const [categoryFilter, setCategoryFilter] = useState<PreLogFilter>("stay");
+
+  const handleAddPlace = () => {
+    if (onAddPlace) {
+      onAddPlace();
+    } else {
+      router.push("/pre-log/new");
+    }
+  };
 
   const filteredPlaces = useMemo(() => {
     if (categoryFilter === "all") return places;
@@ -82,7 +92,7 @@ export default function PreLogView({
       <Button
         variant="primary"
         disabled={false}
-        onClick={() => onAddPlace?.()}
+        onClick={handleAddPlace}
         className="fixed bottom-0 left-0 right-0"
       >
         계획 추가
