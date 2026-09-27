@@ -10,7 +10,9 @@ import MeetupSummary from "@/features/meetup/components/MeetupSummary";
 import type { MeetupDetail } from "@/features/meetup/types";
 import PreLogCategoryTabs from "@/features/pre-log/components/PreLogCategoryTabs";
 import PreLogDateRangeSheet from "@/features/pre-log/components/PreLogDateRangeSheet";
+import PreLogDeleteModal from "@/features/pre-log/components/PreLogDeleteModal";
 import PreLogEmptyState from "@/features/pre-log/components/PreLogEmptyState";
+import PreLogMapView from "@/features/pre-log/components/PreLogMapView";
 import PreLogPlaceItem from "@/features/pre-log/components/PreLogPlaceItem";
 import { PRE_LOG_FILTER_TABS } from "@/features/pre-log/constants/category";
 import type { PreLogFilter, PreLogPlace } from "@/features/pre-log/types";
@@ -41,6 +43,8 @@ export default function PreLogView({
   const [dates, setDates] = useState({ startDate: meetup.startDate, endDate: meetup.endDate });
   const [isEditingSummary, setIsEditingSummary] = useState(false);
   const [isEditDatesOpen, setIsEditDatesOpen] = useState(false);
+  const [placeList, setPlaceList] = useState(places);
+  const [deleteTarget, setDeleteTarget] = useState<PreLogPlace | null>(null);
 
   const handleAddPlace = () => {
     if (onAddPlace) {
@@ -59,26 +63,37 @@ export default function PreLogView({
   };
 
   const filteredPlaces = useMemo(() => {
-    if (categoryFilter === "all") return places;
-    if (categoryFilter === "pinned") return places.filter((place) => place.isPinned);
-    return places.filter((place) => place.category === categoryFilter);
-  }, [places, categoryFilter]);
+    if (categoryFilter === "all") return placeList;
+    if (categoryFilter === "pinned") return placeList.filter((place) => place.isPinned);
+    return placeList.filter((place) => place.category === categoryFilter);
+  }, [placeList, categoryFilter]);
+
+  const handleConfirmDelete = () => {
+    if (!deleteTarget) return;
+    setPlaceList((prev) => prev.filter((place) => place.id !== deleteTarget.id));
+    onDeletePlace?.(deleteTarget);
+    setDeleteTarget(null);
+  };
 
   return (
-    <main className="pb-[114px]">
+    <main className="flex min-h-dvh flex-col pb-[114px]">
       <BackHeader title="Pre-log" />
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
 
-      <MeetupSummary
-        meetup={{ ...meetup, title, location, startDate: dates.startDate, endDate: dates.endDate }}
-        isEditing={isEditingSummary}
-        onEdit={() => setIsEditingSummary((prev) => !prev)}
-        onTitleChange={setTitle}
-        onLocationChange={setLocation}
-        onDateClick={() => setIsEditDatesOpen(true)}
-      />
+      {mainTabIndex === 0 && (
+        <>
+          <MeetupSummary
+            meetup={{ ...meetup, title, location, startDate: dates.startDate, endDate: dates.endDate }}
+            isEditing={isEditingSummary}
+            onEdit={() => setIsEditingSummary((prev) => !prev)}
+            onTitleChange={setTitle}
+            onLocationChange={setLocation}
+            onDateClick={() => setIsEditDatesOpen(true)}
+          />
 
-      <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
+          <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
+        </>
+      )}
 
       <TabBar tabs={MAIN_TABS} activeIndex={mainTabIndex} onChange={setMainTabIndex} />
 
@@ -97,7 +112,7 @@ export default function PreLogView({
                   key={place.id}
                   place={place}
                   onClick={onSelectPlace}
-                  onDelete={onDeletePlace}
+                  onDelete={setDeleteTarget}
                 />
               ))}
             </div>
@@ -106,9 +121,11 @@ export default function PreLogView({
           )}
         </>
       ) : (
-        <div className="flex h-[300px] items-center justify-center">
-          <p className="pretendard-m-15 text-sub-gray-2">지도 준비 중이에요</p>
-        </div>
+        <PreLogMapView
+          places={placeList}
+          onSelectPlace={onSelectPlace}
+          onDeletePlace={setDeleteTarget}
+        />
       )}
 
       <Button
@@ -126,6 +143,14 @@ export default function PreLogView({
           endDate={parseDotDate(dates.endDate)}
           onCancel={() => setIsEditDatesOpen(false)}
           onConfirm={handleConfirmDates}
+        />
+      )}
+
+      {deleteTarget && (
+        <PreLogDeleteModal
+          placeName={deleteTarget.title}
+          onCancel={() => setDeleteTarget(null)}
+          onConfirm={handleConfirmDelete}
         />
       )}
     </main>
