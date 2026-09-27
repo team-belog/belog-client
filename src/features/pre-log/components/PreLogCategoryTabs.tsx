@@ -14,7 +14,7 @@ export default function PreLogCategoryTabs({
   onChange,
 }: PreLogCategoryTabsProps) {
   return (
-    <div className="scrollbar-thin flex w-full items-center overflow-x-auto">
+    <div className="mt-[9px] flex w-full items-center">
       {tabs.map(({ key, label }) => {
         const isActive = key === activeKey;
         return (
@@ -22,8 +22,10 @@ export default function PreLogCategoryTabs({
             key={key}
             type="button"
             onClick={() => onChange(key)}
-            className={`pretendard-r-15 shrink-0 whitespace-nowrap px-5 py-2 ${
-              isActive ? "border-b-2 border-main-black text-main-black" : "text-sub-gray-2"
+            className={`pretendard-r-15 flex-1 whitespace-nowrap py-2 text-center ${
+              isActive
+                ? "border-b-2 border-main-black text-main-black"
+                : "text-sub-gray-2"
             }`}
           >
             {label}
