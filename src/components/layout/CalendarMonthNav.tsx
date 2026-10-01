@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import ChevronIcon from "@/components/ui/ChevronIcon";
 
 interface CalendarMonthNavProps {
   label: string;
@@ -21,7 +21,7 @@ export default function CalendarMonthNav({
         aria-label="이전 달"
         className="flex h-[38px] w-[28px] items-center justify-center"
       >
-        <Image src="/icons/home/prev-arrow.svg" alt="" width={10} height={20} />
+        <ChevronIcon direction="left" className="text-main-black" />
       </button>
 
       <p className="pretendard-sb-20 flex-1 whitespace-nowrap text-center text-main-black">
@@ -34,7 +34,7 @@ export default function CalendarMonthNav({
         aria-label="다음 달"
         className="flex h-[38px] w-[28px] items-center justify-center"
       >
-        <Image src="/icons/home/next-arrow.svg" alt="" width={10} height={20} />
+        <ChevronIcon className="text-main-black" />
       </button>
     </div>
   );

@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 
 import MeetupMembers from "@/features/home/components/MeetupMembers";
 import MeetupStatusBadge from "@/features/home/components/MeetupStatusBadge";
 import type { Schedule } from "@/features/home/types";
 import { formatDateRange } from "@/features/home/utils/meetup";
+import ChevronIcon from "@/components/ui/ChevronIcon";
 
 interface MeetupTicketItemProps {
   schedule: Schedule;
@@ -33,7 +33,7 @@ export default function MeetupTicketItem({ schedule, onClick }: MeetupTicketItem
 
       <div className="flex items-center justify-between">
         <MeetupMembers leaderName={leaderName} memberCount={memberCount} />
-        <Image src="/icons/home/next-arrow.svg" alt="" width={10} height={20} />
+        <ChevronIcon className="text-main-black" />
       </div>
     </button>
   );

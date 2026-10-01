@@ -13,7 +13,7 @@ export default function PreLogEmptyState({
     <div className={`flex flex-col items-center gap-[15px] ${className}`}>
       <div className="relative size-[134px]">
         <Image
-          src="/images/empty.svg"
+          src="/icons/empty-state.svg"
           alt=""
           fill
           unoptimized

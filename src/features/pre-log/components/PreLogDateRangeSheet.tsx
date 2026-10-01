@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
 import CalendarGrid from "@/components/layout/CalendarGrid";
 import CalendarWeekdays from "@/components/layout/CalendarWeekdays";
 import Button from "@/components/ui/Button";
 import PreLogMonthYearPicker from "@/features/pre-log/components/PreLogMonthYearPicker";
 import { useDateRangePicker } from "@/hooks/useDateRangePicker";
+import ChevronIcon from "@/components/ui/ChevronIcon";
 
 interface PreLogDateRangeSheetProps {
   startDate: Date;
@@ -57,7 +57,7 @@ export default function PreLogDateRangeSheet({
                   aria-label="이전 달"
                   className="flex h-[38px] w-[28px] items-center justify-center"
                 >
-                  <Image src="/icons/home/prev-arrow.svg" alt="" width={10} height={20} />
+                  <ChevronIcon direction="left" className="text-main-black" />
                 </button>
 
                 <button
@@ -74,7 +74,7 @@ export default function PreLogDateRangeSheet({
                   aria-label="다음 달"
                   className="flex h-[38px] w-[28px] items-center justify-center"
                 >
-                  <Image src="/icons/home/next-arrow.svg" alt="" width={10} height={20} />
+                  <ChevronIcon className="text-main-black" />
                 </button>
               </div>
 

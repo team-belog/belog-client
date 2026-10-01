@@ -11,15 +11,15 @@ export const DUMMY_DAILY_PAYMENTS: DailyPayment[] = [
     date: "Day 01 (2026.08.06)",
     totalAmount: "22,000원",
     items: [
-      { id: 1, thumbnailUrl: "/images/cafe.jpg", name: "아랑이 카페", amount: "11,000원", payer: "정바미" },
-      { id: 2, thumbnailUrl: "/images/restaurant.jpg", name: "맛집", amount: "11,000원", payer: "바비" },
+      { id: 1, thumbnailUrl: "/icons/cafe.jpg", name: "아랑이 카페", amount: "11,000원", payer: "정바미" },
+      { id: 2, thumbnailUrl: "/icons/restaurant.jpg", name: "맛집", amount: "11,000원", payer: "바비" },
     ],
   },
   {
     date: "Day 01 (2026.08.07)",
     totalAmount: "15,000원",
     items: [
-      { id: 3, thumbnailUrl: "/images/cafe.jpg", name: "스타벅스", amount: "15,000원", payer: "김민준" },
+      { id: 3, thumbnailUrl: "/icons/cafe.jpg", name: "스타벅스", amount: "15,000원", payer: "김민준" },
     ],
   },
 ];

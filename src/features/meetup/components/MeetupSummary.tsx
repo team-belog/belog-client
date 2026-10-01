@@ -79,7 +79,7 @@ export default function MeetupSummary({
         </div>
 
         <button type="button" onClick={onEdit} aria-label="만남 정보 수정" className="shrink-0">
-          <Image src="/icons/meetup/edit.svg" alt="" width={40} height={40} />
+          <Image src="/icons/edit.svg" alt="" width={40} height={40} />
         </button>
       </div>
     </div>

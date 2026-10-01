@@ -24,7 +24,7 @@ export default function PhotoItem({ src, likeCount = 0, onLike, onClick }: Photo
         className="absolute left-[6px] top-[6px] flex items-end gap-px"
       >
         <Image
-          src={isLiked ? "/icons/post-log/like-filled.svg" : "/icons/post-log/like-empty.svg"}
+          src={isLiked ? "/icons/like-filled.svg" : "/icons/post-log/like-empty.svg"}
           alt="좋아요"
           width={14}
           height={14}

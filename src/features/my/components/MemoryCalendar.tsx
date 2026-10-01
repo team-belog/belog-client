@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import MeetupTicketCard from "@/features/home/components/MeetupTicketCard";
 import type { Schedule } from "@/features/home/types";
+import ChevronIcon from "@/components/ui/ChevronIcon";
 
 interface MemoryCalendarProps {
   initialYear?: number;
@@ -70,11 +71,11 @@ export default function MemoryCalendar({
       <div className="flex flex-col items-center gap-[23px] px-[15px] py-4">
         <div className="flex w-full items-center justify-between">
           <button onClick={handlePrev} aria-label="이전 달">
-            <Image src="/icons/my/chevron-left.svg" alt="이전" width={28} height={38} />
+            <ChevronIcon direction="left" width={28} height={38} className="text-main-black" />
           </button>
           <p className="pretendard-sb-20 text-main-black">{year}년 {month}월</p>
           <button onClick={handleNext} aria-label="다음 달">
-            <Image src="/icons/my/chevron-right.svg" alt="다음" width={28} height={38} />
+            <ChevronIcon width={28} height={38} className="text-main-black" />
           </button>
         </div>
 

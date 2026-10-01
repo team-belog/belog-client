@@ -22,7 +22,7 @@ export default function GroupPastMeetupItem({ meetup, onClick }: GroupPastMeetup
             <Image src={thumbnailUrl} alt="" fill className="object-cover" />
           ) : (
             <Image
-              src="/images/empty.svg"
+              src="/icons/empty-state.svg"
               alt=""
               fill
               unoptimized

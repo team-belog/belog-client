@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import Image from "next/image";
 
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Modal from "@/components/ui/Modal";
+import ChevronIcon from "@/components/ui/ChevronIcon";
 
 function SwitchToggle({ checked = false, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -35,7 +35,9 @@ function SettingRow({ label, children, account, onClick }: { label: string; chil
     >
       <p className="pretendard-m-15 text-main-black">{label}</p>
       {account && (
-        <Image src="/icons/bill-log/chevron-right.svg" alt="" width={26} height={32} onClick={() => router.push("/setting/account")} />
+        <button type="button" aria-label="계정 설정" onClick={() => router.push("/setting/account")}>
+          <ChevronIcon width={26} height={32} scale={0.7} className="text-sub-gray-2" />
+        </button>
       )}
       {children}
     </div>

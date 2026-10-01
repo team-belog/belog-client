@@ -8,6 +8,7 @@ import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
 import { DUMMY_MEETUP_RESPONSE } from "@/features/meetup/constants/dummy";
+import ChevronIcon from "@/components/ui/ChevronIcon";
 
 export default function MeetupRespondView() {
   const { totalMembers, respondedMembers, candidateDates } =
@@ -51,19 +52,14 @@ export default function MeetupRespondView() {
           className="pretendard-sb-14 flex items-center gap-0 self-end text-main-mint"
         >
           조율 현황 보기
-          <Image
-            src="/icons/meetup/chevron-right-mint.svg"
-            alt=""
-            width={26}
-            height={32}
-          />
+          <ChevronIcon width={26} height={32} scale={0.7} />
         </button>
       </div>
 
       {hasResponded ? (
         <div className="flex flex-1 flex-col items-center justify-center pb-[60px]">
           <Image
-            src="/images/group/empty-meetup.svg"
+            src="/icons/empty-state.svg"
             alt=""
             width={134}
             height={134}

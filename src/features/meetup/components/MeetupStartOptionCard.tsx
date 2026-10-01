@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import ChevronIcon from "@/components/ui/ChevronIcon";
 
 interface MeetupStartOptionCardProps {
   iconSrc: string;
@@ -32,15 +33,10 @@ export default function MeetupStartOptionCard({
           <p className="pretendard-m-14 text-sub-gray-2">{description}</p>
         </div>
       </div>
-      <Image
-        src={
-          selected
-            ? "/icons/meetup/chevron-right-mint.svg"
-            : "/icons/meetup/chevron-right-dark.svg"
-        }
-        alt=""
-        width={16}
+      <ChevronIcon
+        width={20}
         height={20}
+        className={selected ? "text-main-mint" : "text-main-black"}
       />
     </button>
   );
