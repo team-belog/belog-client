@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import ChevronIcon from "@/components/ui/ChevronIcon";
 
 interface BackHeaderProps {
   title: string;
@@ -28,7 +29,7 @@ export default function BackHeader({ title, onBack, onShare, right }: BackHeader
         className="absolute left-4 flex size-6 items-center justify-center"
         aria-label="뒤로 가기"
       >
-        <Image src="/icons/back-arrow.svg" alt="뒤로 가기" width={24} height={24} />
+        <ChevronIcon direction="left" width={24} height={24} scale={0.78} strokeWidth={2.5} className="text-main-black" />
       </button>
       <p className="pretendard-sb-18 w-full text-center text-main-black">
         {title}

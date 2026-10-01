@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ChevronIcon from "@/components/ui/ChevronIcon";
 
 interface PaymentHistoryItemProps {
   thumbnailUrl: string;
@@ -33,12 +34,7 @@ export default function PaymentHistoryItem({
           </div>
         </div>
       </div>
-      <Image
-        src="/icons/bill-log/chevron-right.svg"
-        alt="상세보기"
-        width={18}
-        height={18}
-      />
+      <ChevronIcon width={18} height={18} scale={0.72} strokeWidth={2.3} className="text-sub-gray-2" />
     </button>
   );
 }

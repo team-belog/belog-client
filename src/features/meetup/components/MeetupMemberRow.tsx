@@ -29,8 +29,8 @@ export default function MeetupMemberRow({
       <Image
         src={
           selected
-            ? "/icons/meetup/member-check-on.svg"
-            : "/icons/meetup/member-check-off.svg"
+            ? "/icons/meetup/check-on.svg"
+            : "/icons/meetup/check-off.svg"
         }
         alt={selected ? "선택됨" : "선택 안 됨"}
         width={25}

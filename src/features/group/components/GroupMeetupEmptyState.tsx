@@ -14,7 +14,7 @@ export default function GroupMeetupEmptyState({
       <div className="flex h-[146px] flex-col items-center justify-center gap-1 rounded-[12px] bg-main-cool-gray">
         <div className="relative size-[100px]">
           <Image
-            src="/images/empty.svg"
+            src="/icons/empty-state.svg"
             alt=""
             fill
             unoptimized

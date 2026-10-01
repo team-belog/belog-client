@@ -3,6 +3,7 @@ import Image from "next/image";
 import TrashIcon from "@/components/ui/TrashIcon";
 import { PRE_LOG_CATEGORY_LABEL } from "@/features/pre-log/constants/category";
 import type { PreLogPlace } from "@/features/pre-log/types";
+import ChevronIcon from "@/components/ui/ChevronIcon";
 
 interface PreLogPlaceItemProps {
   place: PreLogPlace;
@@ -19,7 +20,7 @@ export default function PreLogPlaceItem({ place, onClick, onDelete }: PreLogPlac
         <div className="relative size-[80px] shrink-0 overflow-hidden rounded-[10px] bg-sub-gray-3">
           {thumbnailUrl && <Image src={thumbnailUrl} alt="" fill className="object-cover" />}
           <div className="absolute left-1 top-1 flex items-center gap-px text-[10px] font-semibold text-main-mint">
-            <Image src="/icons/post-log/like-filled.svg" alt="" width={14} height={14} />
+            <Image src="/icons/like-filled.svg" alt="" width={14} height={14} />
             {likeCount}
           </div>
         </div>
@@ -35,7 +36,7 @@ export default function PreLogPlaceItem({ place, onClick, onDelete }: PreLogPlac
 
       <div className="flex shrink-0 items-center gap-5">
         <button type="button" onClick={() => onClick?.(place)} aria-label="장소 상세 보기">
-          <Image src="/icons/bill-log/chevron-right.svg" alt="" width={18} height={18} />
+          <ChevronIcon width={18} height={18} scale={0.72} strokeWidth={2.3} className="text-sub-gray-2" />
         </button>
         <button
           type="button"

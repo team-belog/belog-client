@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
 import { DUMMY_MEETUP_COORDINATION } from "@/features/meetup/constants/dummy";
+import ChevronIcon from "@/components/ui/ChevronIcon";
 
 interface MeetupCoordinationViewProps {
   isHost: boolean;
@@ -99,12 +99,11 @@ export default function MeetupCoordinationView({
                     현재까지 {index + 1}위
                   </span>
                   <span className="absolute right-[19px] top-[25px] flex h-[26px] w-[32px] items-center justify-center">
-                    <Image
-                      src="/icons/meetup/chevron-right-gray.svg"
-                      alt=""
+                    <ChevronIcon
                       width={26}
                       height={32}
-                      className={`max-w-none shrink-0 transition-transform ${isOpen ? "-rotate-90" : "rotate-90"}`}
+                      scale={0.7}
+                      className={`max-w-none shrink-0 text-sub-gray-2 transition-transform ${isOpen ? "-rotate-90" : "rotate-90"}`}
                     />
                   </span>
                 </button>

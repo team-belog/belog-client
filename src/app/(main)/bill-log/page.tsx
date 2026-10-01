@@ -26,7 +26,7 @@ export default function BillLogPage() {
         <div className="w-full flex flex-col gap-4">
           {DUMMY_SETTLEMENTS.length === 0 ? (
             <div className="flex min-h-[calc(100vh-180px)] flex-col items-center justify-center gap-[15px]">
-              <Image src="/icons/bill-log/empty-state.jpg" alt="빈 상태 이미지" width={134} height={134} />
+              <Image src="/icons/empty-state.svg" alt="빈 상태 이미지" width={134} height={134} />
               <div className="flex flex-col items-center gap-[15px]">
                 <p className="pretendard-sb-18 text-main-black">아직 등록된 결제내역이 없어요</p>
                 <p className="pretendard-m-15 text-sub-gray-2">결제내역을 등록하고 정산을 시작해보세요</p>

@@ -18,13 +18,13 @@ const START_OPTIONS: {
 }[] = [
   {
     type: "coordinate",
-    iconSrc: "/images/meetup/post-log.png",
+    iconSrc: "/icons/post-log.png",
     title: "일정 조율하기",
     description: "멤버들이 되는 날을 체크해 방장이 확정해요",
   },
   {
     type: "fixedDate",
-    iconSrc: "/images/meetup/date-fixed.png",
+    iconSrc: "/icons/meetup/date-fixed.png",
     title: "날짜 바로 정하기",
     description: "이미 날짜가 정해졌어요",
   },

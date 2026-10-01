@@ -52,7 +52,7 @@ export default function PreLogMapView({
     >
       <div className="absolute inset-0">
         <Image
-          src="/images/pre-log/map-placeholder.png"
+          src="/icons/pre-log/map-placeholder.png"
           alt=""
           fill
           unoptimized
