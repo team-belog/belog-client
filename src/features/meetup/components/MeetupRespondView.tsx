@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -12,6 +13,8 @@ export default function MeetupRespondView() {
   const { totalMembers, respondedMembers, candidateDates } =
     DUMMY_MEETUP_RESPONSE;
 
+  const router = useRouter();
+  const { id } = useParams<{ id: string }>();
   const [selected, setSelected] = useState<number[]>([]);
   const [hasResponded, setHasResponded] = useState(false);
 
@@ -44,6 +47,7 @@ export default function MeetupRespondView() {
 
         <button
           type="button"
+          onClick={() => router.push(`/meetup/${id}/status`)}
           className="pretendard-sb-14 flex items-center gap-0 self-end text-main-mint"
         >
           조율 현황 보기

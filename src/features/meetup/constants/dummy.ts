@@ -25,3 +25,26 @@ export const DUMMY_MEETUP_RESPONSE = {
     "8월 22일 (금)",
   ],
 };
+
+export const DUMMY_MEETUP_COORDINATION = {
+  totalMembers: 5,
+  respondedMembers: 2,
+  unrespondedMembers: 3,
+  dates: [
+    {
+      date: "8월 17일 (일)",
+      availableMembers: ["이름", "성이름", "성이름", "성이름"],
+      unavailableMembers: ["이름", "성이름"],
+    },
+    {
+      date: "8월 18일 (월)",
+      availableMembers: ["이름", "성이름", "성이름"],
+      unavailableMembers: ["이름", "성이름", "성이름"],
+    },
+    {
+      date: "8월 19일 (화)",
+      availableMembers: ["이름", "성이름", "성이름", "성이름"],
+      unavailableMembers: ["이름", "성이름"],
+    },
+  ],
+};
