@@ -1,8 +1,8 @@
 "use client";
 
-import CalendarDayCell from "@/features/home/components/CalendarDayCell";
-import type { CalendarDay } from "@/features/home/types";
-import { toDateKey } from "@/features/home/utils/calendar";
+import CalendarDayCell from "@/components/layout/CalendarDayCell";
+import type { CalendarDay } from "@/lib/calendar";
+import { toDateKey } from "@/lib/calendar";
 
 interface CalendarGridProps {
   days: CalendarDay[];

@@ -1,9 +1,9 @@
 "use client";
 
+import CalendarGrid from "@/components/layout/CalendarGrid";
+import CalendarMonthNav from "@/components/layout/CalendarMonthNav";
+import CalendarWeekdays from "@/components/layout/CalendarWeekdays";
 import Button from "@/components/ui/Button";
-import CalendarGrid from "@/features/home/components/CalendarGrid";
-import CalendarMonthNav from "@/features/home/components/CalendarMonthNav";
-import CalendarWeekdays from "@/features/home/components/CalendarWeekdays";
 import { useMeetupCandidateDatesPicker } from "@/features/meetup/hooks/useMeetupCandidateDatesPicker";
 
 interface MeetupStep4CoordinateProps {

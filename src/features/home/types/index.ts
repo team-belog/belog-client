@@ -1,3 +1,5 @@
+import type { CalendarDay } from "@/lib/calendar";
+
 export type ScheduleStatus = "before" | "ongoing" | "done";
 
 export type Schedule = {
@@ -15,14 +17,4 @@ export type Schedule = {
   memberHandles?: string[];
 };
 
-export type RangePosition = "single" | "start" | "middle" | "end";
-
-export type CalendarDay = {
-  date: Date;
-  isCurrentMonth: boolean;
-  isToday: boolean;
-  isSelected: boolean;
-  isPast?: boolean;
-  schedules: Schedule[];
-  rangePosition: RangePosition | null;
-};
+export type HomeCalendarDay = CalendarDay & { schedules: Schedule[] };

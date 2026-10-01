@@ -4,17 +4,36 @@ import type { MeetupDetail } from "@/features/meetup/types";
 
 interface MeetupSummaryProps {
   meetup: MeetupDetail;
+  isEditing?: boolean;
   onEdit?: () => void;
+  onTitleChange?: (value: string) => void;
+  onLocationChange?: (value: string) => void;
+  onDateClick?: () => void;
 }
 
-export default function MeetupSummary({ meetup, onEdit }: MeetupSummaryProps) {
+export default function MeetupSummary({
+  meetup,
+  isEditing = false,
+  onEdit,
+  onTitleChange,
+  onLocationChange,
+  onDateClick,
+}: MeetupSummaryProps) {
   const { title, groupName, dDay, startDate, endDate, location } = meetup;
 
   return (
     <div className="px-4 pb-[30px] pt-[37px]">
       <div className="flex items-start justify-between">
         <div className="flex flex-col gap-[10px]">
-          <p className="pretendard-sb-20 text-main-black">{title}</p>
+          {isEditing ? (
+            <input
+              value={title}
+              onChange={(e) => onTitleChange?.(e.target.value)}
+              className="pretendard-sb-20 h-[40px] w-[267px] rounded-[12px] bg-[#F7F8F9] px-[10px] text-main-black outline-none"
+            />
+          ) : (
+            <p className="pretendard-sb-20 text-main-black">{title}</p>
+          )}
           <p className="pretendard-m-15 text-main-black">{groupName}</p>
         </div>
         <p className="pretendard-sb-20 text-main-mint">D-{dDay}</p>
@@ -22,16 +41,41 @@ export default function MeetupSummary({ meetup, onEdit }: MeetupSummaryProps) {
 
       <div className="mt-[30px] flex items-center justify-between gap-2">
         <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-[5px]">
-            <Image src="/icons/meetup/calendar.svg" alt="" width={18} height={18} />
-            <p className="pretendard-r-15 text-sub-gray-2">
-              {startDate} - {endDate}
-            </p>
-          </div>
-          <div className="flex items-center gap-[5px]">
-            <Image src="/icons/meetup/location.svg" alt="" width={15} height={18} />
-            <p className="pretendard-r-15 text-sub-gray-2">{location}</p>
-          </div>
+          {isEditing ? (
+            <button
+              type="button"
+              onClick={onDateClick}
+              className="flex h-[40px] w-[267px] items-center gap-[5px] rounded-[12px] bg-[#F7F8F9] px-[10px]"
+            >
+              <Image src="/icons/meetup/calendar.svg" alt="" width={18} height={18} />
+              <p className="pretendard-r-15 text-sub-gray-2">
+                {startDate} - {endDate}
+              </p>
+            </button>
+          ) : (
+            <div className="flex items-center gap-[5px]">
+              <Image src="/icons/meetup/calendar.svg" alt="" width={18} height={18} />
+              <p className="pretendard-r-15 text-sub-gray-2">
+                {startDate} - {endDate}
+              </p>
+            </div>
+          )}
+
+          {isEditing ? (
+            <div className="flex h-[40px] w-[267px] items-center gap-[5px] rounded-[12px] bg-[#F7F8F9] px-[10px]">
+              <Image src="/icons/meetup/location.svg" alt="" width={15} height={18} />
+              <input
+                value={location}
+                onChange={(e) => onLocationChange?.(e.target.value)}
+                className="pretendard-r-15 min-w-0 flex-1 bg-transparent text-sub-gray-2 outline-none"
+              />
+            </div>
+          ) : (
+            <div className="flex items-center gap-[5px]">
+              <Image src="/icons/meetup/location.svg" alt="" width={15} height={18} />
+              <p className="pretendard-r-15 text-sub-gray-2">{location.trim() || "-"}</p>
+            </div>
+          )}
         </div>
 
         <button type="button" onClick={onEdit} aria-label="만남 정보 수정" className="shrink-0">

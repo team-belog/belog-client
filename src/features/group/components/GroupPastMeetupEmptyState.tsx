@@ -5,7 +5,7 @@ export default function GroupPastMeetupEmptyState() {
     <div className="flex flex-col items-center gap-[15px] py-5">
       <div className="relative size-[134px]">
         <Image
-          src="/images/group/empty-meetup.svg"
+          src="/images/empty.svg"
           alt=""
           fill
           unoptimized

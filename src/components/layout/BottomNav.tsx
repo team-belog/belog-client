@@ -12,7 +12,7 @@ const NAV_ITEMS = [
   { label: "마이", href: "/my", icon: "my" },
 ] as const;
 
-const NAV_PATHS = NAV_ITEMS.map((item) => item.href);
+export const BOTTOM_NAV_PATHS = NAV_ITEMS.map((item) => item.href);
 
 export default function BottomNav() {
   const pathname = usePathname();

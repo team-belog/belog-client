@@ -1,10 +1,10 @@
 "use client";
 
+import CalendarGrid from "@/components/layout/CalendarGrid";
+import CalendarMonthNav from "@/components/layout/CalendarMonthNav";
+import CalendarWeekdays from "@/components/layout/CalendarWeekdays";
 import Button from "@/components/ui/Button";
-import CalendarGrid from "@/features/home/components/CalendarGrid";
-import CalendarMonthNav from "@/features/home/components/CalendarMonthNav";
-import CalendarWeekdays from "@/features/home/components/CalendarWeekdays";
-import { useMeetupDateRangePicker } from "@/features/meetup/hooks/useMeetupDateRangePicker";
+import { useDateRangePicker } from "@/hooks/useDateRangePicker";
 
 interface MeetupStep4FixedDateProps {
   onSubmit: () => void;
@@ -14,7 +14,7 @@ export default function MeetupStep4FixedDate({
   onSubmit,
 }: MeetupStep4FixedDateProps) {
   const { monthLabel, days, rangeStart, goToPrevMonth, goToNextMonth, selectDate } =
-    useMeetupDateRangePicker();
+    useDateRangePicker();
 
   return (
     <div className="flex flex-col gap-6 px-4 pb-[114px] pt-3">

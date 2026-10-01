@@ -3,8 +3,9 @@
 import { addMonths, subMonths } from "date-fns";
 import { useMemo, useState } from "react";
 
-import type { CalendarDay, Schedule } from "@/features/home/types";
-import { buildCalendarDay, getMonthLabel, getMonthMatrix } from "@/features/home/utils/calendar";
+import type { HomeCalendarDay, Schedule } from "@/features/home/types";
+import { buildCalendarDay } from "@/features/home/utils/calendar";
+import { getMonthLabel, getMonthMatrix } from "@/lib/calendar";
 
 export function useHomeCalendar(
   schedules: Schedule[],
@@ -16,7 +17,7 @@ export function useHomeCalendar(
   );
   const [selectedDate, setSelectedDate] = useState<Date | null>(initialSelectedDate);
 
-  const days = useMemo<CalendarDay[]>(() => {
+  const days = useMemo<HomeCalendarDay[]>(() => {
     const weeks = getMonthMatrix(viewMonth.getFullYear(), viewMonth.getMonth() + 1);
     return weeks.flat().map((date) => buildCalendarDay(date, viewMonth, selectedDate, schedules));
   }, [viewMonth, selectedDate, schedules]);
