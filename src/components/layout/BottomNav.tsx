@@ -25,7 +25,7 @@ export default function BottomNav() {
     <nav className="fixed bottom-[21px] left-1/2 z-50 h-[62px] w-[276px] -translate-x-1/2 rounded-[30px] bg-main-white/70 shadow-[2px_2px_10px_0px_rgba(0,0,0,0.1)]">
       <span
         aria-hidden
-        className="absolute inset-y-[8px] rounded-[30px] bg-[#E9E9E9]/70 transition-[left] duration-300 ease-out"
+        className="absolute inset-y-[5px] rounded-[30px] bg-[#E9E9E9]/70 transition-[left] duration-300 ease-out"
         style={{
           left: `calc(${activeIndex} * 33.3333% + 5px)`,
           width: "calc(33.3333% - 10px)",
@@ -41,10 +41,22 @@ export default function BottomNav() {
           >
             <span className="flex size-[30px] items-center justify-center">
               {icon === "home" && (
-                <Image src="/icons/home/nav-home.svg" alt="" width={30} height={30} />
+                <Image
+                  src="/icons/home/nav-home.svg"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
               )}
               {icon === "group" && <BelogIcon width={20} height={19} />}
-              {icon === "my" && <Image src="/icons/home/nav-my.svg" alt="" width={19} height={21} />}
+              {icon === "my" && (
+                <Image
+                  src="/icons/home/nav-my.svg"
+                  alt=""
+                  width={19}
+                  height={21}
+                />
+              )}
             </span>
             <span className="pretendard-sb-10 text-main-black">{label}</span>
           </Link>
