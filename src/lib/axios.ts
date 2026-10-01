@@ -6,7 +6,13 @@ import { refreshAccessToken } from "@/lib/refresh";
 
 type RetriableConfig = InternalAxiosRequestConfig & { _retry?: boolean };
 
-export const api = axios.create({
+// 401이어도 재발급을 시도하지 않는 요청 (로그인 실패, 이미 만료된 Refresh Token으로의 로그아웃)
+const NO_REFRESH_URLS: string[] = [
+  ENDPOINTS.auth.googleLogin,
+  ENDPOINTS.auth.logout,
+];
+
+export const api =axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   timeout: 10000,
   withCredentials: true,
@@ -26,7 +32,7 @@ api.interceptors.response.use(
       error.response?.status === 401 &&
       original &&
       !original._retry &&
-      original.url !== ENDPOINTS.auth.googleLogin;
+      !NO_REFRESH_URLS.includes(original.url ?? "");
 
     if (!shouldRefresh) return Promise.reject(toApiError(error));
 

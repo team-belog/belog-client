@@ -13,3 +13,7 @@ export async function loginWithGoogle(body: GoogleLoginRequest) {
   );
   return data.data;
 }
+
+export async function logout() {
+  await api.post(ENDPOINTS.auth.logout);
+}

@@ -8,6 +8,7 @@ import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Modal from "@/components/ui/Modal";
 import ChevronIcon from "@/components/ui/ChevronIcon";
+import { useLogout } from "@/features/auth/hooks/useLogout";
 
 function SwitchToggle({ checked = false, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -46,6 +47,7 @@ function SettingRow({ label, children, account, onClick }: { label: string; chil
 
 export default function SettingPage() {
   const router = useRouter();
+  const { mutate: logout } = useLogout();
   const [notificationEnabled, setNotificationEnabled] = useState(true);
   const [modal, setModal] = useState<"logout" | "withdraw" | null>(null);
 
@@ -64,7 +66,7 @@ export default function SettingPage() {
         isOpen={modal === "logout"}
         message="로그아웃 하시겠습니까?"
         confirmLabel="로그아웃"
-        onConfirm={() => router.push("/")}
+        onConfirm={() => logout()}
         onCancel={() => setModal(null)}
       />
       <Modal
