@@ -50,7 +50,7 @@ export default function MeetupStep1({ onNext }: MeetupStep1Props) {
 
       <Button
         variant="primary"
-        disabled={title.trim().length === 0 || nights === null}
+        disabled={title.trim().length === 0}
         onClick={onNext}
         className="fixed bottom-0 left-0 right-0"
       >
