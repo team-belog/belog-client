@@ -7,14 +7,17 @@ import Button from "@/components/ui/Button";
 import { useMeetupCandidateDatesPicker } from "@/features/meetup/hooks/useMeetupCandidateDatesPicker";
 
 interface MeetupStep4CoordinateProps {
+  /** 박 수. null = 미정, 0 = 무박 */
+  nights: number | null;
   onSubmit: () => void;
 }
 
 export default function MeetupStep4Coordinate({
+  nights,
   onSubmit,
 }: MeetupStep4CoordinateProps) {
   const { monthLabel, days, selectedDates, goToPrevMonth, goToNextMonth, toggleDate } =
-    useMeetupCandidateDatesPicker();
+    useMeetupCandidateDatesPicker(nights);
 
   return (
     <div className="flex flex-col gap-6 px-4 pb-[114px] pt-3">

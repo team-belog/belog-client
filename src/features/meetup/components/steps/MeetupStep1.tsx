@@ -4,15 +4,22 @@ import { useState } from "react";
 
 import Button from "@/components/ui/Button";
 import MeetupCharField from "@/features/meetup/components/MeetupCharField";
+import MeetupDurationPicker from "@/features/meetup/components/MeetupDurationPicker";
 
 const TITLE_MAX = 15;
 const LOCATION_MAX = 20;
 
 interface MeetupStep1Props {
+  nights: number | null;
+  onChangeNights: (nights: number | null) => void;
   onNext: () => void;
 }
 
-export default function MeetupStep1({ onNext }: MeetupStep1Props) {
+export default function MeetupStep1({
+  nights,
+  onChangeNights,
+  onNext,
+}: MeetupStep1Props) {
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
 
@@ -37,6 +44,12 @@ export default function MeetupStep1({ onNext }: MeetupStep1Props) {
           value={location}
           onChange={setLocation}
           maxLength={LOCATION_MAX}
+        />
+        <MeetupDurationPicker
+          label="만남 일정"
+          required
+          nights={nights}
+          onChange={onChangeNights}
         />
       </div>
 

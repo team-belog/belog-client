@@ -71,15 +71,30 @@ function BlockDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "onS
       ? "pretendard-m-15 text-main-black"
       : "pretendard-m-15 text-sub-gray-1";
 
+  // 여러 날 묶음은 셀 뒤에 연한 민트 띠를 깔아 한 덩어리로 보이게 한다 (셀 사이 gap 7px 포함)
+  const bandClass =
+    day.rangePosition === "start"
+      ? "left-0 -right-[3.5px] rounded-l-[10px]"
+      : day.rangePosition === "end"
+        ? "-left-[3.5px] right-0 rounded-r-[10px]"
+        : day.rangePosition === "middle"
+          ? "-left-[3.5px] -right-[3.5px]"
+          : null;
+
   return (
-    <button
-      type="button"
-      onClick={() => onSelect?.(day.date)}
-      disabled={disabled}
-      className={`flex h-[45px] w-full items-center justify-center rounded-[10px] disabled:cursor-default ${cellClass}`}
-    >
-      <span className={textClass}>{day.date.getDate()}</span>
-    </button>
+    <div className="relative">
+      {bandClass && (
+        <span aria-hidden className={`absolute inset-y-0 bg-main-mint/30 ${bandClass}`} />
+      )}
+      <button
+        type="button"
+        onClick={() => onSelect?.(day.date)}
+        disabled={disabled}
+        className={`relative flex h-[45px] w-full items-center justify-center rounded-[10px] disabled:cursor-default ${cellClass}`}
+      >
+        <span className={textClass}>{day.date.getDate()}</span>
+      </button>
+    </div>
   );
 }
 
