@@ -73,7 +73,7 @@ export default function MeetupSummary({
           ) : (
             <div className="flex items-center gap-[5px]">
               <Image src="/icons/meetup/location.svg" alt="" width={15} height={18} />
-              <p className="pretendard-r-15 text-sub-gray-2">{location}</p>
+              <p className="pretendard-r-15 text-sub-gray-2">{location.trim() || "-"}</p>
             </div>
           )}
         </div>
