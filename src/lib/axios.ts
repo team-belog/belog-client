@@ -1,6 +1,10 @@
-import axios from "axios";
-import { getAccessToken } from "@/lib/authToken";
+import axios, { type InternalAxiosRequestConfig } from "axios";
+import { ENDPOINTS } from "@/constants/endpoints";
+import { getAccessToken, setAccessToken } from "@/lib/authToken";
 import { toApiError } from "@/lib/apiError";
+import { refreshAccessToken } from "@/lib/refresh";
+
+type RetriableConfig = InternalAxiosRequestConfig & { _retry?: boolean };
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -16,5 +20,27 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(toApiError(error)),
+  async (error) => {
+    const original: RetriableConfig | undefined = error.config;
+    const shouldRefresh =
+      error.response?.status === 401 &&
+      original &&
+      !original._retry &&
+      original.url !== ENDPOINTS.auth.googleLogin;
+
+    if (!shouldRefresh) return Promise.reject(toApiError(error));
+
+    original._retry = true;
+    try {
+      const token = await refreshAccessToken();
+      original.headers.Authorization = `Bearer ${token}`;
+      return api(original);
+    } catch (refreshError) {
+      setAccessToken(null);
+      if (!window.location.pathname.startsWith("/login")) {
+        window.location.href = "/login";
+      }
+      return Promise.reject(refreshError);
+    }
+  },
 );
