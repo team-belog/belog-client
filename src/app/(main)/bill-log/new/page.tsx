@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
-import StepProgressBar from "@/features/bill-log/components/StepProgressBar";
+import StepProgressBar from "@/components/ui/StepProgressBar";
 import Step1 from "@/features/bill-log/components/steps/Step1";
 import Step2 from "@/features/bill-log/components/steps/Step2";
 import Step3 from "@/features/bill-log/components/steps/Step3";

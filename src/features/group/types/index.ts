@@ -14,6 +14,7 @@ export type GroupMember = {
   id: number;
   name: string;
   role: GroupMemberRole;
+  avatarUrl?: string;
 };
 
 export type PendingMeetup = {
@@ -36,6 +37,7 @@ export type GroupDetail = {
   name: string;
   description: string;
   coverImageUrl?: string;
+  members: GroupMember[];
   pendingMeetup?: PendingMeetup;
   ongoingMeetup?: PendingMeetup;
   pastMeetups: PastMeetup[];

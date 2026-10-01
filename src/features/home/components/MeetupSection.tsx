@@ -1,8 +1,8 @@
 "use client";
 
+import SearchBar from "@/components/ui/SearchBar";
 import TabBar from "@/components/ui/TabBar";
 import MeetupItemList from "@/features/home/components/MeetupItemList";
-import MeetupSearchBar from "@/features/home/components/MeetupSearchBar";
 import { useMeetupItemList } from "@/features/home/hooks/useMeetupItemList";
 import type { Schedule } from "@/features/home/types";
 
@@ -35,7 +35,7 @@ export default function MeetupSection({
       />
 
       <div className="flex flex-col gap-6 px-4">
-        <MeetupSearchBar
+        <SearchBar
           value={searchQuery}
           onChange={onSearchChange}
           placeholder={`${TAB_LABELS[activeIndex]}을 검색해 보세요`}

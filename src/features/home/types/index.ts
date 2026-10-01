@@ -22,6 +22,7 @@ export type CalendarDay = {
   isCurrentMonth: boolean;
   isToday: boolean;
   isSelected: boolean;
+  isPast?: boolean;
   schedules: Schedule[];
   rangePosition: RangePosition | null;
 };
