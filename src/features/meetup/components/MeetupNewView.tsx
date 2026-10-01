@@ -19,6 +19,7 @@ const TOTAL_STEPS = 4;
 export default function MeetupNewView() {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const [nights, setNights] = useState<number | null>(null);
   const [startOption, setStartOption] = useState<MeetupStartOption | null>(null);
 
   const handleBack = () => {
@@ -52,7 +53,11 @@ export default function MeetupNewView() {
       <Divider />
       <StepProgressBar current={step} total={TOTAL_STEPS} />
 
-      {step === 1 && <MeetupStep1 onNext={handleNext} />}
+      {step === 1 && <MeetupStep1
+          nights={nights}
+          onChangeNights={setNights}
+          onNext={handleNext}
+        />}
       {step === 2 && (
         <MeetupStep2 members={DUMMY_GROUP_DETAIL.members} onNext={handleNext} />
       )}
@@ -61,7 +66,7 @@ export default function MeetupNewView() {
         <MeetupStep4FixedDate onSubmit={handleSubmit} />
       )}
       {step === 4 && startOption === "coordinate" && (
-        <MeetupStep4Coordinate onSubmit={handleSubmit} />
+        <MeetupStep4Coordinate nights={nights} onSubmit={handleSubmit} />
       )}
     </main>
   );

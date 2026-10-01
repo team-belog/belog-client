@@ -10,13 +10,18 @@ const TITLE_MAX = 15;
 const LOCATION_MAX = 20;
 
 interface MeetupStep1Props {
+  nights: number | null;
+  onChangeNights: (nights: number | null) => void;
   onNext: () => void;
 }
 
-export default function MeetupStep1({ onNext }: MeetupStep1Props) {
+export default function MeetupStep1({
+  nights,
+  onChangeNights,
+  onNext,
+}: MeetupStep1Props) {
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
-  const [nights, setNights] = useState<number | null>(null);
 
   return (
     <div className="flex flex-col gap-6 px-4 pb-[114px] pt-3">
@@ -44,7 +49,7 @@ export default function MeetupStep1({ onNext }: MeetupStep1Props) {
           label="만남 일정"
           required
           nights={nights}
-          onChange={setNights}
+          onChange={onChangeNights}
         />
       </div>
 
