@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import Button from "@/components/ui/Button";
+import { getGoogleAuthUrl } from "@/constants/google";
 
 export default function GoogleAuthButton() {
   const handleGoogleLogin = () => {
-    // TODO
+    window.location.href = getGoogleAuthUrl();
   };
 
   return (
