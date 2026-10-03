@@ -6,5 +6,6 @@ export const ENDPOINTS = {
   },
   group: {
     list: "/groups",
+    create: "/groups",
   },
 } as const;

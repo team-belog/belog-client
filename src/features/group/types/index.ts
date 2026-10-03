@@ -25,6 +25,19 @@ export type GroupPreviewMemberDto = {
   profileImageUrl: string | null;
 };
 
+export type CreateGroupRequest = {
+  name: string;
+  coverImageObjectKey?: string;
+};
+
+export type CreateGroupData = {
+  groupId: number;
+  name: string;
+  currentMemberCount: number;
+  inviteCode: string;
+  inviteLink: string;
+};
+
 export type GroupSummary = {
   id: number;
   name: string;
