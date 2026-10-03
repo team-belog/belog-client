@@ -38,6 +38,21 @@ export type CreateGroupData = {
   inviteLink: string;
 };
 
+export type CoverImageUploadUrlRequest = {
+  contentType: CoverImageContentType;
+  fileSize: number;
+};
+
+export type CoverImageContentType = "image/jpeg" | "image/png" | "image/webp";
+
+export type CoverImageUploadUrlData = {
+  objectKey: string;
+  uploadUrl: string;
+  method: "PUT";
+  requiredHeaders: Record<string, string>;
+  expiresAt: string;
+};
+
 export type GroupSummary = {
   id: number;
   name: string;

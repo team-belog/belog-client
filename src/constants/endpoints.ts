@@ -7,5 +7,6 @@ export const ENDPOINTS = {
   group: {
     list: "/groups",
     create: "/groups",
+    coverImageUploadUrl: "/groups/cover-image/upload-url",
   },
 } as const;

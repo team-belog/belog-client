@@ -1,7 +1,15 @@
 import { api } from "@/lib/axios";
 import type { ApiResponse } from "@/lib/apiError";
 import { ENDPOINTS } from "@/constants/endpoints";
-import type { GroupListData, GroupListParams } from "@/features/group/types";
+import { ApiError } from "@/lib/apiError";
+import type {
+  CoverImageUploadUrlData,
+  CoverImageUploadUrlRequest,
+  CreateGroupData,
+  CreateGroupRequest,
+  GroupListData,
+  GroupListParams,
+} from "@/features/group/types";
 
 export async function getGroups(params: GroupListParams = {}) {
   const { data } = await api.get<ApiResponse<GroupListData>>(
@@ -11,10 +19,40 @@ export async function getGroups(params: GroupListParams = {}) {
   return data.data;
 }
 
-export async function createGroup(name: string, coverImageObjectKey?: string) {
-  const { data } = await api.post<ApiResponse<GroupListData>>(
+export async function createGroup(body: CreateGroupRequest) {
+  const { data } = await api.post<ApiResponse<CreateGroupData>>(
     ENDPOINTS.group.create,
-    { name, coverImageObjectKey },
+    body,
   );
   return data.data;
+}
+
+export async function getCoverImageUploadUrl(body: CoverImageUploadUrlRequest) {
+  const { data } = await api.post<ApiResponse<CoverImageUploadUrlData>>(
+    ENDPOINTS.group.coverImageUploadUrl,
+    body,
+  );
+  return data.data;
+}
+
+export async function uploadFileToS3(
+  uploadUrl: string,
+  file: File,
+  contentType: string,
+) {
+  const response = await fetch(uploadUrl, {
+    method: "PUT",
+    headers: {
+      "Content-Type": contentType,
+    },
+    body: file,
+  });
+
+  if (!response.ok) {
+    throw new ApiError(
+      response.status,
+      "S3_UPLOAD_FAILED",
+      "이미지 업로드에 실패했습니다.",
+    );
+  }
 }
