@@ -1,9 +1,37 @@
+export type GroupListParams = {
+  cursor?: string;
+  size?: number;
+};
+
+export type GroupListData = {
+  items: GroupListItemDto[];
+  nextCursor: string | null;
+  hasNext: boolean;
+};
+
+export type GroupListItemDto = {
+  groupId: number;
+  name: string;
+  coverImageUrl: string | null;
+  memberCount: number;
+  previewMembers: GroupPreviewMemberDto[];
+  pinned: boolean;
+  canDeleteGroup: boolean;
+};
+
+export type GroupPreviewMemberDto = {
+  groupMemberId: number;
+  nickname: string;
+  profileImageUrl: string | null;
+};
+
 export type GroupSummary = {
   id: number;
   name: string;
   leaderName: string;
   memberCount: number;
   isPinned: boolean;
+  canDelete: boolean;
   coverImageUrl?: string;
   memberAvatarUrls?: string[];
 };
