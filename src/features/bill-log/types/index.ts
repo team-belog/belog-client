@@ -35,3 +35,9 @@ export type BillContent = {
   members: Member[];
   menu: MenuItem[];
 };
+
+export type BillLogResponse = {
+  totalSpentAmount: number
+  completedParticipantCount: number
+  pendingParticipantCount: number
+}

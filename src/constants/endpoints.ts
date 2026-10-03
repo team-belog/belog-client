@@ -4,4 +4,9 @@ export const ENDPOINTS = {
     refresh: "/auth/refresh",
     logout: "/auth/logout",
   },
+  billLog: {
+  create: "/bill-log",
+  getList: "/bill-log",
+  getSummary: (meetingId: number) => `/meetings/${meetingId}/bill-log`,
+}
 } as const;
