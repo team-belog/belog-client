@@ -10,3 +10,11 @@ export async function getGroups(params: GroupListParams = {}) {
   );
   return data.data;
 }
+
+export async function createGroup(name: string, coverImageObjectKey?: string) {
+  const { data } = await api.post<ApiResponse<GroupListData>>(
+    ENDPOINTS.group.create,
+    { name, coverImageObjectKey },
+  );
+  return data.data;
+}
