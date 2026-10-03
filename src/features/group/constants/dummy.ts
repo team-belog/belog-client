@@ -1,53 +1,9 @@
-import type { GroupDetail, GroupSummary } from "@/features/group/types";
+import type { GroupDetail } from "@/features/group/types";
 
 const MEMBER_AVATAR_URLS = [
   "/icons/group/sample-avatar-1.png",
   "/icons/group/sample-avatar-2.png",
   "/icons/group/sample-avatar-3.png",
-];
-
-export const DUMMY_GROUPS: GroupSummary[] = [
-  {
-    id: 1,
-    name: "피블이와 기니휘기",
-    leaderName: "이정원",
-    memberCount: 2,
-    isPinned: true,
-    coverImageUrl: "/icons/sample-photo.png",
-    memberAvatarUrls: MEMBER_AVATAR_URLS,
-  },
-  {
-    id: 2,
-    name: "피블이와 기니휘기",
-    leaderName: "이정원",
-    memberCount: 2,
-    isPinned: false,
-    memberAvatarUrls: MEMBER_AVATAR_URLS,
-  },
-  {
-    id: 3,
-    name: "피블이와 기니휘기",
-    leaderName: "이정원",
-    memberCount: 2,
-    isPinned: false,
-    memberAvatarUrls: MEMBER_AVATAR_URLS,
-  },
-  {
-    id: 4,
-    name: "피블이와 기니휘기",
-    leaderName: "이정원",
-    memberCount: 2,
-    isPinned: false,
-    memberAvatarUrls: MEMBER_AVATAR_URLS,
-  },
-  {
-    id: 5,
-    name: "피블이와 기니휘기",
-    leaderName: "이정원",
-    memberCount: 2,
-    isPinned: false,
-    memberAvatarUrls: MEMBER_AVATAR_URLS,
-  },
 ];
 
 export const DUMMY_GROUP_DETAIL: GroupDetail = {

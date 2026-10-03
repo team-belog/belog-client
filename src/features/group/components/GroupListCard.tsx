@@ -37,6 +37,7 @@ export default function GroupListCard({
     leaderName,
     memberCount,
     isPinned,
+    canDelete,
     coverImageUrl,
     memberAvatarUrls,
   } = group;
@@ -93,21 +94,23 @@ export default function GroupListCard({
             height={17}
           />
         </button>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete?.(group);
-          }}
-          aria-label="그룹 삭제"
-          className="flex size-[22px] items-center justify-center"
-        >
-          <TrashIcon
-            width={16}
-            height={17}
-            className={coverImageUrl ? "text-main-white" : "text-sub-gray-2"}
-          />
-        </button>
+        {canDelete && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete?.(group);
+            }}
+            aria-label="그룹 삭제"
+            className="flex size-[22px] items-center justify-center"
+          >
+            <TrashIcon
+              width={16}
+              height={17}
+              className={coverImageUrl ? "text-main-white" : "text-sub-gray-2"}
+            />
+          </button>
+        )}
       </div>
     </div>
   );
