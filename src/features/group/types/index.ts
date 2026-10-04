@@ -38,12 +38,12 @@ export type CreateGroupData = {
   inviteLink: string;
 };
 
+export type CoverImageContentType = "image/jpeg" | "image/png" | "image/webp";
+
 export type CoverImageUploadUrlRequest = {
   contentType: CoverImageContentType;
   fileSize: number;
 };
-
-export type CoverImageContentType = "image/jpeg" | "image/png" | "image/webp";
 
 export type CoverImageUploadUrlData = {
   objectKey: string;

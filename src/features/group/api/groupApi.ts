@@ -1,8 +1,8 @@
 import { api } from "@/lib/axios";
-import type { ApiResponse } from "@/lib/apiError";
+import { ApiResponse, ApiError } from "@/lib/apiError";
 import { ENDPOINTS } from "@/constants/endpoints";
-import { ApiError } from "@/lib/apiError";
 import type {
+  CoverImageContentType,
   CoverImageUploadUrlData,
   CoverImageUploadUrlRequest,
   CreateGroupData,
@@ -38,7 +38,7 @@ export async function getCoverImageUploadUrl(body: CoverImageUploadUrlRequest) {
 export async function uploadFileToS3(
   uploadUrl: string,
   file: File,
-  contentType: string,
+  contentType: CoverImageContentType,
 ) {
   const response = await fetch(uploadUrl, {
     method: "PUT",
