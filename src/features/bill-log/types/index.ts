@@ -1,11 +1,3 @@
-export type Settlement = {
-  id: number;
-  fromName: string;
-  toName: string;
-  amount: string;
-  status: "request" | "pending" | "completed";
-};
-
 export type PaymentItem = {
   id: number;
   thumbnailUrl: string;
@@ -40,4 +32,32 @@ export type BillLogResponse = {
   totalSpentAmount: number
   completedParticipantCount: number
   pendingParticipantCount: number
+}
+
+export type SettlementRequests = {
+  meetingId: number
+  cursor: string | undefined
+  size: number
+}
+
+export type SettlementResponse = {
+  items: Settlement[]
+  nextCursor: string | null
+  hasNext: boolean
+}
+
+export type Settlement = {
+  settlementRequestId: number
+  amount: number
+  sender: SettlementParticipant;
+  receiver: SettlementParticipant;
+  status: "PENDING" | "COMPLETED"
+  action: "SEND_REMINDER" | "none"
+}
+
+export type SettlementParticipant = {
+  meetingParticipantId: number
+  nickname: string
+  profileImageUrl: string | null
+  isMe: boolean
 }
