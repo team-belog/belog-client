@@ -9,5 +9,6 @@ export const ENDPOINTS = {
   getList: "/bill-log",
   getSummary: (meetingId: number) => `/meetings/${meetingId}/bill-log`,
   getSettlement: (meetingId: number) => `/meetings/${meetingId}/bill-log/settlement-requests`,
+  getBills: (meetingId: number) => `/meetings/${meetingId}/bill-log/bills`,
 }
 } as const;

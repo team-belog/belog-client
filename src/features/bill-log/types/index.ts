@@ -61,3 +61,29 @@ export type SettlementParticipant = {
   profileImageUrl: string | null
   isMe: boolean
 }
+
+export type BillsRequest = {
+  meetingId:  number
+  cursorDate: string | undefined
+  size: number
+}
+
+export type BillsResponse = {
+  days: Bills[]
+  nextCursorDate : string
+  hasNext: boolean
+}
+
+export type Bills = {
+dayNumber: number
+paymentDate: string
+dailyTotalAmount: number
+bills: Bill[]
+}
+
+export type Bill = {
+  billId: number
+  title: string
+  payerNickname: string
+  totalAmount: number
+}
