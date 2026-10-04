@@ -10,5 +10,6 @@ export const ENDPOINTS = {
   getSummary: (meetingId: number) => `/meetings/${meetingId}/bill-log`,
   getSettlement: (meetingId: number) => `/meetings/${meetingId}/bill-log/settlement-requests`,
   getBills: (meetingId: number) => `/meetings/${meetingId}/bill-log/bills`,
+  getBillDetail: (billId: number) => `/bills/${billId}`,
 }
 } as const;

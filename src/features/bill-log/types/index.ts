@@ -87,3 +87,28 @@ export type Bill = {
   payerNickname: string
   totalAmount: number
 }
+
+export type BillDetailResponse = {
+  billId: number
+  dayNumber: number
+  paymentDate: string
+  title: string
+  payerNickname: string
+  settlementMethod: string
+  items: BillItem[]
+  totalAmount: number
+  shares: BillShare[]
+}
+
+export type BillItem = {
+  name: string
+  amount: number
+}
+
+export type BillShare = {
+  meetingParticipantId: number
+  nickname: string
+  profileImageUrl: string | null
+  amount: number
+  payer: boolean
+}
