@@ -1,23 +1,24 @@
 import Profile from "@/components/ui/Profile";
+import { type SettlementParticipant } from "../types";
 
 interface SettlementStatusItemProps {
-  fromName: string;
-  toName: string;
-  amount: string;
+  sender: SettlementParticipant;
+  receiver: SettlementParticipant;
+  amount: number;
   avatarUrl?: string;
   onSendNotification: () => void;
-  status: "request" | "pending" | "completed";
+  status: "request" | "PENDING" | "COMPLETED"
 }
 
 const buttonStyleByStatus = {
   request: { bg: "bg-main-mint", label: "알림 보내기" },
-  pending: { bg: "bg-main-black", label: "완료로 표시" },
-  completed: { bg: "bg-sub-gray-3", label: "정산 완료" },
+  PENDING: { bg: "bg-main-black", label: "완료로 표시" },
+  COMPLETED: { bg: "bg-sub-gray-3", label: "정산 완료" },
 };
 
 export default function SettlementStatusItem({
-  fromName,
-  toName,
+  sender,
+  receiver,
   amount,
   onSendNotification,
   status,
@@ -28,7 +29,7 @@ export default function SettlementStatusItem({
         <Profile width={24} height={24} />
         <div className="flex flex-col gap-1">
           <p className="pretendard-m-16 text-sub-gray-1">
-            {fromName} → {`${toName}(나)`}
+            {sender} → {`${receiver}(나)`}
           </p>
           <p className="pretendard-sb-18 text-sub-black">{amount}</p>
         </div>

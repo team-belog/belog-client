@@ -13,7 +13,8 @@ import TabBar from "@/components/ui/TabBar";
 import Button from "@/components/ui/Button";
 import SettlementStatusTab from "@/features/bill-log/components/tab/SettlementStatusTab";
 import PaymentHistoryTab from "@/features/bill-log/components/tab/PaymentHistoryTab";
-import { useGetBillLogSummary } from "@/features/bill-log/hooks/useBillLog";
+
+import { useGetBillLogSummary } from "@/features/bill-log/hooks/useBillLogSummary";
 
 export default function BillLogPage() {
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -21,7 +22,8 @@ export default function BillLogPage() {
 
   const searchParams = useSearchParams()
   const meetingId = Number(searchParams.get("meetingId"))
-  const { data, isLoading } = useGetBillLogSummary(meetingId)
+
+  const { data, isLoading } = useGetBillLogSummary(meetingId)  
   const totalParticipantCount = (data?.completedParticipantCount ?? 0) + (data?.pendingParticipantCount ?? 0)
 
   if (isLoading) return <div className="flex min-h-screen items-center justify-center">로딩 중...</div>;
@@ -51,7 +53,7 @@ export default function BillLogPage() {
               />
               <ProgressBar current={data.pendingParticipantCount} total={totalParticipantCount} />
               <TabBar tabs={["정산 현황", "결제 내역"]} activeIndex={activeTab} onChange={setActiveTab} />
-              {activeTab === 0 ? <SettlementStatusTab /> : <PaymentHistoryTab />}
+              {activeTab === 0 ? <SettlementStatusTab pendingParticipantCount={data.pendingParticipantCount} totalSpentAmount={data.totalSpentAmount} /> : <PaymentHistoryTab />}
             </div>
           )}
         </div>
