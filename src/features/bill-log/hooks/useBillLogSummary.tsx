@@ -5,6 +5,6 @@ export function useGetBillLogSummary(meetingId: number) {
     return useQuery({
         queryKey: ["billLog", meetingId],
         queryFn: () => getBillLogSummary(meetingId),
-        enabled: !!meetingId
-    })
+        enabled: !!meetingId,
+    });
 }
