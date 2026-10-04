@@ -1,7 +1,7 @@
 import { api } from "@/lib/axios";
 import { ENDPOINTS } from "@/constants/endpoints";
 import { ApiResponse } from "@/lib/apiError";
-import { BillLogResponse, BillsRequest, BillsResponse } from "../types";
+import { BillLogResponse, BillsRequest, BillsResponse, BillDetailResponse } from "../types";
 import { type SettlementRequests } from "../types";
 import { SettlementResponse } from "../types";
 
@@ -25,6 +25,13 @@ export async function getBills(params:BillsRequest): Promise<BillsResponse> {
     const { data } = await api.get<ApiResponse<BillsResponse>>(
         ENDPOINTS.billLog.getBills(params.meetingId),
         { params: { cursor: params.cursorDate, size: params.size } }
+    );
+    return data.data;
+}
+
+export async function getBillDetail(billId: number): Promise<BillDetailResponse> {
+    const { data } = await api.get<ApiResponse<BillDetailResponse>>(
+        ENDPOINTS.billLog.getBillDetail(billId)
     );
     return data.data;
 }
