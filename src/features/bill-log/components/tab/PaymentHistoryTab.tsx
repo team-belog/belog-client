@@ -1,21 +1,33 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useGetBills } from "../../hooks/useGetBills";
 
 import DailyPaymentGroup from "../DailyPaymentGroup";
-import { DUMMY_DAILY_PAYMENTS } from "@/features/bill-log/constants/dummy";
 
 export default function PaymentHistoryTab() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const meetingId = Number(searchParams.get("meetingId"));
+  const { data, isLoading } = useGetBills({ meetingId, cursorDate: undefined, size: 10 }); 
 
+  if (isLoading) return <div className="flex justify-center py-10">로딩 중...</div>;
+  
   return (
     <div className="flex flex-col">
-      {DUMMY_DAILY_PAYMENTS.map((group) => (
+      {data?.days?.map((group) => (
         <DailyPaymentGroup
-          key={group.date}
-          date={group.date}
-          totalAmount={group.totalAmount}
-          items={group.items}
+          key={group.dayNumber}
+          date={`Day ${group.dayNumber} (${group.paymentDate})`}
+          totalAmount={`${group.dailyTotalAmount}원`}
+          items={group.bills.map(bill => ({
+            id: bill.billId,
+            thumbnailUrl: "",
+            name: bill.title,
+            amount: `${bill.totalAmount}원`,
+            payer: bill.payerNickname,
+          }))}
           onItemClick={(id) => router.push(`/bill-log/${id}`)}
         />
       ))}
