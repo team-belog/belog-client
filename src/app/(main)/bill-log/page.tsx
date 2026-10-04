@@ -14,7 +14,7 @@ import Button from "@/components/ui/Button";
 import SettlementStatusTab from "@/features/bill-log/components/tab/SettlementStatusTab";
 import PaymentHistoryTab from "@/features/bill-log/components/tab/PaymentHistoryTab";
 
-import { useGetBillLogSummary } from "@/features/bill-log/hooks/useBillLogSummary";
+import { useGetBillLogSummary } from "@/features/bill-log/hooks/useGetBillLogSummary";
 
 export default function BillLogPage() {
   const [activeTab, setActiveTab] = useState<number>(0);
