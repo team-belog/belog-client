@@ -14,6 +14,8 @@ export default function SettlementStatusTab({ pendingParticipantCount, totalSpen
   const { data, isLoading } = useGetSettlement({ meetingId, cursor: undefined, size: 20 }
   )
   
+  if (isLoading) return <div className="flex justify-center py-10">로딩 중...</div>;
+
   return (
     <div>
       <TextLayout left={`정산 진행중인 인원 ${pendingParticipantCount}명`} right={`${totalSpentAmount}원`} />
