@@ -6,6 +6,7 @@ import Divider from "@/components/layout/Divider";
 import Toggle from "@/components/ui/Toggle";
 import Receipt from "@/features/bill-log/components/Receipt";
 import { useGetBillDetail } from "@/features/bill-log/hooks/useGetBillDetail";
+import { BILL_SPLIT_LABEL } from "@/features/bill-log/constants/billLog";
 
 export default function BillDetailPage() {
   const params = useParams()
@@ -19,12 +20,12 @@ export default function BillDetailPage() {
     <main className="">
       <BackHeader title="영수증" />
       <Divider />
-      <div className="flex flex-col gap-6 p-4 pt-5">
+      <div className="flex flex-col gap-6 p-4 pt-5 pb-[58px]">
         <Toggle label={`Day ${data.dayNumber} (${data.paymentDate})`} variant="outlined" />
         <Receipt
           title={data.title}
           payerNickname={data.payerNickname}
-          settlementMethod={data.settlementMethod}
+          settlementMethod={BILL_SPLIT_LABEL[data.settlementMethod]}
           items={data.items}
           totalAmount={data.totalAmount}
           shares={data.shares}

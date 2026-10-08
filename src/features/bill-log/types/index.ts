@@ -94,7 +94,7 @@ export type BillDetailResponse = {
   paymentDate: string
   title: string
   payerNickname: string
-  settlementMethod: string
+  settlementMethod: BillSplitType
   items: BillItem[]
   totalAmount: number
   shares: BillShare[]
@@ -112,3 +112,5 @@ export type BillShare = {
   amount: number
   payer: boolean
 }
+
+export type BillSplitType = "EQUAL_SPLIT" | "ITEM_TAG" | "MANUAL"
