@@ -8,5 +8,7 @@ export const ENDPOINTS = {
     onboarding: "/users/me/onboarding",
     profileImageUploadUrl: "/users/me/profile-image/upload-url",
     nicknameAvailability: "/users/nickname/availability",
+    myProfile: "/users/me/profile",
+    updateProfile: "/users/me/profile",
   },
 } as const;

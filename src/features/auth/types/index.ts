@@ -14,6 +14,20 @@ export type OnboardingRequest = {
   profileImageObjectKey?: string
 }
 
+export type ProfileImageType = "CUSTOM" | "DEFAULT"
+
+export type UpdateProfileRequest = {
+  nickname?: string
+  profileImageObjectKey?: string
+  profileImageType?: ProfileImageType
+}
+
+export type MyProfileResponse = {
+  nickname: string
+  email: string
+  profileImageUrl: string | null
+}
+
 export type NicknameAvailabilityResponse = {
   nickname: string
   available: boolean
