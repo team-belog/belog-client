@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useCheckNicknameAvailability } from "@/features/auth/hooks/useCheckNicknameAvailability";
 
 const NICKNAME_MAX = 5;
 
@@ -23,6 +24,7 @@ export default function NicknameField({
   onStatusChange,
 }: NicknameFieldProps) {
   const [status, setStatus] = useState<NicknameStatus>("idle");
+  const { mutate: checkNickname, isPending } = useCheckNicknameAvailability();
 
   const updateStatus = (next: NicknameStatus) => {
     setStatus(next);
@@ -31,15 +33,14 @@ export default function NicknameField({
 
   const handleChange = (next: string) => {
     onChange(next);
-    if (status !== "idle") updateStatus("idle"); // 값이 바뀌면 재확인 필요
+    if (status !== "idle") updateStatus("idle");
   };
 
-  const handleCheck = async () => {
+  const handleCheck = () => {
     if (value.length === 0) return;
-    // TODO: GET /users/nickname/check?value= 연결
-    // const { isDuplicated } = await checkNickname(value);
-    const isDuplicated = false;
-    updateStatus(isDuplicated ? "unavailable" : "available");
+    checkNickname(value, {
+      onSuccess: ({ available }) => updateStatus(available ? "available" : "unavailable"),
+    });
   };
 
   return (
@@ -62,10 +63,10 @@ export default function NicknameField({
         <button
           type="button"
           onClick={handleCheck}
-          disabled={value.length === 0}
+          disabled={value.length === 0 || isPending}
           className="pretendard-m-15 w-[84px] shrink-0 rounded-[12px] border border-sub-gray-3 text-main-black disabled:opacity-40"
         >
-          중복확인
+          {isPending ? "확인 중" : "중복확인"}
         </button>
       </div>
 
