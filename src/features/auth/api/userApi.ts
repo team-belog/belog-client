@@ -21,6 +21,10 @@ export async function getMyProfile(): Promise<MyProfileResponse> {
     return data.data;
 }
 
+export async function withdrawAccount(): Promise<void> {
+    await api.delete<ApiResponse<null>>(ENDPOINTS.user.withdraw);
+}
+
 export async function getMyBankAccount(): Promise<BankAccountResponse> {
     const { data } = await api.get<ApiResponse<BankAccountResponse>>(ENDPOINTS.user.bankAccount);
     return data.data;

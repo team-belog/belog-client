@@ -11,5 +11,6 @@ export const ENDPOINTS = {
     myProfile: "/users/me/profile",
     updateProfile: "/users/me/profile",
     bankAccount: "/users/me/bank-account",
+    withdraw: "/users/me",
   },
 } as const;

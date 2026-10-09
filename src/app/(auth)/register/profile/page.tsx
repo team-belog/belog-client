@@ -114,7 +114,15 @@ export default function RegisterProfilePage() {
       <Button
         onClick={handleSubmit}
         variant="primary"
-        disabled={isPending}
+        disabled={
+          !name ||
+          !nickname ||
+          nicknameStatus !== "available" ||
+          !bank ||
+          !accountNumber ||
+          !accountHolder ||
+          isPending
+        }
         className="fixed bottom-0 left-0 right-0 z-20"
       >
         {isPending ? "처리 중..." : "시작하기"}
