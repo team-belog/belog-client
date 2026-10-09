@@ -10,5 +10,6 @@ export const ENDPOINTS = {
     nicknameAvailability: "/users/nickname/availability",
     myProfile: "/users/me/profile",
     updateProfile: "/users/me/profile",
+    bankAccount: "/users/me/bank-account",
   },
 } as const;

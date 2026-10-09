@@ -22,6 +22,19 @@ export type UpdateProfileRequest = {
   profileImageType?: ProfileImageType
 }
 
+export type BankAccountResponse = {
+  bankCode: BankCode
+  bankName: string
+  accountNumber: string
+  accountHolderName: string
+}
+
+export type UpdateBankAccountRequest = {
+  bankCode: BankCode
+  accountNumber: string
+  accountHolderName: string
+}
+
 export type MyProfileResponse = {
   nickname: string
   email: string
