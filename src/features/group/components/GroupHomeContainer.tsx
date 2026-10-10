@@ -6,6 +6,7 @@ import GroupHomeView from "@/features/group/components/GroupHomeView";
 import { useGroupDetail } from "@/features/group/hooks/useGroupDetail";
 import { useGroupMembers } from "@/features/group/hooks/useGroupMembers";
 import { usePastMeetings } from "@/features/group/hooks/usePastMeetings";
+import { useUpdateGroupCoverImage } from "@/features/group/hooks/useUpdateGroupCoverImage";
 
 export default function GroupHomeContainer({ groupId }: { groupId: number }) {
   const { data, isPending, isError, error, refetch } = useGroupDetail(groupId);
@@ -17,6 +18,7 @@ export default function GroupHomeContainer({ groupId }: { groupId: number }) {
     isFetchingNextPage,
     fetchNextPage,
   } = usePastMeetings(groupId);
+  const updateCoverImage = useUpdateGroupCoverImage(groupId);
 
   const ownerNickname = members?.items.find(
     (member) => member.role === "OWNER",
@@ -56,6 +58,9 @@ export default function GroupHomeContainer({ groupId }: { groupId: number }) {
       pastMeetings={pastMeetings}
       hasMorePastMeetings={hasNextPage}
       onLoadMorePastMeetings={handleLoadMorePastMeetings}
+      isUpdatingCoverImage={updateCoverImage.isPending}
+      coverImageErrorMessage={updateCoverImage.error?.message}
+      onChangeCoverImage={updateCoverImage.mutate}
     />
   );
 }

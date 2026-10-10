@@ -11,5 +11,6 @@ export const ENDPOINTS = {
     detail: (groupId: number) => `/groups/${groupId}`,
     members: (groupId: number) => `/groups/${groupId}/members`,
     pastMeetings: (groupId: number) => `/groups/${groupId}/meetings/past`,
+    coverImage: (groupId: number) => `/groups/${groupId}/cover-image`,
   },
 } as const;

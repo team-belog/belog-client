@@ -1,3 +1,6 @@
+"use client";
+
+import { useRef } from "react";
 import Image from "next/image";
 
 import ImageUploadIcon from "@/components/ui/ImageUploadIcon";
@@ -6,15 +9,25 @@ interface GroupCoverSectionProps {
   name: string;
   coverImageUrl?: string;
   canEditCoverImage: boolean;
-  onChangeCoverImage?: () => void;
+  isUpdatingCoverImage?: boolean;
+  onChangeCoverImage?: (file: File) => void;
 }
 
 export default function GroupCoverSection({
   name,
   coverImageUrl,
   canEditCoverImage,
+  isUpdatingCoverImage = false,
   onChangeCoverImage,
 }: GroupCoverSectionProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // 같은 파일 다시 선택해도 onChange 발생하도록
+    if (file) onChangeCoverImage?.(file);
+  };
+
   return (
     <div className="relative h-[203px] w-full overflow-hidden bg-main-cool-gray">
       {coverImageUrl && <Image src={coverImageUrl} alt="" fill className="object-cover" />}
@@ -26,14 +39,26 @@ export default function GroupCoverSection({
       </div>
 
       {canEditCoverImage && (
-        <button
-          type="button"
-          onClick={onChangeCoverImage}
-          className="absolute bottom-[14px] right-4 flex items-center gap-[5px]"
-        >
-          <span className="pretendard-m-12 text-sub-gray-3">이미지 변경</span>
-          <ImageUploadIcon width={25} height={25} className="text-sub-gray-3" />
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={isUpdatingCoverImage}
+            className="absolute bottom-[14px] right-4 flex items-center gap-[5px]"
+          >
+            <span className="pretendard-m-12 text-sub-gray-3">
+              {isUpdatingCoverImage ? "변경 중..." : "이미지 변경"}
+            </span>
+            <ImageUploadIcon width={25} height={25} className="text-sub-gray-3" />
+          </button>
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleFile}
+            className="hidden"
+          />
+        </>
       )}
     </div>
   );

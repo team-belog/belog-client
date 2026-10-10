@@ -25,6 +25,9 @@ interface GroupHomeViewProps {
   pastMeetings?: PastMeetingDto[];
   hasMorePastMeetings: boolean;
   onLoadMorePastMeetings: () => void;
+  isUpdatingCoverImage: boolean;
+  coverImageErrorMessage?: string;
+  onChangeCoverImage: (file: File) => void;
 }
 
 export default function GroupHomeView({
@@ -33,6 +36,9 @@ export default function GroupHomeView({
   pastMeetings,
   hasMorePastMeetings,
   onLoadMorePastMeetings,
+  isUpdatingCoverImage,
+  coverImageErrorMessage,
+  onChangeCoverImage,
 }: GroupHomeViewProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
@@ -75,7 +81,14 @@ export default function GroupHomeView({
         name={group.name}
         coverImageUrl={group.coverImageUrl ?? undefined}
         canEditCoverImage={group.canEditCoverImage}
+        isUpdatingCoverImage={isUpdatingCoverImage}
+        onChangeCoverImage={onChangeCoverImage}
       />
+      {coverImageErrorMessage && (
+        <p className="pretendard-m-12 px-4 pt-2 text-red-500">
+          {coverImageErrorMessage}
+        </p>
+      )}
 
       <TabBar tabs={TABS} activeIndex={activeTab} onChange={setActiveTab} />
 

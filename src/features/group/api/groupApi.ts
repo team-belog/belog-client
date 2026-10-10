@@ -14,6 +14,7 @@ import type {
   PastMeetingsData,
   PastMeetingsParams,
   GroupMembersParams,
+  UpdateGroupCoverImageRequest,
 } from "@/features/group/types";
 
 export async function getGroups(params: GroupListParams = {}) {
@@ -60,6 +61,13 @@ export async function uploadFileToS3(
       "이미지 업로드에 실패했습니다.",
     );
   }
+}
+
+export async function updateGroupCoverImage(
+  groupId: number,
+  body: UpdateGroupCoverImageRequest,
+) {
+  await api.put(ENDPOINTS.group.coverImage(groupId), body);
 }
 
 export async function getGroupDetail(groupId: number) {

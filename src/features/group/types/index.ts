@@ -40,6 +40,10 @@ export type CreateGroupData = {
 
 export type CoverImageContentType = "image/jpeg" | "image/png" | "image/webp";
 
+export type UpdateGroupCoverImageRequest = {
+  coverImageObjectKey: string;
+};
+
 export type CoverImageUploadUrlRequest = {
   contentType: CoverImageContentType;
   fileSize: number;
