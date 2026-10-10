@@ -5,7 +5,7 @@ import { PostLogCalendarResponse } from "../types";
 
 export async function getPostLogCalendar(yearMonth: string): Promise<PostLogCalendarResponse> {
     const { data } = await api.get<ApiResponse<PostLogCalendarResponse>>(
-        ENDPOINTS.my.postLogCalendar,
+        ENDPOINTS.user.postLogCalendar,
         { params: { yearMonth } }
     );
     return data.data;

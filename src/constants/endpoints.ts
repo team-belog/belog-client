@@ -12,8 +12,6 @@ export const ENDPOINTS = {
     updateProfile: "/users/me/profile",
     bankAccount: "/users/me/bank-account",
     withdraw: "/users/me",
-  },
-  my: {
     postLogCalendar: "/users/me/post-logs/calendar",
   },
   postLog: {
