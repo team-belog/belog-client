@@ -10,6 +10,9 @@ export const ENDPOINTS = {
   getSummary: (meetingId: number) => `/meetings/${meetingId}/bill-log`,
   getSettlement: (meetingId: number) => `/meetings/${meetingId}/bill-log/settlement-requests`,
   getBills: (meetingId: number) => `/meetings/${meetingId}/bill-log/bills`,
+  createBill: (meetingId: number) => `/meetings/${meetingId}/bill-log/bills`,
   getBillDetail: (billId: number) => `/bills/${billId}`,
+  getUploadUrl: (meetingId: number) => `/meetings/${meetingId}/bill-log/receipt-images/upload-url`,
+  analyzeReceipt: (meetingId: number) => `/meetings/${meetingId}/bill-log/receipt-analysis`,
 }
 } as const;

@@ -114,3 +114,55 @@ export type BillShare = {
 }
 
 export type BillSplitType = "EQUAL_SPLIT" | "ITEM_TAG" | "MANUAL"
+
+export type CreateBillItem = {
+  name: string
+  amount: number
+}
+
+export type CreateBillShare = {
+  participantMemberId: number
+  amount: number
+}
+
+export type CreateBillRequest = {
+  title: string
+  payerMemberId: number
+  totalAmount: number
+  splitType: BillSplitType
+  items: CreateBillItem[]
+  shares: CreateBillShare[]
+}
+
+export type UploadUrlRequest = {
+  contentType: string
+  fileSize: number
+}
+
+export type UploadUrlResponse = {
+  objectKey: string
+  uploadUrl: string
+  method: string
+  requiredHeaders: {
+    "Content-Type": string
+    "Content-Length": string
+  }
+  expiresAt: string
+}
+
+export type ReceiptAnalysisRequest = {
+  receiptImageObjectKey: string
+}
+
+export type ReceiptAnalysisItem = {
+  name: string
+  amount: number
+}
+
+export type ReceiptAnalysisResponse = {
+  title: string
+  paymentDate: string
+  items: ReceiptAnalysisItem[]
+  totalAmount: number
+  requiresConfirmation: boolean
+}
