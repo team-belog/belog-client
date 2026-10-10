@@ -10,6 +10,19 @@ export type GroupSummary = {
 
 export type GroupMemberRole = "leader" | "member";
 
+export type GroupMemberApiRole = "OWNER" | "MEMBER";
+
+export type GroupMemberItem = {
+  groupMemberId: number;
+  nickname: string;
+  profileImageUrl: string | null;
+  role: GroupMemberApiRole;
+};
+
+export type GroupMembersResponse = {
+  items: GroupMemberItem[];
+};
+
 export type GroupMember = {
   id: number;
   name: string;
