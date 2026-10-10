@@ -58,17 +58,6 @@ export type CreateGroupInput = {
   coverImage: File | null;
 };
 
-export type GroupSummary = {
-  id: number;
-  name: string;
-  leaderName: string;
-  memberCount: number;
-  isPinned: boolean;
-  canDelete: boolean;
-  coverImageUrl?: string;
-  memberAvatarUrls?: string[];
-};
-
 export type GroupDetailData = {
   groupId: number;
   name: string;
@@ -135,30 +124,4 @@ export type PastMeetingDto = {
   name: string;
   startDate: string;
   endDate: string;
-};
-
-export type PendingMeetup = {
-  id: number;
-  title: string;
-  members: GroupMember[];
-  memberLimit: number;
-  inviteCode: string;
-};
-
-export type PastMeetup = {
-  id: number;
-  title: string;
-  date: string;
-  thumbnailUrl?: string;
-};
-
-export type GroupDetail = {
-  id: number;
-  name: string;
-  description: string;
-  coverImageUrl?: string;
-  members: GroupMember[];
-  pendingMeetup?: PendingMeetup;
-  ongoingMeetup?: PendingMeetup;
-  pastMeetups: PastMeetup[];
 };

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import GroupDeleteModal from "@/features/group/components/GroupDeleteModal";
 import GroupListCard from "@/features/group/components/GroupListCard";
 import { useGroups } from "@/features/group/hooks/useGroups";
-import type { GroupSummary } from "@/features/group/types";
+import type { GroupListItemDto } from "@/features/group/types";
 
 export default function GroupList() {
   const {
@@ -21,7 +21,9 @@ export default function GroupList() {
   // 고정/삭제 API 연동 전까지 화면 내 임시 상태로만 반영
   const [pinOverrides, setPinOverrides] = useState<Record<number, boolean>>({});
   const [deletedIds, setDeletedIds] = useState<number[]>([]);
-  const [deleteTarget, setDeleteTarget] = useState<GroupSummary | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<GroupListItemDto | null>(
+    null,
+  );
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -57,25 +59,25 @@ export default function GroupList() {
     );
   }
 
-  const groups = data.groups
-    .filter((group) => !deletedIds.includes(group.id))
+  const groups = data
+    .filter((group) => !deletedIds.includes(group.groupId))
     .map((group) => ({
       ...group,
-      isPinned: pinOverrides[group.id] ?? group.isPinned,
+      pinned: pinOverrides[group.groupId] ?? group.pinned,
     }));
 
-  const handleTogglePin = (target: GroupSummary) => {
-    setPinOverrides((prev) => ({ ...prev, [target.id]: !target.isPinned }));
+  const handleTogglePin = (target: GroupListItemDto) => {
+    setPinOverrides((prev) => ({ ...prev, [target.groupId]: !target.pinned }));
   };
 
   const handleConfirmDelete = () => {
     if (!deleteTarget) return;
-    setDeletedIds((prev) => [...prev, deleteTarget.id]);
+    setDeletedIds((prev) => [...prev, deleteTarget.groupId]);
     setDeleteTarget(null);
   };
 
   const sortedGroups = [...groups].sort(
-    (a, b) => Number(b.isPinned) - Number(a.isPinned),
+    (a, b) => Number(b.pinned) - Number(a.pinned),
   );
 
   if (sortedGroups.length === 0) {
@@ -90,7 +92,7 @@ export default function GroupList() {
     <div className="flex flex-col gap-[15px] pb-4 pt-[25px]">
       {sortedGroups.map((group) => (
         <GroupListCard
-          key={group.id}
+          key={group.groupId}
           group={group}
           onTogglePin={handleTogglePin}
           onDelete={setDeleteTarget}
