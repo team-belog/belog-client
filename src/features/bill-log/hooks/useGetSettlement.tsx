@@ -1,11 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getSettlement } from "../api/billLogApi";
-import { SettlementRequests } from "../types";
 
-export function useGetSettlement(params: SettlementRequests) {
-    return useQuery({
-        queryKey: ["settlement", params.meetingId],
-        queryFn: () => getSettlement(params),
-        enabled: !!params.meetingId,
-    });
+export function useGetSettlement(meetingId: number) {
+  return useInfiniteQuery({
+    queryKey: ["settlement", meetingId],
+    queryFn: ({ pageParam }) => getSettlement({ meetingId, cursor: pageParam, size: 20 }),
+    getNextPageParam: (lastPage) => lastPage.hasNext ? lastPage.nextCursor : undefined,
+    initialPageParam: undefined as string | undefined,
+    enabled: !!meetingId,
+  });
 }

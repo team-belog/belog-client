@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import TextLayout from "@/components/ui/TextLayout";
 import SettlementStatusItem from "../SettlementStatusItem";
@@ -11,16 +12,29 @@ interface SettlementStatusTabProps {
 export default function SettlementStatusTab({ pendingParticipantCount, totalSpentAmount}:SettlementStatusTabProps) {
   const searchParams = useSearchParams();
   const meetingId = Number(searchParams.get("meetingId"))
-  const { data, isLoading } = useGetSettlement({ meetingId, cursor: undefined, size: 20 }
-  )
+  const { data, isLoading, fetchNextPage, hasNextPage } = useGetSettlement(meetingId)
+
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const allItems = data?.pages.flatMap((page) => page.items ?? []);
   
+  useEffect(() => {
+      const observer = new IntersectionObserver((entries) => {
+        if(entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage()
+        }
+      }) 
+      if (bottomRef.current)
+        observer.observe(bottomRef.current)
+      return () => observer.disconnect();
+    }, [hasNextPage, fetchNextPage])
+
   if (isLoading) return <div className="flex justify-center py-10">로딩 중...</div>;
 
   return (
     <div>
       <TextLayout left={`정산 진행중인 인원 ${pendingParticipantCount}명`} right={`${totalSpentAmount}원`} />
       <div className="flex flex-col gap-4 px-4">
-        {data?.items?.map((item) => (
+        {allItems?.map((item) => (
           <SettlementStatusItem
             key={item.settlementRequestId}
             sender={item.sender}
@@ -31,6 +45,7 @@ export default function SettlementStatusTab({ pendingParticipantCount, totalSpen
           />
         ))}
       </div>
+      <div ref={bottomRef} />
     </div>
   );
 }

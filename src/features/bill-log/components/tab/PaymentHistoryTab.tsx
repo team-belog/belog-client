@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useGetBills } from "../../hooks/useGetBills";
@@ -10,13 +11,27 @@ export default function PaymentHistoryTab() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const meetingId = Number(searchParams.get("meetingId"));
-  const { data, isLoading } = useGetBills({ meetingId, cursorDate: undefined, size: 10 }); 
+  const { data, isLoading, fetchNextPage, hasNextPage } = useGetBills(meetingId);
 
-  if (isLoading) return <div className="flex justify-center py-10">로딩 중...</div>;
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const allDays = data?.pages.flatMap((page) => page.days ?? []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if(entries[0].isIntersecting && hasNextPage) {
+        fetchNextPage()
+      }
+    }) 
+    if (bottomRef.current)
+      observer.observe(bottomRef.current)
+    return () => observer.disconnect();
+  }, [hasNextPage, fetchNextPage])
+
+    if (isLoading) return <div className="flex justify-center py-10">로딩 중...</div>;
   
   return (
     <div className="flex flex-col">
-      {data?.days?.map((group) => (
+      {allDays?.map((group) => (
         <DailyPaymentGroup
           key={group.dayNumber}
           date={`Day ${group.dayNumber} (${group.paymentDate})`}
@@ -31,6 +46,7 @@ export default function PaymentHistoryTab() {
           onItemClick={(id) => router.push(`/bill-log/${id}`)}
         />
       ))}
+      <div ref={bottomRef} />
     </div>
   );
 }
