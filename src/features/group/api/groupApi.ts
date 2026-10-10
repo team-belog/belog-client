@@ -10,6 +10,10 @@ import type {
   CreateGroupRequest,
   GroupListData,
   GroupListParams,
+  GroupMembersData,
+  PastMeetingsData,
+  PastMeetingsParams,
+  GroupMembersParams,
 } from "@/features/group/types";
 
 export async function getGroups(params: GroupListParams = {}) {
@@ -61,6 +65,28 @@ export async function uploadFileToS3(
 export async function getGroupDetail(groupId: number) {
   const { data } = await api.get<ApiResponse<GroupDetailData>>(
     ENDPOINTS.group.detail(groupId),
+  );
+  return data.data;
+}
+
+export async function getGroupMembers(
+  groupId: number,
+  params: GroupMembersParams = {},
+) {
+  const { data } = await api.get<ApiResponse<GroupMembersData>>(
+    ENDPOINTS.group.members(groupId),
+    { params },
+  );
+  return data.data;
+}
+
+export async function getPastMeetings(
+  groupId: number,
+  params: PastMeetingsParams = {},
+) {
+  const { data } = await api.get<ApiResponse<PastMeetingsData>>(
+    ENDPOINTS.group.pastMeetings(groupId),
+    { params },
   );
   return data.data;
 }

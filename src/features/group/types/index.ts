@@ -104,6 +104,39 @@ export type GroupMember = {
   avatarUrl?: string;
 };
 
+export type GroupMembersParams = {
+  query?: string;
+};
+
+export type GroupMembersData = {
+  items: GroupMemberDto[];
+};
+
+export type GroupMemberDto = {
+  groupMemberId: number;
+  nickname: string;
+  profileImageUrl: string | null;
+  role: "OWNER" | "MEMBER";
+};
+
+export type PastMeetingsParams = {
+  cursor?: number;
+  size?: number;
+};
+
+export type PastMeetingsData = {
+  items: PastMeetingDto[];
+  nextCursor: number | null;
+  hasNext: boolean;
+};
+
+export type PastMeetingDto = {
+  meetingId: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+};
+
 export type PendingMeetup = {
   id: number;
   title: string;
