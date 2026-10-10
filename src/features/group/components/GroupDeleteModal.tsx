@@ -1,10 +1,18 @@
 interface GroupDeleteModalProps {
   groupName: string;
+  isDeleting?: boolean;
+  errorMessage?: string;
   onCancel: () => void;
   onConfirm: () => void;
 }
 
-export default function GroupDeleteModal({ groupName, onCancel, onConfirm }: GroupDeleteModalProps) {
+export default function GroupDeleteModal({
+  groupName,
+  isDeleting = false,
+  errorMessage,
+  onCancel,
+  onConfirm,
+}: GroupDeleteModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65">
       <div className="relative h-[200px] w-[310px] rounded-[12px] bg-main-white">
@@ -14,6 +22,12 @@ export default function GroupDeleteModal({ groupName, onCancel, onConfirm }: Gro
             &quot;{groupName}&quot; 삭제하기
           </p>
         </div>
+
+        {errorMessage && (
+          <p className="pretendard-m-12 absolute left-5 right-5 top-[106px] text-center text-red-500">
+            {errorMessage}
+          </p>
+        )}
 
         <div className="absolute left-[20px] top-[136px] flex gap-[10px]">
           <button
@@ -26,9 +40,10 @@ export default function GroupDeleteModal({ groupName, onCancel, onConfirm }: Gro
           <button
             type="button"
             onClick={onConfirm}
+            disabled={isDeleting}
             className="pretendard-m-15 flex w-[130px] items-center justify-center rounded-[8px] border border-main-mint bg-main-mint py-[10px] text-main-white"
           >
-            삭제
+            {isDeleting ? "삭제 중..." : "삭제"}
           </button>
         </div>
       </div>
