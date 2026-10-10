@@ -19,4 +19,15 @@ export const ENDPOINTS = {
   postLog: {
     getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,
   },
+  group: {
+    list: "/groups",
+    create: "/groups",
+    coverImageUploadUrl: "/groups/cover-image/upload-url",
+    detail: (groupId: number) => `/groups/${groupId}`,
+    delete: (groupId: number) => `/groups/${groupId}`,
+    pin: (groupId: number) => `/groups/${groupId}/pin`,
+    members: (groupId: number) => `/groups/${groupId}/members`,
+    pastMeetings: (groupId: number) => `/groups/${groupId}/meetings/past`,
+    coverImage: (groupId: number) => `/groups/${groupId}/cover-image`,
+  },
 } as const;
