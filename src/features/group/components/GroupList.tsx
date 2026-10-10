@@ -6,7 +6,7 @@ import GroupDeleteModal from "@/features/group/components/GroupDeleteModal";
 import GroupListCard from "@/features/group/components/GroupListCard";
 import { useDeleteGroup } from "@/features/group/hooks/useDeleteGroup";
 import { useGroups } from "@/features/group/hooks/useGroups";
-import { usePinGroup } from "@/features/group/hooks/usePinGroup";
+import { useToggleGroupPin } from "@/features/group/hooks/useToggleGroupPin";
 import type { GroupListItemDto } from "@/features/group/types";
 
 export default function GroupList() {
@@ -21,9 +21,7 @@ export default function GroupList() {
     refetch,
   } = useGroups();
   const deleteGroup = useDeleteGroup();
-  const pinGroup = usePinGroup();
-  // TODO: 고정 해제 API 연동 전까지 해제만 화면 내 임시 상태로 반영
-  const [unpinnedIds, setUnpinnedIds] = useState<number[]>([]);
+  const toggleGroupPin = useToggleGroupPin();
   const [deleteTarget, setDeleteTarget] = useState<GroupListItemDto | null>(
     null,
   );
@@ -62,18 +60,11 @@ export default function GroupList() {
     );
   }
 
-  const groups = data.map((group) => ({
-    ...group,
-    pinned: group.pinned && !unpinnedIds.includes(group.groupId),
-  }));
-
   const handleTogglePin = (target: GroupListItemDto) => {
-    if (target.pinned) {
-      setUnpinnedIds((prev) => [...prev, target.groupId]);
-      return;
-    }
-    setUnpinnedIds((prev) => prev.filter((id) => id !== target.groupId));
-    pinGroup.mutate(target.groupId);
+    toggleGroupPin.mutate({
+      groupId: target.groupId,
+      pinned: !target.pinned,
+    });
   };
 
   const handleConfirmDelete = () => {
@@ -88,7 +79,7 @@ export default function GroupList() {
     deleteGroup.reset();
   };
 
-  const sortedGroups = [...groups].sort(
+  const sortedGroups = [...data].sort(
     (a, b) => Number(b.pinned) - Number(a.pinned),
   );
 

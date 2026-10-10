@@ -78,6 +78,10 @@ export async function pinGroup(groupId: number) {
   await api.put(ENDPOINTS.group.pin(groupId));
 }
 
+export async function unpinGroup(groupId: number) {
+  await api.delete(ENDPOINTS.group.pin(groupId));
+}
+
 export async function getGroupDetail(groupId: number) {
   const { data } = await api.get<ApiResponse<GroupDetailData>>(
     ENDPOINTS.group.detail(groupId),
