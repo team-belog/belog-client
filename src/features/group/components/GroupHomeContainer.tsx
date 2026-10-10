@@ -1,11 +1,30 @@
 "use client";
 
-import { useGroupDetail } from "@/features/group/hooks/useGroupDetail";
+import { useCallback } from "react";
+
 import GroupHomeView from "@/features/group/components/GroupHomeView";
-import { toGroupDetail } from "@/features/group/utils/groupMapper";
+import { useGroupDetail } from "@/features/group/hooks/useGroupDetail";
+import { useGroupMembers } from "@/features/group/hooks/useGroupMembers";
+import { usePastMeetings } from "@/features/group/hooks/usePastMeetings";
 
 export default function GroupHomeContainer({ groupId }: { groupId: number }) {
   const { data, isPending, isError, error, refetch } = useGroupDetail(groupId);
+  // 멤버와 지난 만남은 각자 로딩되며, 실패해도 그룹 홈은 그대로 보여준다
+  const { data: members } = useGroupMembers(groupId);
+  const {
+    data: pastMeetings,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = usePastMeetings(groupId);
+
+  const ownerNickname = members?.items.find(
+    (member) => member.role === "OWNER",
+  )?.nickname;
+
+  const handleLoadMorePastMeetings = useCallback(() => {
+    if (!isFetchingNextPage) fetchNextPage();
+  }, [isFetchingNextPage, fetchNextPage]);
 
   if (isPending) {
     return (
@@ -30,5 +49,13 @@ export default function GroupHomeContainer({ groupId }: { groupId: number }) {
     );
   }
 
-  return <GroupHomeView group={toGroupDetail(data)} />;
+  return (
+    <GroupHomeView
+      group={data}
+      ownerNickname={ownerNickname}
+      pastMeetings={pastMeetings}
+      hasMorePastMeetings={hasNextPage}
+      onLoadMorePastMeetings={handleLoadMorePastMeetings}
+    />
+  );
 }
