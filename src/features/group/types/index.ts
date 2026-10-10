@@ -53,6 +53,11 @@ export type CoverImageUploadUrlData = {
   expiresAt: string;
 };
 
+export type CreateGroupInput = {
+  name: string;
+  coverImage: File | null;
+};
+
 export type GroupSummary = {
   id: number;
   name: string;
