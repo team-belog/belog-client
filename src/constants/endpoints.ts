@@ -9,6 +9,7 @@ export const ENDPOINTS = {
     create: "/groups",
     coverImageUploadUrl: "/groups/cover-image/upload-url",
     detail: (groupId: number) => `/groups/${groupId}`,
+    delete: (groupId: number) => `/groups/${groupId}`,
     members: (groupId: number) => `/groups/${groupId}/members`,
     pastMeetings: (groupId: number) => `/groups/${groupId}/meetings/past`,
     coverImage: (groupId: number) => `/groups/${groupId}/cover-image`,

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import GroupDeleteModal from "@/features/group/components/GroupDeleteModal";
 import GroupListCard from "@/features/group/components/GroupListCard";
+import { useDeleteGroup } from "@/features/group/hooks/useDeleteGroup";
 import { useGroups } from "@/features/group/hooks/useGroups";
 import type { GroupListItemDto } from "@/features/group/types";
 
@@ -18,9 +19,9 @@ export default function GroupList() {
     isFetchingNextPage,
     refetch,
   } = useGroups();
-  // 고정/삭제 API 연동 전까지 화면 내 임시 상태로만 반영
+  const deleteGroup = useDeleteGroup();
+  // 고정 API 연동 전까지 화면 내 임시 상태로만 반영
   const [pinOverrides, setPinOverrides] = useState<Record<number, boolean>>({});
-  const [deletedIds, setDeletedIds] = useState<number[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<GroupListItemDto | null>(
     null,
   );
@@ -59,12 +60,10 @@ export default function GroupList() {
     );
   }
 
-  const groups = data
-    .filter((group) => !deletedIds.includes(group.groupId))
-    .map((group) => ({
-      ...group,
-      pinned: pinOverrides[group.groupId] ?? group.pinned,
-    }));
+  const groups = data.map((group) => ({
+    ...group,
+    pinned: pinOverrides[group.groupId] ?? group.pinned,
+  }));
 
   const handleTogglePin = (target: GroupListItemDto) => {
     setPinOverrides((prev) => ({ ...prev, [target.groupId]: !target.pinned }));
@@ -72,8 +71,14 @@ export default function GroupList() {
 
   const handleConfirmDelete = () => {
     if (!deleteTarget) return;
-    setDeletedIds((prev) => [...prev, deleteTarget.groupId]);
+    deleteGroup.mutate(deleteTarget.groupId, {
+      onSuccess: () => setDeleteTarget(null),
+    });
+  };
+
+  const handleCancelDelete = () => {
     setDeleteTarget(null);
+    deleteGroup.reset();
   };
 
   const sortedGroups = [...groups].sort(
@@ -104,7 +109,9 @@ export default function GroupList() {
       {deleteTarget && (
         <GroupDeleteModal
           groupName={deleteTarget.name}
-          onCancel={() => setDeleteTarget(null)}
+          isDeleting={deleteGroup.isPending}
+          errorMessage={deleteGroup.error?.message}
+          onCancel={handleCancelDelete}
           onConfirm={handleConfirmDelete}
         />
       )}

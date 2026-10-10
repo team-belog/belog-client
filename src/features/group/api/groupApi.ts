@@ -70,6 +70,10 @@ export async function updateGroupCoverImage(
   await api.put(ENDPOINTS.group.coverImage(groupId), body);
 }
 
+export async function deleteGroup(groupId: number) {
+  await api.delete(ENDPOINTS.group.delete(groupId));
+}
+
 export async function getGroupDetail(groupId: number) {
   const { data } = await api.get<ApiResponse<GroupDetailData>>(
     ENDPOINTS.group.detail(groupId),

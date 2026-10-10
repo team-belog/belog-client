@@ -28,6 +28,10 @@ interface GroupHomeViewProps {
   isUpdatingCoverImage: boolean;
   coverImageErrorMessage?: string;
   onChangeCoverImage: (file: File) => void;
+  isDeletingGroup: boolean;
+  deleteGroupErrorMessage?: string;
+  onDeleteGroup: () => void;
+  onCancelDeleteGroup: () => void;
 }
 
 export default function GroupHomeView({
@@ -39,6 +43,10 @@ export default function GroupHomeView({
   isUpdatingCoverImage,
   coverImageErrorMessage,
   onChangeCoverImage,
+  isDeletingGroup,
+  deleteGroupErrorMessage,
+  onDeleteGroup,
+  onCancelDeleteGroup,
 }: GroupHomeViewProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
@@ -55,9 +63,9 @@ export default function GroupHomeView({
     return () => observer.disconnect();
   }, [hasMorePastMeetings, onLoadMorePastMeetings]);
 
-  const handleConfirmDelete = () => {
+  const handleCancelDelete = () => {
     setIsDeleteModalOpen(false);
-    router.push("/group");
+    onCancelDeleteGroup();
   };
 
   return (
@@ -159,8 +167,10 @@ export default function GroupHomeView({
       {isDeleteModalOpen && (
         <GroupDeleteModal
           groupName={group.name}
-          onCancel={() => setIsDeleteModalOpen(false)}
-          onConfirm={handleConfirmDelete}
+          isDeleting={isDeletingGroup}
+          errorMessage={deleteGroupErrorMessage}
+          onCancel={handleCancelDelete}
+          onConfirm={onDeleteGroup}
         />
       )}
     </main>

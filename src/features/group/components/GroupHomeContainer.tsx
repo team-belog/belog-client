@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback } from "react";
+import { useRouter } from "next/navigation";
 
 import GroupHomeView from "@/features/group/components/GroupHomeView";
+import { useDeleteGroup } from "@/features/group/hooks/useDeleteGroup";
 import { useGroupDetail } from "@/features/group/hooks/useGroupDetail";
 import { useGroupMembers } from "@/features/group/hooks/useGroupMembers";
 import { usePastMeetings } from "@/features/group/hooks/usePastMeetings";
@@ -19,10 +21,18 @@ export default function GroupHomeContainer({ groupId }: { groupId: number }) {
     fetchNextPage,
   } = usePastMeetings(groupId);
   const updateCoverImage = useUpdateGroupCoverImage(groupId);
+  const deleteGroup = useDeleteGroup();
+  const router = useRouter();
 
   const ownerNickname = members?.items.find(
     (member) => member.role === "OWNER",
   )?.nickname;
+
+  const handleDeleteGroup = () => {
+    deleteGroup.mutate(groupId, {
+      onSuccess: () => router.replace("/group"),
+    });
+  };
 
   const handleLoadMorePastMeetings = useCallback(() => {
     if (!isFetchingNextPage) fetchNextPage();
@@ -61,6 +71,10 @@ export default function GroupHomeContainer({ groupId }: { groupId: number }) {
       isUpdatingCoverImage={updateCoverImage.isPending}
       coverImageErrorMessage={updateCoverImage.error?.message}
       onChangeCoverImage={updateCoverImage.mutate}
+      isDeletingGroup={deleteGroup.isPending}
+      deleteGroupErrorMessage={deleteGroup.error?.message}
+      onDeleteGroup={handleDeleteGroup}
+      onCancelDeleteGroup={deleteGroup.reset}
     />
   );
 }
