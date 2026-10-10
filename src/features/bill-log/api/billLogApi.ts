@@ -1,7 +1,7 @@
 import { api } from "@/lib/axios";
 import { ENDPOINTS } from "@/constants/endpoints";
 import { ApiResponse } from "@/lib/apiError";
-import { BillLogResponse, BillsRequest, BillsResponse, BillDetailResponse } from "../types";
+import { BillLogResponse, BillsRequest, BillsResponse, BillDetailResponse, UploadUrlResponse, UploadUrlRequest, ReceiptAnalysisRequest, ReceiptAnalysisResponse, CreateBillRequest } from "../types";
 import { type SettlementRequests } from "../types";
 import { SettlementResponse } from "../types";
 
@@ -34,4 +34,24 @@ export async function getBillDetail(billId: number): Promise<BillDetailResponse>
         ENDPOINTS.billLog.getBillDetail(billId)
     );
     return data.data;
+}
+
+export async function getUploadUrl(meetingId: number, body: UploadUrlRequest): Promise<UploadUrlResponse> {
+    const { data } = await api.post<ApiResponse<UploadUrlResponse>>(
+        ENDPOINTS.billLog.getUploadUrl(meetingId),
+        body
+    );
+    return data.data;
+}
+
+export async function analyzeReceipt(meetingId: number, body: ReceiptAnalysisRequest): Promise<ReceiptAnalysisResponse> {
+    const { data } = await api.post<ApiResponse<ReceiptAnalysisResponse>>(
+        ENDPOINTS.billLog.analyzeReceipt(meetingId),
+        body
+    );
+    return data.data;
+}
+
+export async function createBill(meetingId: number, body: CreateBillRequest): Promise<void> {
+    await api.post(ENDPOINTS.billLog.createBill(meetingId), body);
 }
