@@ -4,12 +4,6 @@ import type { Schedule } from "@/features/home/types";
 
 export type MeetupTab = "ongoing" | "ended";
 
-export function formatDateRange(schedule: Schedule): string {
-  const start = format(parseISO(schedule.startDate), "yyyy.MM.dd");
-  const end = format(parseISO(schedule.endDate), "yyyy.MM.dd");
-  return `${start} - ${end}`;
-}
-
 export function formatMemoryDateRange(schedule: Schedule): string {
   const start = parseISO(schedule.startDate);
   const end = parseISO(schedule.endDate);

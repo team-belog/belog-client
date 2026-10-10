@@ -1,52 +1,115 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import GroupDeleteModal from "@/features/group/components/GroupDeleteModal";
 import GroupListCard from "@/features/group/components/GroupListCard";
-import type { GroupSummary } from "@/features/group/types";
+import { useDeleteGroup } from "@/features/group/hooks/useDeleteGroup";
+import { useGroups } from "@/features/group/hooks/useGroups";
+import { useToggleGroupPin } from "@/features/group/hooks/useToggleGroupPin";
+import type { GroupListItemDto } from "@/features/group/types";
 
-interface GroupListProps {
-  initialGroups: GroupSummary[];
-}
+export default function GroupList() {
+  const {
+    data,
+    isPending,
+    isError,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useGroups();
+  const deleteGroup = useDeleteGroup();
+  const toggleGroupPin = useToggleGroupPin();
+  const [deleteTarget, setDeleteTarget] = useState<GroupListItemDto | null>(
+    null,
+  );
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
-export default function GroupList({ initialGroups }: GroupListProps) {
-  const [groups, setGroups] = useState(initialGroups);
-  const [deleteTarget, setDeleteTarget] = useState<GroupSummary | null>(null);
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || !hasNextPage) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !isFetchingNextPage) fetchNextPage();
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleTogglePin = (target: GroupSummary) => {
-    setGroups((prev) =>
-      prev.map((group) =>
-        group.id === target.id ? { ...group, isPinned: !group.isPinned } : group,
-      ),
+  if (isPending) {
+    return (
+      <p className="pretendard-m-15 pt-[25px] text-center text-sub-gray-2">
+        불러오는 중...
+      </p>
     );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center gap-3 pt-[25px]">
+        <p className="pretendard-m-15 text-sub-gray-2">{error.message}</p>
+        <button
+          type="button"
+          onClick={() => refetch()}
+          className="pretendard-m-15 text-main-black underline"
+        >
+          다시 시도
+        </button>
+      </div>
+    );
+  }
+
+  const handleTogglePin = (target: GroupListItemDto) => {
+    toggleGroupPin.mutate({
+      groupId: target.groupId,
+      pinned: !target.pinned,
+    });
   };
 
   const handleConfirmDelete = () => {
     if (!deleteTarget) return;
-    setGroups((prev) => prev.filter((group) => group.id !== deleteTarget.id));
-    setDeleteTarget(null);
+    deleteGroup.mutate(deleteTarget.groupId, {
+      onSuccess: () => setDeleteTarget(null),
+    });
   };
 
-  const sortedGroups = [...groups].sort(
-    (a, b) => Number(b.isPinned) - Number(a.isPinned),
+  const handleCancelDelete = () => {
+    setDeleteTarget(null);
+    deleteGroup.reset();
+  };
+
+  const sortedGroups = [...data].sort(
+    (a, b) => Number(b.pinned) - Number(a.pinned),
   );
+
+  if (sortedGroups.length === 0) {
+    return (
+      <p className="pretendard-m-15 pt-[25px] text-center text-sub-gray-2">
+        참여 중인 그룹이 없어요
+      </p>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-[15px] pb-4 pt-[25px]">
       {sortedGroups.map((group) => (
         <GroupListCard
-          key={group.id}
+          key={group.groupId}
           group={group}
           onTogglePin={handleTogglePin}
           onDelete={setDeleteTarget}
         />
       ))}
 
+      <div ref={sentinelRef} />
+
       {deleteTarget && (
         <GroupDeleteModal
           groupName={deleteTarget.name}
-          onCancel={() => setDeleteTarget(null)}
+          isDeleting={deleteGroup.isPending}
+          errorMessage={deleteGroup.error?.message}
+          onCancel={handleCancelDelete}
           onConfirm={handleConfirmDelete}
         />
       )}

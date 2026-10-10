@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
@@ -13,8 +14,15 @@ import BankSelectField from "@/features/auth/components/register/BankSelectField
 import AccountNumberField from "@/features/auth/components/register/AccountNumberField";
 import AccountHolderField from "@/features/auth/components/register/AccountHolderField";
 import Button from "@/components/ui/Button";
+import { useCompleteOnboarding } from "@/features/auth/hooks/useCompleteOnboarding";
+import { useGetProfileImageUploadUrl } from "@/features/auth/hooks/useGetProfileImageUploadUrl";
+import type { BankCode } from "@/features/auth/types";
 
 export default function RegisterProfilePage() {
+  const router = useRouter();
+  const { mutate: completeOnboarding, isPending: isOnboardingPending } = useCompleteOnboarding();
+  const { mutate: getUploadUrl, isPending: isUploadPending } = useGetProfileImageUploadUrl();
+
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [nicknameStatus, setNicknameStatus] = useState<NicknameStatus>("idle");
@@ -22,6 +30,45 @@ export default function RegisterProfilePage() {
   const [bank, setBank] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [accountHolder, setAccountHolder] = useState("");
+
+  const isPending = isOnboardingPending || isUploadPending;
+
+  const submitOnboarding = (profileImageObjectKey?: string) => {
+    completeOnboarding(
+      {
+        nickname,
+        name,
+        bankCode: bank as BankCode,
+        accountNumber,
+        accountHolderName: accountHolder,
+        profileImageObjectKey,
+      },
+      { onSuccess: () => router.replace("/") }
+    );
+  };
+
+  const handleSubmit = () => {
+    if (profileImage) {
+      getUploadUrl(
+        { contentType: profileImage.type, fileSize: profileImage.size },
+        {
+          onSuccess: async (uploadData) => {
+            await fetch(uploadData.uploadUrl, {
+              method: "PUT",
+              headers: {
+                "Content-Type": profileImage.type,
+                "Content-Length": String(profileImage.size),
+              },
+              body: profileImage,
+            });
+            submitOnboarding(uploadData.objectKey);
+          },
+        }
+      );
+    } else {
+      submitOnboarding();
+    }
+  };
 
   return (
     <main className="pb-[114px]">
@@ -65,12 +112,20 @@ export default function RegisterProfilePage() {
         </div>
       </div>
       <Button
-        onClick={() => {}}
+        onClick={handleSubmit}
         variant="primary"
-        disabled={false}
+        disabled={
+          !name ||
+          !nickname ||
+          nicknameStatus !== "available" ||
+          !bank ||
+          !accountNumber ||
+          !accountHolder ||
+          isPending
+        }
         className="fixed bottom-0 left-0 right-0 z-20"
       >
-        시작하기
+        {isPending ? "처리 중..." : "시작하기"}
       </Button>
     </main>
   );

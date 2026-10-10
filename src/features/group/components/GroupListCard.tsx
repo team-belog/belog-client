@@ -3,16 +3,16 @@ import { useRouter } from "next/navigation";
 
 import Profile from "@/components/ui/Profile";
 import TrashIcon from "@/components/ui/TrashIcon";
-import type { GroupSummary } from "@/features/group/types";
+import type { GroupListItemDto } from "@/features/group/types";
 
 interface GroupListCardProps {
-  group: GroupSummary;
-  onTogglePin?: (group: GroupSummary) => void;
-  onDelete?: (group: GroupSummary) => void;
+  group: GroupListItemDto;
+  onTogglePin?: (group: GroupListItemDto) => void;
+  onDelete?: (group: GroupListItemDto) => void;
 }
 
-function AvatarStack({ avatarUrls }: { avatarUrls?: string[] }) {
-  const avatars = avatarUrls?.length
+function AvatarStack({ avatarUrls }: { avatarUrls: (string | undefined)[] }) {
+  const avatars = avatarUrls.length
     ? avatarUrls.slice(0, 3)
     : [undefined, undefined, undefined];
 
@@ -33,13 +33,20 @@ export default function GroupListCard({
   onDelete,
 }: GroupListCardProps) {
   const {
+    groupId,
     name,
-    leaderName,
     memberCount,
-    isPinned,
-    coverImageUrl,
-    memberAvatarUrls,
+    previewMembers,
+    pinned: isPinned,
   } = group;
+  const canDelete = group.canDeleteGroup;
+  const coverImageUrl = group.coverImageUrl ?? undefined;
+  // previewMembers는 OWNER 우선 정렬이므로 첫 번째 멤버가 리더
+  const leaderName = previewMembers[0]?.nickname ?? "";
+  const otherMemberCount = memberCount - 1;
+  const memberAvatarUrls = previewMembers.map(
+    (member) => member.profileImageUrl ?? undefined,
+  );
 
   const router = useRouter();
   const textColor = coverImageUrl ? "text-main-white" : "text-main-black";
@@ -48,9 +55,9 @@ export default function GroupListCard({
     <div
       role="button"
       tabIndex={0}
-      onClick={() => router.push(`/group/${group.id}`)}
+      onClick={() => router.push(`/group/${groupId}`)}
       onKeyDown={(e) => {
-        if (e.key === "Enter") router.push(`/group/${group.id}`);
+        if (e.key === "Enter") router.push(`/group/${groupId}`);
       }}
       className={`relative mx-4 h-[109px] cursor-pointer overflow-hidden rounded-[12px] ${
         coverImageUrl ? "" : "bg-main-cool-gray"
@@ -68,7 +75,9 @@ export default function GroupListCard({
         <div className="flex items-center gap-2">
           <AvatarStack avatarUrls={memberAvatarUrls} />
           <p className={`pretendard-sb-10 underline ${textColor}`}>
-            {leaderName} 외 {memberCount}명
+            {otherMemberCount > 0
+              ? `${leaderName} 외 ${otherMemberCount}명`
+              : leaderName}
           </p>
         </div>
       </div>
@@ -93,21 +102,23 @@ export default function GroupListCard({
             height={17}
           />
         </button>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete?.(group);
-          }}
-          aria-label="그룹 삭제"
-          className="flex size-[22px] items-center justify-center"
-        >
-          <TrashIcon
-            width={16}
-            height={17}
-            className={coverImageUrl ? "text-main-white" : "text-sub-gray-2"}
-          />
-        </button>
+        {canDelete && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete?.(group);
+            }}
+            aria-label="그룹 삭제"
+            className="flex size-[22px] items-center justify-center"
+          >
+            <TrashIcon
+              width={16}
+              height={17}
+              className={coverImageUrl ? "text-main-white" : "text-sub-gray-2"}
+            />
+          </button>
+        )}
       </div>
     </div>
   );

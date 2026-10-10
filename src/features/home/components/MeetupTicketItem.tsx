@@ -4,7 +4,7 @@
 import MeetupMembers from "@/features/home/components/MeetupMembers";
 import MeetupStatusBadge from "@/features/home/components/MeetupStatusBadge";
 import type { Schedule } from "@/features/home/types";
-import { formatDateRange } from "@/features/home/utils/meetup";
+import { formatDateRange } from "@/lib/date";
 import ChevronIcon from "@/components/ui/ChevronIcon";
 
 interface MeetupTicketItemProps {

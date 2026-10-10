@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -8,20 +8,13 @@ import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
 import InviteLinkField from "@/features/group/components/InviteLinkField";
 import InviteCodeBoxes from "@/features/group/components/InviteCodeBoxes";
-import { generateInviteCode } from "@/features/group/utils/inviteCode";
 
 function GroupInviteContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const groupName = searchParams.get("name") || "그룹";
-
-  // 서버/클라이언트 렌더링 간 랜덤 코드 불일치(hydration mismatch)를 피하기 위해
-  // 마운트 이후에만 초대 코드를 생성한다.
-  const [inviteCode, setInviteCode] = useState("");
-  useEffect(() => {
-    setInviteCode(generateInviteCode());
-  }, []);
-  const inviteLink = `https://belog.vercel.app/join/${inviteCode}`;
+  const inviteCode = searchParams.get("inviteCode") ?? "";
+  const inviteLink = searchParams.get("inviteLink") ?? "";
 
   return (
     <main className="pb-[114px]">

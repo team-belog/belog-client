@@ -2,21 +2,28 @@
 
 import { useState } from "react";
 
-import type { PendingMeetup } from "@/features/group/types";
+import type { SchedulingMeetingDto } from "@/features/group/types";
+
+// 만남 정원은 응답에 없어 고정값 사용
+const MEETUP_MEMBER_LIMIT = 15;
 
 interface GroupPendingMeetupCardProps {
-  meetup: PendingMeetup;
+  meeting: SchedulingMeetingDto;
+  inviteCode: string;
+  ownerNickname?: string;
   actionLabel?: string;
   onAction?: () => void;
 }
 
 export default function GroupPendingMeetupCard({
-  meetup,
+  meeting,
+  inviteCode,
+  ownerNickname,
   actionLabel = "일정 확정하기",
   onAction,
 }: GroupPendingMeetupCardProps) {
   const [copied, setCopied] = useState(false);
-  const { title, members, memberLimit, inviteCode } = meetup;
+  const { name, participantNicknames, participantCount } = meeting;
 
   const handleCopy = async () => {
     try {
@@ -31,21 +38,21 @@ export default function GroupPendingMeetupCard({
   return (
     <div className="mx-4 flex flex-col gap-[10px]">
       <div className="flex flex-col gap-[15px] rounded-[12px] bg-main-cool-gray px-[13px] py-[21px]">
-        <p className="pretendard-sb-16 text-main-black">{title}</p>
+        <p className="pretendard-sb-16 text-main-black">{name}</p>
 
         <div className="flex items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-[5px]">
-            {members.map((member) => (
+            {participantNicknames.map((nickname) => (
               <span
-                key={member.id}
+                key={nickname}
                 className="pretendard-m-12 whitespace-nowrap rounded-[8px] bg-[#F1F4F9] px-[10px] py-[6px] text-sub-gray-1"
               >
-                {member.role === "leader" ? `${member.name} · 만남장` : member.name}
+                {nickname === ownerNickname ? `${nickname} · 만남장` : nickname}
               </span>
             ))}
           </div>
           <p className="pretendard-m-12 whitespace-nowrap text-sub-gray-2">
-            {members.length}/{memberLimit}명
+            {participantCount}/{MEETUP_MEMBER_LIMIT}명
           </p>
         </div>
 

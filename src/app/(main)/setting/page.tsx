@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Modal from "@/components/ui/Modal";
 import ChevronIcon from "@/components/ui/ChevronIcon";
 import { useLogout } from "@/features/auth/hooks/useLogout";
+import { useWithdrawAccount } from "@/features/auth/hooks/useWithdrawAccount";
 
 function SwitchToggle({ checked = false, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -46,8 +45,8 @@ function SettingRow({ label, children, account, onClick }: { label: string; chil
 }
 
 export default function SettingPage() {
-  const router = useRouter();
   const { mutate: logout } = useLogout();
+  const { mutate: withdraw, isPending: isWithdrawing } = useWithdrawAccount();
   const [notificationEnabled, setNotificationEnabled] = useState(true);
   const [modal, setModal] = useState<"logout" | "withdraw" | null>(null);
 
@@ -72,9 +71,9 @@ export default function SettingPage() {
       <Modal
         isOpen={modal === "withdraw"}
         message="회원 탈퇴 하시겠습니까?"
-        confirmLabel="탈퇴"
+        confirmLabel={isWithdrawing ? "처리 중..." : "탈퇴"}
         confirmVariant="danger"
-        onConfirm={() => router.push("/")}
+        onConfirm={() => withdraw()}
         onCancel={() => setModal(null)}
       />
     </main>

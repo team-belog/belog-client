@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import StepProgressBar from "@/components/ui/StepProgressBar";
-import { DUMMY_GROUP_DETAIL } from "@/features/group/constants/dummy";
+import { DUMMY_GROUP_MEMBERS } from "@/features/group/constants/dummy";
 import MeetupRequestComplete from "@/features/meetup/components/MeetupRequestComplete";
 import MeetupStep1 from "@/features/meetup/components/steps/MeetupStep1";
 import MeetupStep2 from "@/features/meetup/components/steps/MeetupStep2";
@@ -70,7 +70,7 @@ export default function MeetupNewView() {
           onNext={handleNext}
         />}
       {step === 2 && (
-        <MeetupStep2 members={DUMMY_GROUP_DETAIL.members} onNext={handleNext} />
+        <MeetupStep2 members={DUMMY_GROUP_MEMBERS} onNext={handleNext} />
       )}
       {step === 3 && <MeetupStep3 onNext={handleSelectStartOption} />}
       {step === 4 && startOption === "fixedDate" && (
