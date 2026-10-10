@@ -69,6 +69,32 @@ export type GroupSummary = {
   memberAvatarUrls?: string[];
 };
 
+export type GroupDetailData = {
+  groupId: number;
+  name: string;
+  coverImageUrl: string | null;
+  inviteCode: string;
+  memberCount: number;
+  canEditCoverImage: boolean;
+  canDeleteGroup: boolean;
+  schedulingMeetings: SchedulingMeetingDto[];
+  activeMeetings: ActiveMeetingDto[];
+};
+
+export type SchedulingMeetingDto = {
+  meetingId: number;
+  name: string;
+  participantNicknames: string[];
+  participantCount: number;
+};
+
+export type ActiveMeetingDto = {
+  meetingId: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+};
+
 export type GroupMemberRole = "leader" | "member";
 
 export type GroupMember = {

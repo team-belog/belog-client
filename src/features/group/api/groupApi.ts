@@ -2,6 +2,7 @@ import { api } from "@/lib/axios";
 import { ApiResponse, ApiError } from "@/lib/apiError";
 import { ENDPOINTS } from "@/constants/endpoints";
 import type {
+  GroupDetailData,
   CoverImageContentType,
   CoverImageUploadUrlData,
   CoverImageUploadUrlRequest,
@@ -55,4 +56,11 @@ export async function uploadFileToS3(
       "이미지 업로드에 실패했습니다.",
     );
   }
+}
+
+export async function getGroupDetail(groupId: number) {
+  const { data } = await api.get<ApiResponse<GroupDetailData>>(
+    ENDPOINTS.group.detail(groupId),
+  );
+  return data.data;
 }
