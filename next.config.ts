@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.amazonaws.com",
+      },
+      {
+        protocol: "https",
         hostname: "belog-storage.s3.ap-northeast-2.amazonaws.com",
       },
     ],
