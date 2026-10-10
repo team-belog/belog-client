@@ -13,4 +13,10 @@ export const ENDPOINTS = {
     bankAccount: "/users/me/bank-account",
     withdraw: "/users/me",
   },
+  my: {
+    postLogCalendar: "/users/me/post-logs/calendar",
+  },
+  postLog: {
+    getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,
+  },
 } as const;
