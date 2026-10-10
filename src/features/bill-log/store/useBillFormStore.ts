@@ -30,7 +30,7 @@ const initialState: BillFormState = {
 
 export const useBillFormStore = create<BillFormState & BillFormActions>((set) => ({
   ...initialState,
-  setAnalyzedData: (data) => set(data),
+  setAnalyzedData: (data) => set({ analyzedData: data }),
   setStep2Data: (data) => set(data),
   setStep3Data: (data) => set(data),
   reset: () => set(initialState),
