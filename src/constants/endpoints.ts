@@ -28,4 +28,7 @@ export const ENDPOINTS = {
     pastMeetings: (groupId: number) => `/groups/${groupId}/meetings/past`,
     coverImage: (groupId: number) => `/groups/${groupId}/cover-image`,
   },
+  meeting: {
+    detail: (meetingId: number) => `/meetings/${meetingId}`,
+  },
 } as const;
