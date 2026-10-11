@@ -125,7 +125,11 @@ export default function GroupHomeView({
               <GroupActiveMeetupCard
                 key={meeting.meetingId}
                 meeting={meeting}
-                onAction={() => router.push(`/meetup/${meeting.meetingId}`)}
+                onAction={() =>
+                  router.push(
+                    `/meetup/${meeting.meetingId}?groupId=${group.groupId}`,
+                  )
+                }
               />
             ))}
           </div>
@@ -157,7 +161,7 @@ export default function GroupHomeView({
       <div className="fixed bottom-0 left-0 right-0 bg-white">
         <Button
           variant="primary"
-          onClick={() => router.push("/meetup/new")}
+          onClick={() => router.push(`/meetup/new?groupId=${group.groupId}`)}
           disabled={false}
         >
           새 만남 시작하기
