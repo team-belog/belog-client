@@ -9,9 +9,11 @@ import type { MeetupDetail } from "@/features/meetup/types";
 
 interface MeetupDetailViewProps {
   meetup: MeetupDetail;
+  meetingId: number;
+  groupId: number;
 }
 
-export default function MeetupDetailView({ meetup }: MeetupDetailViewProps) {
+export default function MeetupDetailView({ meetup, meetingId, groupId }: MeetupDetailViewProps) {
   const router = useRouter();
 
   return (
@@ -36,7 +38,7 @@ export default function MeetupDetailView({ meetup }: MeetupDetailViewProps) {
           title="Bill-log"
           status={meetup.billLogStatus}
           description="영수증으로 정산해요"
-          onClick={() => router.push("/bill-log")}
+          onClick={() => router.push(`/bill-log?meetingId=${meetingId}&groupId=${groupId}`)}
         />
         <MeetupLogRow
           iconSrc="/icons/post-log.png"
