@@ -32,3 +32,7 @@ export async function updateMeeting(
 ) {
   await api.put(ENDPOINTS.meeting.update(meetingId), body);
 }
+
+export async function deleteMeeting(meetingId: number) {
+  await api.delete(ENDPOINTS.meeting.delete(meetingId));
+}

@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
+import TrashIcon from "@/components/ui/TrashIcon";
+import MeetupDeleteModal from "@/features/meetup/components/MeetupDeleteModal";
 import MeetupLogRow from "@/features/meetup/components/MeetupLogRow";
 import MeetupSummary from "@/features/meetup/components/MeetupSummary";
 import {
@@ -29,6 +31,10 @@ interface MeetupDetailViewProps {
     body: UpdateMeetingRequest,
     options?: { onSuccess?: () => void },
   ) => void;
+  isDeleting: boolean;
+  deleteErrorMessage?: string;
+  onDelete: () => void;
+  onCancelDelete: () => void;
 }
 
 function toDraft(meeting: MeetingDetailData): UpdateMeetingRequest {
@@ -45,10 +51,15 @@ export default function MeetupDetailView({
   isUpdating,
   updateErrorMessage,
   onUpdate,
+  isDeleting,
+  deleteErrorMessage,
+  onDelete,
+  onCancelDelete,
 }: MeetupDetailViewProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [isEditDatesOpen, setIsEditDatesOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [draft, setDraft] = useState(() => toDraft(meeting));
 
   const { name, location, startDate, endDate } = isEditing
@@ -99,6 +110,11 @@ export default function MeetupDetailView({
     );
   };
 
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    onCancelDelete();
+  };
+
   const handleConfirmDates = (range: { startDate: Date; endDate: Date }) => {
     setDraft((prev) => ({
       ...prev,
@@ -110,7 +126,21 @@ export default function MeetupDetailView({
 
   return (
     <main>
-      <BackHeader title="만남 상세" />
+      <BackHeader
+        title="만남 상세"
+        right={
+          // 삭제도 수정과 같이 만남 생성자만 가능하므로 수정 권한으로 판단
+          meeting.canEditMeeting && (
+            <button
+              type="button"
+              onClick={() => setIsDeleteModalOpen(true)}
+              aria-label="만남 삭제"
+            >
+              <TrashIcon variant="header" className="text-main-black" />
+            </button>
+          )
+        }
+      />
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
 
       <MeetupSummary
@@ -163,6 +193,16 @@ export default function MeetupDetailView({
           endDate={parseISO(draft.endDate)}
           onCancel={() => setIsEditDatesOpen(false)}
           onConfirm={handleConfirmDates}
+        />
+      )}
+
+      {isDeleteModalOpen && (
+        <MeetupDeleteModal
+          meetingName={meeting.meetingName}
+          isDeleting={isDeleting}
+          errorMessage={deleteErrorMessage}
+          onCancel={handleCancelDelete}
+          onConfirm={onDelete}
         />
       )}
     </main>

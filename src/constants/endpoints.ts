@@ -32,5 +32,6 @@ export const ENDPOINTS = {
     detail: (meetingId: number) => `/meetings/${meetingId}`,
     create: (groupId: number) => `/groups/${groupId}/meetings`,
     update: (meetingId: number) => `/meetings/${meetingId}`,
+    delete: (meetingId: number) => `/meetings/${meetingId}`,
   },
 } as const;
