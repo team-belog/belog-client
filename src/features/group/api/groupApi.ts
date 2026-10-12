@@ -15,6 +15,8 @@ import type {
   PastMeetingsParams,
   GroupMembersParams,
   UpdateGroupCoverImageRequest,
+  JoinGroupData,
+  JoinGroupRequest,
 } from "@/features/group/types";
 
 export async function getGroups(params: GroupListParams = {}) {
@@ -107,6 +109,14 @@ export async function getPastMeetings(
   const { data } = await api.get<ApiResponse<PastMeetingsData>>(
     ENDPOINTS.group.pastMeetings(groupId),
     { params },
+  );
+  return data.data;
+}
+
+export async function joinGroup(body: JoinGroupRequest) {
+  const { data } = await api.post<ApiResponse<JoinGroupData>>(
+    ENDPOINTS.groupMembership.join,
+    body,
   );
   return data.data;
 }
