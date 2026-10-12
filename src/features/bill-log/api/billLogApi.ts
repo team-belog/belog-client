@@ -55,3 +55,7 @@ export async function analyzeReceipt(meetingId: number, body: ReceiptAnalysisReq
 export async function createBill(meetingId: number, body: CreateBillRequest): Promise<void> {
     await api.post(ENDPOINTS.billLog.createBill(meetingId), body);
 }
+
+export async function completeSettlement(settlementRequestId: number): Promise<void> {
+    await api.put(ENDPOINTS.billLog.completeSettlement(settlementRequestId));
+}
