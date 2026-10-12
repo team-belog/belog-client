@@ -66,13 +66,14 @@ export default function Step3({ onNext }: Step3Props) {
       ).length;
       return sum + Math.floor((item?.amount ?? 0) / Math.max(count, 1));
     }, 0);
-    return total + "원";
+    return String(total);
   };
 
   const getMemberAmount = (memberId: number): string => {
     if (!settlementMethod) return "";
-    if (settlementMethod === "EQUAL_SPLIT" && selectedMemberIds.length > 0) {
-      return Math.floor(totalAmount / selectedMemberIds.length) + "원";
+    if (!selectedMemberIds.includes(memberId)) return "0";
+    if (settlementMethod === "EQUAL_SPLIT") {
+      return String(Math.floor(totalAmount / selectedMemberIds.length));
     }
     if (settlementMethod === "ITEM_TAG") {
       return getMemberTagAmount(memberId);
@@ -92,12 +93,32 @@ export default function Step3({ onNext }: Step3Props) {
   const handleNext = () => {
     if (!settlementMethod) return;
 
+    const payerMemberId = selectedMemberIds[0];
+    const payerMember = members.find((m) => m.groupMemberId === payerMemberId);
+
     const shares = selectedMemberIds.map((id) => ({
       participantMemberId: id,
       amount: parseInt(getMemberAmount(id)) || 0,
     }));
 
-    setStep3Data({ payerMemberId: selectedMemberIds[0], splitType: settlementMethod, shares });
+    const shareDisplays = selectedMemberIds.map((id) => {
+      const member = members.find((m) => m.groupMemberId === id);
+      return {
+        participantMemberId: id,
+        nickname: member?.nickname ?? "",
+        profileImageUrl: member?.profileImageUrl ?? null,
+        amount: parseInt(getMemberAmount(id)) || 0,
+        payer: id === payerMemberId,
+      };
+    });
+
+    setStep3Data({
+      payerMemberId,
+      payerNickname: payerMember?.nickname ?? "",
+      splitType: settlementMethod,
+      shares,
+      shareDisplays,
+    });
     onNext();
   };
 
@@ -128,20 +149,23 @@ export default function Step3({ onNext }: Step3Props) {
       </div>
       <TextLayout left={`개별 정산 금액 (${selectedMemberIds.length}명)`} />
       <div className="flex flex-col gap-3 overflow-y-auto h-[568px]">
-        {selectedMembers.map((member) => (
-          <ReadOnlyField
-            key={member.groupMemberId}
-            name={member.nickname}
-            profileSrc={member.profileImageUrl ?? undefined}
-            amount={getMemberAmount(member.groupMemberId)}
-            tag={settlementMethod === "ITEM_TAG"}
-            menu={items}
-            selectedItems={memberItemSelections[member.groupMemberId] ?? []}
-            onToggleItem={(itemName) => toggleItemForMember(member.groupMemberId, itemName)}
-            editable={settlementMethod === "MANUAL"}
-            onAmountChange={(value) => setCustomAmounts((prev) => ({ ...prev, [member.groupMemberId]: value }))}
-          />
-        ))}
+        {members.map((member) => {
+          const isSelected = selectedMemberIds.includes(member.groupMemberId);
+          return (
+            <ReadOnlyField
+              key={member.groupMemberId}
+              name={member.nickname}
+              profileSrc={member.profileImageUrl ?? undefined}
+              amount={getMemberAmount(member.groupMemberId)}
+              tag={isSelected && settlementMethod === "ITEM_TAG"}
+              menu={items}
+              selectedItems={memberItemSelections[member.groupMemberId] ?? []}
+              onToggleItem={(itemName) => toggleItemForMember(member.groupMemberId, itemName)}
+              editable={settlementMethod === "MANUAL"}
+              onAmountChange={(value) => setCustomAmounts((prev) => ({ ...prev, [member.groupMemberId]: value }))}
+            />
+          );
+        })}
       </div>
       <Button
         onClick={handleNext}
