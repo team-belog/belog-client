@@ -38,13 +38,13 @@ export default function ReadOnlyField({
                 type="number"
                 value={amount}
                 onChange={(e) => onAmountChange?.(e.target.value)}
-                placeholder="0"
+                placeholder="0원"
                 className="pretendard-sb-16 w-24 bg-transparent text-right text-main-black outline-none placeholder:text-sub-gray-2"
               />
               {amount && <span className="pretendard-sb-16 text-main-black">원</span>}
             </div>
           ) : (
-            <p className="pretendard-sb-16 text-main-black">{amount}</p>
+            <p className="pretendard-sb-16 text-main-black">{amount}원</p>
           )}
         </div>
       </div>
