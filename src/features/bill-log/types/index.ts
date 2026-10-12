@@ -1,32 +1,3 @@
-export type PaymentItem = {
-  id: number;
-  thumbnailUrl: string;
-  name: string;
-  amount: string;
-  payer: string;
-};
-
-export type DailyPayment = {
-  date: string;
-  totalAmount: string;
-  items: PaymentItem[];
-};
-
-export type MenuItem = {
-  title: string;
-  amount: string;
-};
-
-export type Member = {
-  name: string;
-};
-
-export type BillContent = {
-  date: string;
-  totalAmount: string;
-  members: Member[];
-  menu: MenuItem[];
-};
 
 export type BillLogResponse = {
   totalSpentAmount: number
@@ -46,13 +17,16 @@ export type SettlementResponse = {
   hasNext: boolean
 }
 
+export type SettlementRequestStatus = "PENDING" | "COMPLETED"
+export type SettlementRequestAction = "SEND_REMINDER" | "MARK_COMPLETE" | "NONE"
+
 export type Settlement = {
   settlementRequestId: number
   amount: number
   sender: SettlementParticipant;
   receiver: SettlementParticipant;
-  status: "PENDING" | "COMPLETED"
-  action: "SEND_REMINDER" | "none"
+  status: SettlementRequestStatus
+  action: SettlementRequestAction
 }
 
 export type SettlementParticipant = {
