@@ -29,7 +29,7 @@ export default function SettlementStatusItem({
         <Profile width={24} height={24} />
         <div className="flex flex-col gap-1">
           <p className="pretendard-m-16 text-sub-gray-1">
-            {sender} → {`${receiver}(나)`}
+            {sender.nickname} → {receiver.nickname}{receiver.isMe ? "(나)" : ""}
           </p>
           <p className="pretendard-sb-18 text-sub-black">{amount}</p>
         </div>
