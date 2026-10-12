@@ -32,16 +32,17 @@ export default function SettlementStatusTab({ pendingParticipantCount, totalSpen
 
   return (
     <div>
-      <TextLayout left={`정산 진행중인 인원 ${pendingParticipantCount}명`} right={`${totalSpentAmount}원`} />
+      <TextLayout left={`정산 진행중인 인원 ${pendingParticipantCount}명`} />
       <div className="flex flex-col gap-4 px-4">
         {allItems?.map((item) => (
           <SettlementStatusItem
             key={item.settlementRequestId}
+            settlementRequestId={item.settlementRequestId}
+            meetingId={meetingId}
             sender={item.sender}
             receiver={item.receiver}
             amount={item.amount}
-            status={item.status}
-            onSendNotification={() => {}}
+            action={item.action}
           />
         ))}
       </div>
