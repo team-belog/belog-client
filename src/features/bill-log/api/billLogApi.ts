@@ -59,3 +59,7 @@ export async function createBill(meetingId: number, body: CreateBillRequest): Pr
 export async function completeSettlement(settlementRequestId: number): Promise<void> {
     await api.put(ENDPOINTS.billLog.completeSettlement(settlementRequestId));
 }
+
+export async function sendReminder(settlementRequestId: number): Promise<void> {
+    await api.post(ENDPOINTS.billLog.sendReminder(settlementRequestId));
+}

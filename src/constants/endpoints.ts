@@ -15,6 +15,7 @@ export const ENDPOINTS = {
     getUploadUrl: (meetingId: number) => `/meetings/${meetingId}/bill-log/receipt-images/upload-url`,
     analyzeReceipt: (meetingId: number) => `/meetings/${meetingId}/bill-log/receipt-analysis`,
     completeSettlement: (settlementRequestId: number) => `/settlement-requests/${settlementRequestId}/completion`,
+    sendReminder: (settlementRequestId: number) => `/settlement-requests/${settlementRequestId}/reminders`,
   },
   user: {
     onboarding: "/users/me/onboarding",
