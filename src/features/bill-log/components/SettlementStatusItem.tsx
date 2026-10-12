@@ -17,8 +17,8 @@ interface SettlementStatusItemProps {
 }
 
 const buttonStyleByAction: Record<SettlementRequestAction, { bg: string; label: string }> = {
-  SEND_REMINDER: { bg: "bg-main-mint", label: "돈 보내주세요" },
-  MARK_COMPLETE: { bg: "bg-main-black", label: "돈 보냈어요" },
+  SEND_REMINDER: { bg: "bg-main-mint hover:bg-[#00D4A6]", label: "돈 보내주세요" },
+  MARK_COMPLETE: { bg: "bg-sub-black hover:bg-[#000000]", label: "돈 보냈어요" },
   NONE: { bg: "bg-sub-gray-3", label: "정산 완료" },
 };
 
