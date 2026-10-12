@@ -14,6 +14,8 @@ import { useMemo, useState } from "react";
 import type { CalendarDay, RangePosition } from "@/lib/calendar";
 import { getMonthLabel, getMonthMatrix } from "@/lib/calendar";
 
+const MAX_CANDIDATE_COUNT = 10;
+
 /**
  * 후보 하나 = 시작일부터 `nights + 1`일 묶음.
  * 무박 1일(nights = 0)이나 일정 미정(null)이면 날짜 하나가 후보가 된다.
@@ -79,7 +81,8 @@ export function useMeetupCandidateDatesPicker(
         (start) =>
           !isBefore(addDays(start, lastOffset), date) && !isBefore(end, start),
       );
-      return overlaps ? prev : [...prev, date];
+      if (overlaps || prev.length >= MAX_CANDIDATE_COUNT) return prev;
+      return [...prev, date];
     });
   };
 

@@ -30,5 +30,6 @@ export const ENDPOINTS = {
   },
   meeting: {
     detail: (meetingId: number) => `/meetings/${meetingId}`,
+    create: (groupId: number) => `/groups/${groupId}/meetings`,
   },
 } as const;

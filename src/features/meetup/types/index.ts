@@ -42,3 +42,24 @@ export type MeetingDetailData = {
     postLog: LogStatus;
   };
 };
+
+export type MeetingDateRange = {
+  startDate: string;
+  endDate: string;
+};
+
+export type CreateMeetingRequest = {
+  name: string;
+  location: string | null;
+  // 생성자는 자동으로 포함되므로 같은 그룹의 다른 멤버 ID만 전달
+  participantMemberIds: number[];
+  schedule: {
+    type: MeetingScheduleType;
+    // FIXED는 1개, POLL은 2~10개
+    dateRanges: MeetingDateRange[];
+  };
+};
+
+export type CreateMeetingData = {
+  meetingId: number;
+};
