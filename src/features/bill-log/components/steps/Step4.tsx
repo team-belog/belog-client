@@ -7,13 +7,8 @@ import Receipt from "@/features/bill-log/components/Receipt";
 import Button from "@/components/ui/Button";
 import { useBillFormStore } from "@/features/bill-log/store/useBillFormStore";
 import { createBill } from "@/features/bill-log/api/billLogApi";
-import type { BillShare, BillSplitType } from "@/features/bill-log/types";
-
-const SPLIT_TYPE_LABELS: Record<BillSplitType, string> = {
-  EQUAL_SPLIT: "N분의 1",
-  ITEM_TAG: "항목 태그",
-  MANUAL: "금액 직접 입력",
-};
+import type { BillShare } from "@/features/bill-log/types";
+import { BILL_SPLIT_LABEL } from "@/features/bill-log/constants/billLog";
 
 interface Step4Props {
   onSubmit: () => void;
@@ -64,7 +59,7 @@ export default function Step4({ onSubmit }: Step4Props) {
         <Receipt
           title={title}
           payerNickname={payerNickname}
-          settlementMethod={splitType ? SPLIT_TYPE_LABELS[splitType] : ""}
+          settlementMethod={splitType ? BILL_SPLIT_LABEL[splitType] : ""}
           items={items}
           totalAmount={totalAmount}
           shares={shares}

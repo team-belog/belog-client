@@ -9,16 +9,11 @@ import Button from "@/components/ui/Button";
 import { useGetGroupMembers } from "@/features/group/hooks/useGetGroupMembers";
 import { useBillFormStore } from "@/features/bill-log/store/useBillFormStore";
 import type { BillSplitType } from "@/features/bill-log/types";
+import { SETTLEMENT_METHODS } from "@/features/bill-log/constants/billLog";
 
 interface Step3Props {
   onNext: () => void;
 }
-
-const SETTLEMENT_METHODS: { splitType: BillSplitType; label: string }[] = [
-  { splitType: "ITEM_TAG", label: "항목 태그" },
-  { splitType: "EQUAL_SPLIT", label: "N분의 1" },
-  { splitType: "MANUAL", label: "금액 직접 입력" },
-];
 
 export default function Step3({ onNext }: Step3Props) {
   const groupId = Number(useSearchParams().get("groupId"));
@@ -36,7 +31,6 @@ export default function Step3({ onNext }: Step3Props) {
   const [customAmounts, setCustomAmounts] = useState<Record<number, string>>({});
 
   const members = groupMemberData?.items ?? [];
-  const selectedMembers = members.filter((m) => selectedMemberIds.includes(m.groupMemberId));
 
   const toggleMember = (id: number) => {
     setSelectedMemberIds((prev) =>
