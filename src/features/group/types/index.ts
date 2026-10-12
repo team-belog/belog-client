@@ -88,15 +88,6 @@ export type ActiveMeetingDto = {
   endDate: string;
 };
 
-export type GroupMemberRole = "leader" | "member";
-
-export type GroupMember = {
-  id: number;
-  name: string;
-  role: GroupMemberRole;
-  avatarUrl?: string;
-};
-
 export type GroupMembersParams = {
   query?: string;
 };
