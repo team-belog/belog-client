@@ -52,7 +52,7 @@ export default function BillLogPage() {
                   { label: "총 정산 금액", value: data.totalSpentAmount + "원" },
                 ]}
               />
-              <ProgressBar current={data.pendingParticipantCount} total={totalParticipantCount} />
+              <ProgressBar current={data.completedParticipantCount} total={totalParticipantCount} />
               <TabBar tabs={["정산 현황", "결제 내역"]} activeIndex={activeTab} onChange={setActiveTab} />
               {activeTab === 0 ? <SettlementStatusTab pendingParticipantCount={data.pendingParticipantCount} totalSpentAmount={data.totalSpentAmount} /> : <PaymentHistoryTab />}
             </div>
