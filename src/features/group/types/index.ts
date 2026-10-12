@@ -120,3 +120,13 @@ export type PastMeetingDto = {
   startDate: string;
   endDate: string;
 };
+
+export type JoinGroupRequest = {
+  inviteCode: string;
+};
+
+export type JoinGroupData = {
+  groupId: number;
+  name: string;
+  currentMemberCount: number;
+};
