@@ -1,69 +1,158 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import SelectableToggle from "../SelectableToggle";
-import { DUMMY_CONTENT } from "../../constants/dummy";
 import TextLayout from "@/components/ui/TextLayout";
-import ReadOnlyField from "../ReadOnlyField";
+import ReadOnlyField from "@/features/bill-log/components/ReadOnlyField";
 import Button from "@/components/ui/Button";
+import { useGetGroupMembers } from "@/features/group/hooks/useGetGroupMembers";
+import { useBillFormStore } from "@/features/bill-log/store/useBillFormStore";
+import type { BillSplitType } from "@/features/bill-log/types";
 
 interface Step3Props {
   onNext: () => void;
 }
 
-type SettlementMethod = "tag" | "equal" | "custom";
-
-const SETTLEMENT_METHODS: { type: SettlementMethod; label: string }[] = [
-  { type: "tag", label: "항목 태그" },
-  { type: "equal", label: "N분의 1" },
-  { type: "custom", label: "금액 직접 입력" },
+const SETTLEMENT_METHODS: { splitType: BillSplitType; label: string }[] = [
+  { splitType: "ITEM_TAG", label: "항목 태그" },
+  { splitType: "EQUAL_SPLIT", label: "N분의 1" },
+  { splitType: "MANUAL", label: "금액 직접 입력" },
 ];
 
 export default function Step3({ onNext }: Step3Props) {
-  const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
-  const [settlementMethod, setSettlementMethod] = useState<SettlementMethod | null>(null);
+  const groupId = Number(useSearchParams().get("groupId"));
 
-  const members = DUMMY_CONTENT[0].members;
-  const menu = DUMMY_CONTENT[0].menu
+  const { data: groupMemberData } = useGetGroupMembers(groupId);
 
-  const toggleMember = (name: string) => {
-    setSelectedMembers((prev) =>
-      prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
+  // store
+  const setStep3Data = useBillFormStore((state) => state.setStep3Data);
+  const totalAmount = useBillFormStore((state) => state.totalAmount);
+  const items = useBillFormStore((state) => state.items);
+
+  const [selectedMemberIds, setSelectedMemberIds] = useState<number[]>([]);
+  const [settlementMethod, setSettlementMethod] = useState<BillSplitType | null>(null);
+  const [memberItemSelections, setMemberItemSelections] = useState<Record<number, string[]>>({});
+  const [customAmounts, setCustomAmounts] = useState<Record<number, string>>({});
+
+  const members = groupMemberData?.items ?? [];
+  const selectedMembers = members.filter((m) => selectedMemberIds.includes(m.groupMemberId));
+
+  const toggleMember = (id: number) => {
+    setSelectedMemberIds((prev) =>
+      prev.includes(id) ? prev.filter((n) => n !== id) : [...prev, id]
     );
   };
+
+  const toggleItemForMember = (memberId: number, itemName: string) => {
+    setMemberItemSelections((prev) => {
+      const current = prev[memberId] ?? [];
+      return {
+        ...prev,
+        [memberId]: current.includes(itemName)
+          ? current.filter((n) => n !== itemName)
+          : [...current, itemName],
+      };
+    });
+  };
+
+  // 항목을 선택한 멤버 수로 나눠 개별 정산 금액 계산
+  const getMemberTagAmount = (memberId: number): string => {
+    const selected = memberItemSelections[memberId] ?? [];
+    const total = selected.reduce((sum, itemName) => {
+      const item = items.find((i) => i.name === itemName);
+      const count = selectedMemberIds.filter((id) =>
+        (memberItemSelections[id] ?? []).includes(itemName)
+      ).length;
+      return sum + Math.floor((item?.amount ?? 0) / Math.max(count, 1));
+    }, 0);
+    return total + "원";
+  };
+
+  const getMemberAmount = (memberId: number): string => {
+    if (!settlementMethod) return "";
+    if (settlementMethod === "EQUAL_SPLIT" && selectedMemberIds.length > 0) {
+      return Math.floor(totalAmount / selectedMemberIds.length) + "원";
+    }
+    if (settlementMethod === "ITEM_TAG") {
+      return getMemberTagAmount(memberId);
+    }
+    if (settlementMethod === "MANUAL") {
+      return customAmounts[memberId] ?? "";
+    }
+    return "";
+  };
+
+  const distributedAmount =
+    settlementMethod === "ITEM_TAG" || settlementMethod === "MANUAL"
+      ? selectedMemberIds.reduce((sum, id) => sum + (parseInt(getMemberAmount(id)) || 0), 0)
+      : totalAmount;
+  const remainingAmount = totalAmount - distributedAmount;
+
+  const handleNext = () => {
+    if (!settlementMethod) return;
+
+    const shares = selectedMemberIds.map((id) => ({
+      participantMemberId: id,
+      amount: parseInt(getMemberAmount(id)) || 0,
+    }));
+
+    setStep3Data({ payerMemberId: selectedMemberIds[0], splitType: settlementMethod, shares });
+    onNext();
+  };
+
 
   return (
     <div className="flex flex-col">
       <h1 className="pretendard-sb-20 ml-4 mt-[10px]">누구랑 나눌까요?</h1>
-      <div className="flex gap-3 ml-4 mt-6">
-        {members.map((item) => (
+      <div className="flex gap-3 ml-4 mt-6 flex-wrap">
+        {members.map((member) => (
           <SelectableToggle
-            key={item.name}
-            label={item.name}
-            selected={selectedMembers.includes(item.name)}
-            onClick={() => toggleMember(item.name)}
+            key={member.groupMemberId}
+            label={member.nickname}
+            selected={selectedMemberIds.includes(member.groupMemberId)}
+            onClick={() => toggleMember(member.groupMemberId)}
           />
         ))}
       </div>
       <h2 className="pretendard-sb-16 ml-4 mt-6">정산 방식</h2>
       <div className="flex gap-3 ml-4 mt-6 mb-8">
-        {SETTLEMENT_METHODS.map(({ type, label }) => (
+        {SETTLEMENT_METHODS.map(({ splitType, label }) => (
           <SelectableToggle
-            key={type}
+            key={splitType}
             label={label}
-            selected={settlementMethod === type}
-            onClick={() => setSettlementMethod(type)}
+            selected={settlementMethod === splitType}
+            onClick={() => setSettlementMethod(splitType)}
           />
         ))}
       </div>
-      <TextLayout left={`개별 정산 금액 (${members.length}명)`} />
+      <TextLayout left={`개별 정산 금액 (${selectedMemberIds.length}명)`} />
       <div className="flex flex-col gap-3 overflow-y-auto h-[568px]">
-        {menu.map((item) => (
-          <ReadOnlyField key={item.title} name={item.title} amount={item.amount} tag={settlementMethod === "tag"} />
+        {selectedMembers.map((member) => (
+          <ReadOnlyField
+            key={member.groupMemberId}
+            name={member.nickname}
+            profileSrc={member.profileImageUrl ?? undefined}
+            amount={getMemberAmount(member.groupMemberId)}
+            tag={settlementMethod === "ITEM_TAG"}
+            menu={items}
+            selectedItems={memberItemSelections[member.groupMemberId] ?? []}
+            onToggleItem={(itemName) => toggleItemForMember(member.groupMemberId, itemName)}
+            editable={settlementMethod === "MANUAL"}
+            onAmountChange={(value) => setCustomAmounts((prev) => ({ ...prev, [member.groupMemberId]: value }))}
+          />
         ))}
       </div>
-      <Button onClick={onNext} variant="primary" className="fixed bottom-0 left-0 right-0">
-        다음
+      <Button
+        onClick={handleNext}
+        variant="primary"
+        disabled={selectedMemberIds.length === 0 || !settlementMethod || remainingAmount !== 0}
+        className="fixed bottom-0 left-0 right-0"
+      >
+        {(settlementMethod === "ITEM_TAG" || settlementMethod === "MANUAL") && remainingAmount > 0
+          ? `남은 정산금 ${remainingAmount}원`
+          : "다음"
+        }
       </Button>
     </div>
   );
