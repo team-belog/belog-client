@@ -5,6 +5,7 @@ import type {
   CreateMeetingData,
   CreateMeetingRequest,
   MeetingDetailData,
+  UpdateMeetingRequest,
 } from "@/features/meetup/types";
 
 export async function getMeetingDetail(meetingId: number) {
@@ -23,4 +24,11 @@ export async function createMeeting(
     body,
   );
   return data.data;
+}
+
+export async function updateMeeting(
+  meetingId: number,
+  body: UpdateMeetingRequest,
+) {
+  await api.put(ENDPOINTS.meeting.update(meetingId), body);
 }

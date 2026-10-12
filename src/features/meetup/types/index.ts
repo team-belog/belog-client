@@ -63,3 +63,11 @@ export type CreateMeetingRequest = {
 export type CreateMeetingData = {
   meetingId: number;
 };
+
+export type UpdateMeetingRequest = {
+  name: string;
+  location: string | null;
+  // 일정 조율 중인 만남은 null, 종료된 만남은 기존 일정을 그대로 전달
+  startDate: string | null;
+  endDate: string | null;
+};

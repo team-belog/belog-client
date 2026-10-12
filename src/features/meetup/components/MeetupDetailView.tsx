@@ -1,6 +1,7 @@
 "use client";
 
-import { differenceInCalendarDays, parseISO } from "date-fns";
+import { differenceInCalendarDays, format, parseISO } from "date-fns";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -11,19 +12,58 @@ import {
   POST_LOG_STATUS_LABEL,
   PRE_LOG_STATUS_LABEL,
 } from "@/features/meetup/constants/logStatus";
-import type { MeetingDetailData } from "@/features/meetup/types";
+import type {
+  MeetingDetailData,
+  UpdateMeetingRequest,
+} from "@/features/meetup/types";
+import PreLogDateRangeSheet from "@/features/pre-log/components/PreLogDateRangeSheet";
 import { formatDateRange } from "@/lib/date";
+
+const API_DATE_FORMAT = "yyyy-MM-dd";
 
 interface MeetupDetailViewProps {
   meeting: MeetingDetailData;
+  isUpdating: boolean;
+  updateErrorMessage?: string;
+  onUpdate: (
+    body: UpdateMeetingRequest,
+    options?: { onSuccess?: () => void },
+  ) => void;
 }
 
-export default function MeetupDetailView({ meeting }: MeetupDetailViewProps) {
+function toDraft(meeting: MeetingDetailData): UpdateMeetingRequest {
+  return {
+    name: meeting.meetingName,
+    location: meeting.location,
+    startDate: meeting.startDate,
+    endDate: meeting.endDate,
+  };
+}
+
+export default function MeetupDetailView({
+  meeting,
+  isUpdating,
+  updateErrorMessage,
+  onUpdate,
+}: MeetupDetailViewProps) {
   const router = useRouter();
-  const { startDate, endDate, logStatuses } = meeting;
+  const [isEditing, setIsEditing] = useState(false);
+  const [isEditDatesOpen, setIsEditDatesOpen] = useState(false);
+  const [draft, setDraft] = useState(() => toDraft(meeting));
+
+  const { name, location, startDate, endDate } = isEditing
+    ? draft
+    : toDraft(meeting);
+  const { logStatuses } = meeting;
+
+  // 일정 조율 중인 만남은 일정이 없고, 종료된 만남은 일정을 바꿀 수 없음
+  const isEnded =
+    meeting.endDate !== null &&
+    differenceInCalendarDays(parseISO(meeting.endDate), new Date()) < 0;
+  const canEditDates = meeting.meetingStatus === "CONFIRMED" && !isEnded;
 
   const summary = {
-    title: meeting.meetingName,
+    title: name,
     groupName: meeting.groupName,
     dDay: startDate
       ? differenceInCalendarDays(parseISO(startDate), new Date())
@@ -34,7 +74,38 @@ export default function MeetupDetailView({ meeting }: MeetupDetailViewProps) {
         ? formatDateRange({ startDate, endDate })
         : "일정 조율 중",
     endDate: "",
-    location: meeting.location ?? "",
+    location: location ?? "",
+  };
+
+  const handleEdit = () => {
+    if (isUpdating) return;
+
+    if (!isEditing) {
+      setDraft(toDraft(meeting));
+      setIsEditing(true);
+      return;
+    }
+
+    const trimmedName = draft.name.trim();
+    if (!trimmedName) return;
+
+    onUpdate(
+      {
+        ...draft,
+        name: trimmedName,
+        location: draft.location?.trim() || null,
+      },
+      { onSuccess: () => setIsEditing(false) },
+    );
+  };
+
+  const handleConfirmDates = (range: { startDate: Date; endDate: Date }) => {
+    setDraft((prev) => ({
+      ...prev,
+      startDate: format(range.startDate, API_DATE_FORMAT),
+      endDate: format(range.endDate, API_DATE_FORMAT),
+    }));
+    setIsEditDatesOpen(false);
   };
 
   return (
@@ -42,7 +113,23 @@ export default function MeetupDetailView({ meeting }: MeetupDetailViewProps) {
       <BackHeader title="만남 상세" />
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
 
-      <MeetupSummary meetup={summary} canEdit={meeting.canEditMeeting} />
+      <MeetupSummary
+        meetup={summary}
+        canEdit={meeting.canEditMeeting}
+        isEditing={isEditing}
+        onEdit={handleEdit}
+        onTitleChange={(value) => setDraft((prev) => ({ ...prev, name: value }))}
+        onLocationChange={(value) =>
+          setDraft((prev) => ({ ...prev, location: value }))
+        }
+        onDateClick={canEditDates ? () => setIsEditDatesOpen(true) : undefined}
+      />
+
+      {isEditing && updateErrorMessage && (
+        <p className="pretendard-m-12 px-4 pb-2 text-red-500">
+          {updateErrorMessage}
+        </p>
+      )}
 
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
 
@@ -69,6 +156,15 @@ export default function MeetupDetailView({ meeting }: MeetupDetailViewProps) {
           onClick={() => router.push("/post-log")}
         />
       </div>
+
+      {isEditDatesOpen && draft.startDate && draft.endDate && (
+        <PreLogDateRangeSheet
+          startDate={parseISO(draft.startDate)}
+          endDate={parseISO(draft.endDate)}
+          onCancel={() => setIsEditDatesOpen(false)}
+          onConfirm={handleConfirmDates}
+        />
+      )}
     </main>
   );
 }

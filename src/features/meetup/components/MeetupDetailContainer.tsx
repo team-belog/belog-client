@@ -2,6 +2,7 @@
 
 import MeetupDetailView from "@/features/meetup/components/MeetupDetailView";
 import { useMeetingDetail } from "@/features/meetup/hooks/useMeetingDetail";
+import { useUpdateMeeting } from "@/features/meetup/hooks/useUpdateMeeting";
 
 export default function MeetupDetailContainer({
   meetingId,
@@ -10,6 +11,7 @@ export default function MeetupDetailContainer({
 }) {
   const { data, isPending, isError, error, refetch } =
     useMeetingDetail(meetingId);
+  const updateMeeting = useUpdateMeeting(meetingId);
 
   if (isPending) {
     return (
@@ -34,5 +36,12 @@ export default function MeetupDetailContainer({
     );
   }
 
-  return <MeetupDetailView meeting={data} />;
+  return (
+    <MeetupDetailView
+      meeting={data}
+      isUpdating={updateMeeting.isPending}
+      updateErrorMessage={updateMeeting.error?.message}
+      onUpdate={updateMeeting.mutate}
+    />
+  );
 }
