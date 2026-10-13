@@ -40,6 +40,8 @@ export const ENDPOINTS = {
       `/meetings/${meetingId}/date-poll/responses/me`,
     confirmedDate: (meetingId: number) =>
       `/meetings/${meetingId}/confirmed-date`,
+    datePollReminders: (meetingId: number) =>
+      `/meetings/${meetingId}/date-poll/reminders`,
   },
   groupMembership: {
     join: "/group-memberships",

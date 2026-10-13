@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import MeetupCoordinationView from "@/features/meetup/components/MeetupCoordinationView";
 import { useConfirmMeetingDate } from "@/features/meetup/hooks/useConfirmMeetingDate";
 import { useDatePollResults } from "@/features/meetup/hooks/useDatePollResults";
+import { useSendDatePollReminder } from "@/features/meetup/hooks/useSendDatePollReminder";
 
 export default function MeetupCoordinationContainer({
   meetingId,
@@ -16,6 +17,7 @@ export default function MeetupCoordinationContainer({
   const { data, isPending, isError, error, refetch } =
     useDatePollResults(meetingId);
   const confirmDate = useConfirmMeetingDate(meetingId);
+  const sendReminder = useSendDatePollReminder(meetingId);
   const router = useRouter();
 
   if (isPending) {
@@ -47,6 +49,10 @@ export default function MeetupCoordinationContainer({
       results={data}
       isConfirming={confirmDate.isPending}
       confirmErrorMessage={confirmDate.error?.message}
+      isReminding={sendReminder.isPending}
+      hasReminded={sendReminder.isSuccess}
+      remindErrorMessage={sendReminder.error?.message}
+      onRemind={() => sendReminder.mutate()}
       onConfirm={(candidateDateRangeId) =>
         confirmDate.mutate(
           { candidateDateRangeId },

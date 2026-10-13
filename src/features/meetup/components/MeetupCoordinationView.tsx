@@ -15,6 +15,10 @@ import { formatKoreanDateRange } from "@/lib/date";
 interface MeetupCoordinationViewProps {
   isHost: boolean;
   results: DatePollResultsData;
+  isReminding: boolean;
+  hasReminded: boolean;
+  remindErrorMessage?: string;
+  onRemind: () => void;
   isConfirming: boolean;
   confirmErrorMessage?: string;
   onConfirm: (candidateDateRangeId: number) => void;
@@ -49,6 +53,10 @@ function MemberChips({
 export default function MeetupCoordinationView({
   isHost,
   results,
+  isReminding,
+  hasReminded,
+  remindErrorMessage,
+  onRemind,
   isConfirming,
   confirmErrorMessage,
   onConfirm,
@@ -64,10 +72,6 @@ export default function MeetupCoordinationView({
   const topCandidate = candidateDateResults.reduce<
     (typeof candidateDateResults)[number] | undefined
   >((top, item) => (!top || item.rank < top.rank ? item : top), undefined);
-
-  const handleRemind = () => {
-    // TODO: 미응답 멤버 리마인드 API 연결
-  };
 
   const handleConfirm = () => {
     if (topCandidate) onConfirm(topCandidate.candidateDateRangeId);
@@ -152,11 +156,23 @@ export default function MeetupCoordinationView({
         {isHost && unrespondedCount > 0 && (
           <button
             type="button"
-            onClick={handleRemind}
-            className="pretendard-sb-16 mt-[10px] h-[56px] w-full rounded-[12px] bg-main-mint text-main-white"
+            onClick={onRemind}
+            disabled={isReminding}
+            className="pretendard-sb-16 mt-[10px] h-[56px] w-full rounded-[12px] bg-main-mint text-main-white disabled:opacity-60"
           >
             응답하지 않은 {unrespondedCount}명에게 리마인드 보내기
           </button>
+        )}
+
+        {isHost && remindErrorMessage && (
+          <p className="pretendard-m-12 mt-[10px] text-red-500">
+            {remindErrorMessage}
+          </p>
+        )}
+        {isHost && hasReminded && (
+          <p className="pretendard-m-12 mt-[10px] text-sub-gray-2">
+            리마인드 알림을 보냈어요
+          </p>
         )}
         {isHost && confirmErrorMessage && (
           <p className="pretendard-m-12 mt-[10px] text-red-500">

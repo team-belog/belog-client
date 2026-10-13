@@ -47,6 +47,10 @@ export async function confirmMeetingDate(
   await api.put(ENDPOINTS.meeting.confirmedDate(meetingId), body);
 }
 
+export async function sendDatePollReminder(meetingId: number) {
+  await api.post(ENDPOINTS.meeting.datePollReminders(meetingId));
+}
+
 export async function createMeeting(
   groupId: number,
   body: CreateMeetingRequest,
