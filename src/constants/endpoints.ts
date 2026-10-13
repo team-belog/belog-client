@@ -27,6 +27,9 @@ export const ENDPOINTS = {
     withdraw: "/users/me",
     postLogCalendar: "/users/me/post-logs/calendar",
   },
+  bank: {
+    list: "/banks",
+  },
   postLog: {
     getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,
   },
