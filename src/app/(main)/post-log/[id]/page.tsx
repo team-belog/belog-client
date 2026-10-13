@@ -11,12 +11,20 @@ export default function PostLogPhotoPage() {
   const searchParams = useSearchParams();
   const photoUrl = searchParams.get("photoUrl");
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!photoUrl) return;
+    const response = await fetch(photoUrl);
+    if (!response.ok) return;
+    const blob = await response.blob();
+    const ext = blob.type.includes("png") ? "png" : blob.type.includes("webp") ? "webp" : "jpg";
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.href = photoUrl;
-    link.download = "photo.jpg";
+    link.href = url;
+    link.download = `photo.${ext}`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
