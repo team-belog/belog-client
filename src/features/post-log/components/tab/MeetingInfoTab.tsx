@@ -79,21 +79,32 @@ export default function MeetingInfoTab() {
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 flex h-[114px] gap-[9px] bg-white px-4 py-[28px]">
-        <Button bare variant="light" 
-          disabled={memo.trim().length === 0} 
-          onClick={() => saveDraft(
-            { meetingId, memory: memo },
-            { onSuccess: () => queryClient.invalidateQueries({ queryKey: ["postLogMeetingInfo", meetingId] }) }
-          )}
-          className="w-[114px] shrink-0 border border-[#CDD3DE] bg-sub-white text-main-black">
-          저장
-        </Button>
-        <Button bare variant="primary" 
-          disabled={memo.trim().length === 0} 
-          onClick={() => createTicket({ meetingId, memory: memo }, { onSuccess: (data) => router.push(`/post-log/ticket?ticketId=${data.ticketId}`) })} 
-          className="flex-1">
-          티켓 생성
-        </Button>
+        {meetingInfo?.ticketCreated ? (
+          <Button bare variant="primary"
+            disabled={false}
+            onClick={() => router.push(`/post-log/ticket?ticketId=${meetingInfo.ticketId}`)}
+            className="flex-1">
+            티켓 조회
+          </Button>
+        ) : (
+          <>
+            <Button bare variant="light"
+              disabled={memo.trim().length === 0}
+              onClick={() => saveDraft(
+                { meetingId, memory: memo },
+                { onSuccess: () => queryClient.invalidateQueries({ queryKey: ["postLogMeetingInfo", meetingId] }) }
+              )}
+              className="w-[114px] shrink-0 border border-[#CDD3DE] bg-sub-white text-main-black">
+              저장
+            </Button>
+            <Button bare variant="primary"
+              disabled={memo.trim().length === 0}
+              onClick={() => createTicket({ meetingId, memory: memo }, { onSuccess: (data) => router.push(`/post-log/ticket?ticketId=${data.ticketId}`) })}
+              className="flex-1">
+              티켓 생성
+            </Button>
+          </>
+        )}
       </div>
     </>
   );
