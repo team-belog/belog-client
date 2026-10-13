@@ -17,4 +17,17 @@ export type Schedule = {
   memberHandles?: string[];
 };
 
-export type HomeCalendarDay = CalendarDay & { schedules: Schedule[] };
+export type HomeCalendarMeeting = {
+  meetingId: number;
+  startDate: string;
+  endDate: string;
+};
+
+export type HomeCalendarResponse = {
+  yearMonth: string;
+  today: string;
+  hasUnreadNotification: boolean;
+  meetings: HomeCalendarMeeting[];
+};
+
+export type HomeCalendarDay = CalendarDay & { meetings: HomeCalendarMeeting[] };

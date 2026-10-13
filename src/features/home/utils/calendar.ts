@@ -1,20 +1,20 @@
 import { isSameDay, isSameMonth, isToday, isWithinInterval, parseISO } from "date-fns";
 
-import type { HomeCalendarDay, Schedule } from "@/features/home/types";
+import type { HomeCalendarDay, HomeCalendarMeeting } from "@/features/home/types";
 import type { RangePosition } from "@/lib/calendar";
 
-export function getSchedulesForDate(date: Date, schedules: Schedule[]): Schedule[] {
-  return schedules.filter((schedule) =>
+export function getMeetingsForDate(date: Date, meetings: HomeCalendarMeeting[]): HomeCalendarMeeting[] {
+  return meetings.filter((meeting) =>
     isWithinInterval(date, {
-      start: parseISO(schedule.startDate),
-      end: parseISO(schedule.endDate),
+      start: parseISO(meeting.startDate),
+      end: parseISO(meeting.endDate),
     })
   );
 }
 
-export function getRangePosition(date: Date, schedule: Schedule): RangePosition {
-  const start = parseISO(schedule.startDate);
-  const end = parseISO(schedule.endDate);
+export function getRangePosition(date: Date, meeting: HomeCalendarMeeting): RangePosition {
+  const start = parseISO(meeting.startDate);
+  const end = parseISO(meeting.endDate);
 
   if (isSameDay(start, end)) return "single";
   if (isSameDay(date, start)) return "start";
@@ -26,17 +26,17 @@ export function buildCalendarDay(
   date: Date,
   viewMonth: Date,
   selectedDate: Date | null,
-  schedules: Schedule[]
+  meetings: HomeCalendarMeeting[]
 ): HomeCalendarDay {
-  const daySchedules = getSchedulesForDate(date, schedules);
-  const [primarySchedule] = daySchedules;
+  const dayMeetings = getMeetingsForDate(date, meetings);
+  const [primaryMeeting] = dayMeetings;
 
   return {
     date,
     isCurrentMonth: isSameMonth(date, viewMonth),
     isToday: isToday(date),
     isSelected: selectedDate ? isSameDay(date, selectedDate) : false,
-    schedules: daySchedules,
-    rangePosition: primarySchedule ? getRangePosition(date, primarySchedule) : null,
+    meetings: dayMeetings,
+    rangePosition: primaryMeeting ? getRangePosition(date, primaryMeeting) : null,
   };
 }

@@ -1,7 +1,5 @@
 import type { Schedule } from "@/features/home/types";
 
-export const DEFAULT_SELECTED_DATE = "2026-08-18";
-
 export const DUMMY_SCHEDULES: Schedule[] = [
   {
     id: 1,

@@ -27,6 +27,9 @@ export const ENDPOINTS = {
     withdraw: "/users/me",
     postLogCalendar: "/users/me/post-logs/calendar",
   },
+  home: {
+    calendar: "/home/calendar",
+  },
   bank: {
     list: "/banks",
   },
