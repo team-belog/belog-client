@@ -84,6 +84,10 @@ export type SubmitDatePollResponseRequest = {
   candidateDateRangeIds: number[];
 };
 
+export type ConfirmMeetingDateRequest = {
+  candidateDateRangeId: number;
+};
+
 export type CreateMeetingRequest = {
   name: string;
   location: string | null;

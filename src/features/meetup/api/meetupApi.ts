@@ -3,6 +3,7 @@ import { ApiResponse } from "@/lib/apiError";
 import { ENDPOINTS } from "@/constants/endpoints";
 import type {
   CreateMeetingData,
+  ConfirmMeetingDateRequest,
   CreateMeetingRequest,
   DatePollData,
   DatePollResultsData,
@@ -37,6 +38,13 @@ export async function submitDatePollResponse(
   body: SubmitDatePollResponseRequest,
 ) {
   await api.put(ENDPOINTS.meeting.myDatePollResponse(meetingId), body);
+}
+
+export async function confirmMeetingDate(
+  meetingId: number,
+  body: ConfirmMeetingDateRequest,
+) {
+  await api.put(ENDPOINTS.meeting.confirmedDate(meetingId), body);
 }
 
 export async function createMeeting(

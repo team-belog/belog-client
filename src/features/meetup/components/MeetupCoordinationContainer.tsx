@@ -1,6 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import MeetupCoordinationView from "@/features/meetup/components/MeetupCoordinationView";
+import { useConfirmMeetingDate } from "@/features/meetup/hooks/useConfirmMeetingDate";
 import { useDatePollResults } from "@/features/meetup/hooks/useDatePollResults";
 
 export default function MeetupCoordinationContainer({
@@ -12,6 +15,8 @@ export default function MeetupCoordinationContainer({
 }) {
   const { data, isPending, isError, error, refetch } =
     useDatePollResults(meetingId);
+  const confirmDate = useConfirmMeetingDate(meetingId);
+  const router = useRouter();
 
   if (isPending) {
     return (
@@ -36,5 +41,18 @@ export default function MeetupCoordinationContainer({
     );
   }
 
-  return <MeetupCoordinationView isHost={isHost} results={data} />;
+  return (
+    <MeetupCoordinationView
+      isHost={isHost}
+      results={data}
+      isConfirming={confirmDate.isPending}
+      confirmErrorMessage={confirmDate.error?.message}
+      onConfirm={(candidateDateRangeId) =>
+        confirmDate.mutate(
+          { candidateDateRangeId },
+          { onSuccess: () => router.replace(`/meetup/${meetingId}`) },
+        )
+      }
+    />
+  );
 }

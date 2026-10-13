@@ -15,6 +15,9 @@ import { formatKoreanDateRange } from "@/lib/date";
 interface MeetupCoordinationViewProps {
   isHost: boolean;
   results: DatePollResultsData;
+  isConfirming: boolean;
+  confirmErrorMessage?: string;
+  onConfirm: (candidateDateRangeId: number) => void;
 }
 
 function MemberChips({
@@ -46,6 +49,9 @@ function MemberChips({
 export default function MeetupCoordinationView({
   isHost,
   results,
+  isConfirming,
+  confirmErrorMessage,
+  onConfirm,
 }: MeetupCoordinationViewProps) {
   const {
     totalParticipantCount,
@@ -54,13 +60,17 @@ export default function MeetupCoordinationView({
   } = results;
   const unrespondedCount = totalParticipantCount - respondedParticipantCount;
   const [openId, setOpenId] = useState<number | null>(null);
+  // 별도 선택 UI가 없어 현재 1위(동순위면 먼저 나온) 후보 일정을 확정
+  const topCandidate = candidateDateResults.reduce<
+    (typeof candidateDateResults)[number] | undefined
+  >((top, item) => (!top || item.rank < top.rank ? item : top), undefined);
 
   const handleRemind = () => {
     // TODO: 미응답 멤버 리마인드 API 연결
   };
 
   const handleConfirm = () => {
-    // TODO: 날짜 확정 API 연결
+    if (topCandidate) onConfirm(topCandidate.candidateDateRangeId);
   };
 
   return (
@@ -148,11 +158,16 @@ export default function MeetupCoordinationView({
             응답하지 않은 {unrespondedCount}명에게 리마인드 보내기
           </button>
         )}
+        {isHost && confirmErrorMessage && (
+          <p className="pretendard-m-12 mt-[10px] text-red-500">
+            {confirmErrorMessage}
+          </p>
+        )}
       </div>
 
       <Button
         variant="primary"
-        disabled={!isHost}
+        disabled={!isHost || isConfirming || !topCandidate}
         onClick={handleConfirm}
         className="fixed bottom-0 left-0 right-0"
       >
