@@ -3,11 +3,11 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { useGetActiveMeetings } from "@/features/home/hooks/useGetActiveMeetings";
-import type { Schedule } from "@/features/home/types";
-import { filterEndedMeetups } from "@/features/home/utils/meetup";
+import { useGetCompletedTickets } from "@/features/home/hooks/useGetCompletedTickets";
+import { toTicketSchedule } from "@/features/home/utils/meetup";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 
-export function useMeetupItemList(endedSchedules: Schedule[]) {
+export function useMeetupItemList() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedQuery = useDebouncedValue(searchQuery.trim());
@@ -23,9 +23,20 @@ export function useMeetupItemList(endedSchedules: Schedule[]) {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const filteredEndedSchedules = useMemo(
-    () => filterEndedMeetups(endedSchedules, searchQuery),
-    [endedSchedules, searchQuery]
+  const {
+    data: completedTickets,
+    hasNextPage: hasNextCompletedPage,
+    isFetchingNextPage: isFetchingNextCompletedPage,
+    fetchNextPage: fetchNextCompletedPage,
+  } = useGetCompletedTickets(activeIndex === 1);
+
+  const loadMoreEndedSchedules = useCallback(() => {
+    if (hasNextCompletedPage && !isFetchingNextCompletedPage) fetchNextCompletedPage();
+  }, [hasNextCompletedPage, isFetchingNextCompletedPage, fetchNextCompletedPage]);
+
+  const endedSchedules = useMemo(
+    () => completedTickets?.map(toTicketSchedule),
+    [completedTickets]
   );
 
   return {
@@ -37,6 +48,8 @@ export function useMeetupItemList(endedSchedules: Schedule[]) {
     activeMeetings,
     hasMoreActiveMeetings: Boolean(hasNextPage),
     loadMoreActiveMeetings,
-    filteredEndedSchedules,
+    endedSchedules,
+    hasMoreEndedSchedules: Boolean(hasNextCompletedPage),
+    loadMoreEndedSchedules,
   };
 }

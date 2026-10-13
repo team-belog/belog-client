@@ -1,6 +1,6 @@
 import { format, isSameDay, isSameMonth, parseISO } from "date-fns";
 
-import type { Schedule } from "@/features/home/types";
+import type { CompletedTicket, Schedule } from "@/features/home/types";
 
 export function formatMemoryDateRange(schedule: Schedule): string {
   const start = parseISO(schedule.startDate);
@@ -22,12 +22,19 @@ export function formatMemberLabel(leaderName: string, memberCount: number): stri
   return otherCount > 0 ? `${leaderName} 외 ${otherCount}명` : leaderName;
 }
 
-export function filterEndedMeetups(schedules: Schedule[], query: string): Schedule[] {
-  const normalizedQuery = query.trim().toLowerCase();
-
-  return schedules.filter(
-    (schedule) =>
-      schedule.status === "done" &&
-      (normalizedQuery === "" || schedule.title.toLowerCase().includes(normalizedQuery))
-  );
+// 종료된 만남 티켓을 티켓 카드(MeetupTicketCard)가 쓰는 Schedule 형태로 변환한다
+export function toTicketSchedule(ticket: CompletedTicket): Schedule {
+  return {
+    id: ticket.ticketId,
+    title: ticket.name,
+    description: ticket.memory,
+    photoUrl: ticket.coverPhotoUrl ?? undefined,
+    startDate: ticket.startDate,
+    endDate: ticket.endDate,
+    destinationCity: ticket.location,
+    memberHandles: ticket.participants.map((participant) => participant.nickname),
+    status: "done",
+    leaderName: ticket.participants[0]?.nickname ?? "",
+    memberCount: ticket.participantCount,
+  };
 }

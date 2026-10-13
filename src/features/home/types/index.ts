@@ -63,3 +63,31 @@ export type ActiveMeetingsData = {
   nextCursor: string | null;
   hasNext: boolean;
 };
+
+export type CompletedTicketParticipant = {
+  groupMemberId: number;
+  nickname: string;
+};
+
+export type CompletedTicket = {
+  ticketId: number;
+  name: string;
+  memory: string;
+  coverPhotoUrl: string | null;
+  startDate: string; // "YYYY-MM-DD"
+  endDate: string; // "YYYY-MM-DD"
+  location: string;
+  participantCount: number;
+  participants: CompletedTicketParticipant[];
+};
+
+export type CompletedTicketsParams = {
+  cursor?: string;
+  size?: number;
+};
+
+export type CompletedTicketsData = {
+  items: CompletedTicket[];
+  nextCursor: string | null;
+  hasNext: boolean;
+};
