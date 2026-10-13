@@ -39,6 +39,46 @@ export type PostLogMeetingInfo = {
     ticketCreated: boolean;
 };
 
+export type PhotoUploadRequest = {
+    clientPhotoId: string;
+    contentType: string;
+    fileSize: number;
+};
+
+export type PhotoUploadItem = {
+    clientPhotoId: string;
+    objectKey: string;
+    uploadUrl: string;
+    method: string;
+    requiredHeaders: Record<string, string>;
+    expiresAt: string;
+};
+
+export type GetPhotoUploadUrlsResponse = {
+    uploads: PhotoUploadItem[];
+};
+
+export type PhotoMetadataInput = {
+    objectKey: string;
+    capturedAt: string;
+};
+
+export type RegisteredPhoto = {
+    photoId: number;
+    objectKey: string;
+    capturedAt: string;
+};
+
+export type RegisterPhotoMetadataResponse = {
+    photos: RegisteredPhoto[];
+};
+
+export type LikePhotoResponse = {
+    photoId: number;
+    likedByMe: boolean;
+    likeCount: number;
+};
+
 export type PostLogPhotoListRequest = {
     meetingId: number;
     cursor: string | undefined;
