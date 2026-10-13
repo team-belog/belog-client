@@ -1,6 +1,6 @@
 "use client";
 
-import { addMonths, isBefore, isSameDay, isWithinInterval, startOfDay, subMonths } from "date-fns";
+import { addDays, addMonths, isBefore, isSameDay, isWithinInterval, startOfDay, subMonths } from "date-fns";
 import { useMemo, useState } from "react";
 
 import type { CalendarDay, RangePosition } from "@/lib/calendar";
@@ -17,6 +17,8 @@ export function useDateRangePicker(
   initialMonth: Date = new Date(),
   initialRangeStart: Date | null = null,
   initialRangeEnd: Date | null = null,
+  /** 지정하면 시작일만 고르고 종료일은 시작일 + 박 수로 자동 설정 */
+  fixedNights: number | null = null,
 ) {
   const today = useMemo(() => startOfDay(new Date()), []);
   const [viewMonth, setViewMonth] = useState(
@@ -52,6 +54,12 @@ export function useDateRangePicker(
 
   const selectDate = (date: Date) => {
     if (isBefore(date, today)) return;
+
+    if (fixedNights !== null) {
+      setRangeStart(date);
+      setRangeEnd(addDays(date, fixedNights));
+      return;
+    }
 
     if (!rangeStart || rangeEnd) {
       setRangeStart(date);

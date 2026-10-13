@@ -5,29 +5,35 @@ import { useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import SearchBar from "@/components/ui/SearchBar";
 import MeetupMemberRow from "@/features/meetup/components/MeetupMemberRow";
-import type { GroupMember } from "@/features/group/types";
+import type { GroupMemberDto } from "@/features/group/types";
 
 interface MeetupStep2Props {
-  members: GroupMember[];
+  members: GroupMemberDto[];
+  selectedIds: number[];
+  onChangeSelectedIds: (ids: number[]) => void;
   onNext: () => void;
 }
 
-export default function MeetupStep2({ members, onNext }: MeetupStep2Props) {
+export default function MeetupStep2({
+  members,
+  selectedIds,
+  onChangeSelectedIds,
+  onNext,
+}: MeetupStep2Props) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const filteredMembers = useMemo(() => {
     const query = searchQuery.trim();
     return query
-      ? members.filter((member) => member.name.includes(query))
+      ? members.filter((member) => member.nickname.includes(query))
       : members;
   }, [members, searchQuery]);
 
   const toggleMember = (id: number) => {
-    setSelectedIds((prev) =>
-      prev.includes(id)
-        ? prev.filter((memberId) => memberId !== id)
-        : [...prev, id],
+    onChangeSelectedIds(
+      selectedIds.includes(id)
+        ? selectedIds.filter((memberId) => memberId !== id)
+        : [...selectedIds, id],
     );
   };
 
@@ -54,10 +60,10 @@ export default function MeetupStep2({ members, onNext }: MeetupStep2Props) {
       <div className="flex flex-col">
         {filteredMembers.map((member) => (
           <MeetupMemberRow
-            key={member.id}
+            key={member.groupMemberId}
             member={member}
-            selected={selectedIds.includes(member.id)}
-            onToggle={() => toggleMember(member.id)}
+            selected={selectedIds.includes(member.groupMemberId)}
+            onToggle={() => toggleMember(member.groupMemberId)}
           />
         ))}
       </div>

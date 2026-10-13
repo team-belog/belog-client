@@ -7,20 +7,18 @@ import BackHeader from "@/components/layout/BackHeader";
 import Button from "@/components/ui/Button";
 import TabBar from "@/components/ui/TabBar";
 import TrashIcon from "@/components/ui/TrashIcon";
-import GroupActiveMeetupCard from "@/features/group/components/GroupActiveMeetupCard";
 import GroupCoverSection from "@/features/group/components/GroupCoverSection";
 import GroupDeleteModal from "@/features/group/components/GroupDeleteModal";
+import GroupMeetupCard from "@/features/group/components/GroupMeetupCard";
 import GroupMeetupEmptyState from "@/features/group/components/GroupMeetupEmptyState";
 import GroupPastMeetupEmptyState from "@/features/group/components/GroupPastMeetupEmptyState";
 import GroupPastMeetupItem from "@/features/group/components/GroupPastMeetupItem";
-import GroupPendingMeetupCard from "@/features/group/components/GroupPendingMeetupCard";
 import type { GroupDetailData, PastMeetingDto } from "@/features/group/types";
 
 const TABS = ["조율 중인 만남", "진행 중인 만남"];
 
 interface GroupHomeViewProps {
   group: GroupDetailData;
-  ownerNickname?: string;
   // undefined면 아직 불러오는 중
   pastMeetings?: PastMeetingDto[];
   hasMorePastMeetings: boolean;
@@ -36,7 +34,6 @@ interface GroupHomeViewProps {
 
 export default function GroupHomeView({
   group,
-  ownerNickname,
   pastMeetings,
   hasMorePastMeetings,
   onLoadMorePastMeetings,
@@ -105,11 +102,19 @@ export default function GroupHomeView({
           group.schedulingMeetings.length > 0 ? (
             <div className="flex flex-col gap-[15px]">
               {group.schedulingMeetings.map((meeting) => (
-                <GroupPendingMeetupCard
+                <GroupMeetupCard
                   key={meeting.meetingId}
                   meeting={meeting}
                   inviteCode={group.inviteCode}
-                  ownerNickname={ownerNickname}
+                  // 만남장은 일정을 확정하고, 멤버는 응답 현황만 볼 수 있음
+                  actionLabel={
+                    meeting.isMeetingOwner ? "일정 확정하기" : "일정 현황 보기"
+                  }
+                  onAction={() =>
+                    router.push(
+                      `/meetup/${meeting.meetingId}/status${meeting.isMeetingOwner ? "?role=host" : ""}`,
+                    )
+                  }
                 />
               ))}
             </div>
@@ -122,9 +127,11 @@ export default function GroupHomeView({
         ) : group.activeMeetings.length > 0 ? (
           <div className="flex flex-col gap-[15px]">
             {group.activeMeetings.map((meeting) => (
-              <GroupActiveMeetupCard
+              <GroupMeetupCard
                 key={meeting.meetingId}
                 meeting={meeting}
+                inviteCode={group.inviteCode}
+                actionLabel="만남 상세"
                 onAction={() =>
                   router.push(
                     `/meetup/${meeting.meetingId}?groupId=${group.groupId}`,
