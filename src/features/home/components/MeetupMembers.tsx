@@ -9,19 +9,16 @@ interface MeetupMembersProps {
 
 export default function MeetupMembers({ participants, participantCount }: MeetupMembersProps) {
   const avatarUrls = participants.length
-    ? participants.slice(0, 2).map((participant) => participant.profileImageUrl ?? undefined)
-    : [undefined, undefined];
+    ? participants.slice(0, 3).map((participant) => participant.profileImageUrl ?? undefined)
+    : [undefined, undefined, undefined];
   const leaderName = participants[0]?.nickname ?? "";
 
   return (
     <div className="flex items-center gap-2">
       <div className="flex items-center">
         {avatarUrls.map((src, index) => (
-          <div
-            key={index}
-            className={`relative overflow-hidden rounded-full border-2 border-main-white ${index === 0 ? "" : "-ml-3"}`}
-          >
-            <Profile src={src} width={26} height={26} />
+          <div key={index} className={index === 0 ? "" : "-ml-[15px]"}>
+            <Profile src={src} width={30} height={30} />
           </div>
         ))}
       </div>

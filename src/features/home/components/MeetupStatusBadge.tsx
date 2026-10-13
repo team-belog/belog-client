@@ -5,7 +5,7 @@ interface MeetupStatusBadgeProps {
 }
 
 const STATUS_LABEL: Record<ProgressStatus, string> = {
-  SCHEDULING: "일정 조율 중",
+  SCHEDULING: "조율 중",
   UPCOMING: "시작 전",
   IN_PROGRESS: "진행 중",
 };
