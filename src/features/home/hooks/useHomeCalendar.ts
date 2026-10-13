@@ -23,7 +23,7 @@ export function useHomeCalendar(
   const days = useMemo<HomeCalendarDay[]>(() => {
     const meetings = data?.meetings ?? [];
     const weeks = getMonthMatrix(viewMonth.getFullYear(), viewMonth.getMonth() + 1);
-    return weeks.flat().map((date) => buildCalendarDay(date, viewMonth, selectedDate, meetings));
+    return weeks.flat().map((date) => buildCalendarDay(date, viewMonth, selectedDate, meetings, data?.today));
   }, [viewMonth, selectedDate, data]);
 
   const monthLabel = useMemo(() => getMonthLabel(viewMonth), [viewMonth]);

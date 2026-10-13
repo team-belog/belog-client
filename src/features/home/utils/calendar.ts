@@ -26,7 +26,8 @@ export function buildCalendarDay(
   date: Date,
   viewMonth: Date,
   selectedDate: Date | null,
-  meetings: HomeCalendarMeeting[]
+  meetings: HomeCalendarMeeting[],
+  today?: string
 ): HomeCalendarDay {
   const dayMeetings = getMeetingsForDate(date, meetings);
   const [primaryMeeting] = dayMeetings;
@@ -34,7 +35,7 @@ export function buildCalendarDay(
   return {
     date,
     isCurrentMonth: isSameMonth(date, viewMonth),
-    isToday: isToday(date),
+    isToday: today ? isSameDay(date, parseISO(today)) : isToday(date),
     isSelected: selectedDate ? isSameDay(date, selectedDate) : false,
     meetings: dayMeetings,
     rangePosition: primaryMeeting ? getRangePosition(date, primaryMeeting) : null,
