@@ -16,11 +16,10 @@ import { useUnlikePhoto } from "../../hooks/useUnLikePhoto";
 function groupByTime(photos: PostLogPhoto[]) {
   const map: Record<string, PostLogPhoto[]> = {};
   for (const photo of photos) {
-    const time = new Date(photo.capturedAt).toLocaleTimeString("ko-KR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
+    const date = new Date(photo.capturedAt);
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = date.getMinutes() < 30 ? "00" : "30";
+    const time = `${hours}:${minutes}`;
     if (!map[time]) map[time] = [];
     map[time].push(photo);
   }
