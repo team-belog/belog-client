@@ -51,4 +51,7 @@ export const ENDPOINTS = {
   groupMembership: {
     join: "/group-memberships",
   },
+  preLog: {
+    getMapPlans: (meetingId: number) => `/meetings/${meetingId}/pre-log/map-plans`,
+  },
 } as const;
