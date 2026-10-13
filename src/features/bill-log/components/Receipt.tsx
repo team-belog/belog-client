@@ -3,28 +3,15 @@ import Image from "next/image";
 import BelogIcon from "@/components/ui/BelogIcon";
 import BillItem from "@/features/bill-log/components/BillItem";
 import BillTotal from "@/features/bill-log/components/BillTotal";
-
-interface ReceiptItemData {
-  id: number;
-  name: string;
-  amount: string;
-}
-
-interface SettlementPerson {
-  id: number;
-  name: string;
-  amount: string;
-  isPayer?: boolean;
-  profileSrc?: string;
-}
+import type { BillItem as BillItemType, BillShare } from "@/features/bill-log/types";
 
 interface ReceiptProps {
   title: string;
-  payer: string;
+  payerNickname: string;
   settlementMethod: string;
-  items: ReceiptItemData[];
-  totalAmount: string;
-  settlementPersons: SettlementPerson[];
+  items: BillItemType[];
+  totalAmount: number;
+  shares: BillShare[];
 }
 
 function InfoRow({ label, value }: { label: string; value: string }) {
@@ -36,7 +23,7 @@ function InfoRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-export default function Receipt({ title, payer, settlementMethod, items, totalAmount, settlementPersons }: ReceiptProps) {
+export default function Receipt({ title, payerNickname, settlementMethod, items, totalAmount, shares }: ReceiptProps) {
   return (
     <div style={{ filter: "drop-shadow(0px 0px 2.5px rgba(0,0,0,0.15))" }}>
       {/* 카드 본문 */}
@@ -51,7 +38,7 @@ export default function Receipt({ title, payer, settlementMethod, items, totalAm
             {/* 제목 */}
             <InfoRow label="제목" value={title} />
             {/* 결제자 */}
-            <InfoRow label="결제자" value={payer} />
+            <InfoRow label="결제자" value={payerNickname} />
             {/* 정산 방식 */}
             <div className="flex items-center justify-between">
               <p className="pretendard-m-16 w-[124px] shrink-0 text-sub-black">정산 방식</p>
@@ -63,25 +50,25 @@ export default function Receipt({ title, payer, settlementMethod, items, totalAm
             <div className="flex flex-col gap-4">
               <p className="pretendard-m-16 text-sub-black">결제 항목 ({items.length})</p>
               <div className="flex flex-col gap-2">
-                {items.map((item) => (
-                  <BillItem key={item.id} name={item.name} amount={item.amount} />
+                {items.map((item, index) => (
+                  <BillItem key={index} name={item.name} amount={`${item.amount}원`} />
                 ))}
               </div>
             </div>
-            <BillTotal amount={totalAmount} />
+            <BillTotal amount={`${totalAmount}원`} />
           </div>
 
           {/* 정산 요청 받을 사람 */}
           <div className="flex flex-col gap-4 mt-[60px]">
             <p className="pretendard-sb-16 text-sub-black">정산 요청 받을 사람</p>
             <div className="flex flex-col gap-2">
-              {settlementPersons.map((person) => (
+              {shares.map((share) => (
                 <BillItem
-                  key={person.id}
-                  name={person.name}
-                  amount={person.amount}
-                  isPayer={person.isPayer}
-                  profileSrc={person.profileSrc ?? ""}
+                  key={share.meetingParticipantId}
+                  name={share.nickname}
+                  amount={`${share.amount}원`}
+                  isPayer={share.payer}
+                  profileSrc={share.profileImageUrl ?? ""}
                 />
               ))}
             </div>

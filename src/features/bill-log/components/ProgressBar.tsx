@@ -10,7 +10,7 @@ export default function ProgressBar({ current, total }: ProgressBarProps) {
   const remaining = total - current;
   const percent = total === 0 ? 0 : Math.min(current / total, 1);
   const isFlipped = percent > 0.8;
-  const mascotLeft = `min(calc(${percent * 100}% - 12px), calc(100% - 24px))`;
+  const mascotLeft = `min(calc(${percent * 100}% - 0px), calc(100% - 24px))`;
 
   const getProgressText = () => {
     if (remaining === 0) return "모두 정산했어요 !";

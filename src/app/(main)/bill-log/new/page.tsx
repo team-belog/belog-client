@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
@@ -16,6 +16,9 @@ const TOTAL_STEPS = 4;
 export default function BillNewPage() {
   const [step, setStep] = useState(1);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const meetingId = searchParams.get("meetingId");
+  const groupId = searchParams.get("groupId");
 
   const handleBack = () => {
     if (step > 1) {
@@ -32,7 +35,7 @@ export default function BillNewPage() {
   };
 
   const handleSubmit = () => {
-    router.push("/bill-log");
+    router.push(`/bill-log?meetingId=${meetingId}&groupId=${groupId}`);
   };
 
   return (
