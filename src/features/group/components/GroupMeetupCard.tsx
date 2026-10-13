@@ -2,28 +2,26 @@
 
 import { useState } from "react";
 
-import type { SchedulingMeetingDto } from "@/features/group/types";
+import type { GroupMeetingDto } from "@/features/group/types";
 
 // 만남 정원은 응답에 없어 고정값 사용
 const MEETUP_MEMBER_LIMIT = 15;
 
-interface GroupPendingMeetupCardProps {
-  meeting: SchedulingMeetingDto;
+interface GroupMeetupCardProps {
+  meeting: GroupMeetingDto;
   inviteCode: string;
-  ownerNickname?: string;
-  actionLabel?: string;
+  actionLabel: string;
   onAction?: () => void;
 }
 
-export default function GroupPendingMeetupCard({
+export default function GroupMeetupCard({
   meeting,
   inviteCode,
-  ownerNickname,
-  actionLabel = "일정 확정하기",
+  actionLabel,
   onAction,
-}: GroupPendingMeetupCardProps) {
+}: GroupMeetupCardProps) {
   const [copied, setCopied] = useState(false);
-  const { name, participantNicknames, participantCount } = meeting;
+  const { name, participants, participantCount } = meeting;
 
   const handleCopy = async () => {
     try {
@@ -42,12 +40,12 @@ export default function GroupPendingMeetupCard({
 
         <div className="flex items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-[5px]">
-            {participantNicknames.map((nickname) => (
+            {participants.map(({ nickname, isMeetingOwner }) => (
               <span
                 key={nickname}
                 className="pretendard-m-12 whitespace-nowrap rounded-[8px] bg-[#F1F4F9] px-[10px] py-[6px] text-sub-gray-1"
               >
-                {nickname === ownerNickname ? `${nickname} · 만남장` : nickname}
+                {isMeetingOwner ? `${nickname} · 만남장` : nickname}
               </span>
             ))}
           </div>
