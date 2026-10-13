@@ -1,12 +1,16 @@
-import MeetupDetailView from "@/features/meetup/components/MeetupDetailView";
-import { DUMMY_MEETUP_DETAIL } from "@/features/meetup/constants/dummy";
+import { notFound } from "next/navigation";
+
+import MeetupDetailContainer from "@/features/meetup/components/MeetupDetailContainer";
 
 export default async function MeetupDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await params;
+  const { id } = await params;
+  const meetingId = Number(id);
 
-  return <MeetupDetailView meetup={DUMMY_MEETUP_DETAIL} />;
+  if (!Number.isInteger(meetingId) || meetingId <= 0) notFound();
+
+  return <MeetupDetailContainer meetingId={meetingId} />;
 }

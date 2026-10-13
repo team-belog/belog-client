@@ -3,10 +3,10 @@
 import Image from "next/image";
 
 import Profile from "@/components/ui/Profile";
-import type { GroupMember } from "@/features/group/types";
+import type { GroupMemberDto } from "@/features/group/types";
 
 interface MeetupMemberRowProps {
-  member: GroupMember;
+  member: GroupMemberDto;
   selected: boolean;
   onToggle: () => void;
 }
@@ -23,8 +23,8 @@ export default function MeetupMemberRow({
       className="flex w-full items-center justify-between py-[10px]"
     >
       <div className="flex items-center gap-[10px]">
-        <Profile src={member.avatarUrl} width={55} height={55} />
-        <span className="pretendard-m-15 text-main-black">{member.name}</span>
+        <Profile src={member.profileImageUrl ?? undefined} width={55} height={55} />
+        <span className="pretendard-m-15 text-main-black">{member.nickname}</span>
       </div>
       <Image
         src={
