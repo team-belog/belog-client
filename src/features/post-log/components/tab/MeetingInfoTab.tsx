@@ -1,29 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 import ReadOnlyFieldGroup from "@/components/ui/ReadOnlyFieldGroup";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
-import { DUMMY_MEETING } from "../../constants/dummy";
+import { useGetPostLogMeetingInfo } from "../../hooks/useGetPostLogMeetingInfo";
+import { useCreatePostLogTicket } from "../../hooks/useCreatePostLogTicket";
+import { useSavePostLogDraft } from "../../hooks/useSavePostLogDraft";
 
 const MAX_MEMO = 80;
 
 export default function MeetingInfoTab() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const meetingId = Number(searchParams.get("meetingId"));
+  const queryClient = useQueryClient();
+
+  const { data: meetingInfo, isLoading } = useGetPostLogMeetingInfo(meetingId);
+  const { mutate: createTicket } = useCreatePostLogTicket();
+  const { mutate: saveDraft } = useSavePostLogDraft();
+
   const [memo, setMemo] = useState("");
-  const [date, setDate] = useState(DUMMY_MEETING.date);
-  const [location, setLocation] = useState(DUMMY_MEETING.location);
+
+  useEffect(() => {
+    if(meetingInfo?.memory){
+      setMemo(meetingInfo.memory)
+    }
+  },[meetingInfo])
+
+  if (isLoading) return <div className="flex items-center justify-center h-dvh">로딩 중...</div>;
+
+  const dateRange = meetingInfo ? `${meetingInfo.startDate} - ${meetingInfo.endDate}` : "";
+  const totalAmount = meetingInfo ? `${meetingInfo.settlement.totalAmount.toLocaleString()}원` : "";
 
   return (
     <>
       <div className="flex flex-col gap-4 pb-[130px] pt-[10px]">
         <ReadOnlyFieldGroup
-          title={DUMMY_MEETING.title}
+          title={meetingInfo?.meetingName ?? ""}
           fields={[
-            { label: "완료 인원", value: `${DUMMY_MEETING.completedCount}명` },
-            { label: "총 정산 금액", value: DUMMY_MEETING.totalAmount },
+            { label: "완료 인원", value: `${meetingInfo?.settlement.completedParticipantCount ?? 0}명` },
+            { label: "총 정산 금액", value: totalAmount },
           ]}
         />
 
@@ -39,18 +60,18 @@ export default function MeetingInfoTab() {
           </p>
         </div>
 
-        <InputField label="날짜" placeholder="날짜를 입력해주세요" value={date} onChange={setDate} />
-        <InputField label="장소" placeholder="장소를 입력해주세요" value={location} onChange={setLocation} />
+        <InputField label="날짜" placeholder="날짜를 입력해주세요" value={dateRange} onChange={() => {}} />
+        <InputField label="장소" placeholder="장소를 입력해주세요" value={meetingInfo?.location ?? ""} onChange={() => {}} />
 
         <div className="mx-4 flex flex-col gap-[10px]">
           <div className="flex items-center gap-[5px]">
             <p className="pretendard-sb-16 text-main-black">참여 멤버</p>
-            <p className="pretendard-sb-16 text-main-mint">{DUMMY_MEETING.members.length}명</p>
+            <p className="pretendard-sb-16 text-main-mint">{meetingInfo?.participantCount}명</p>
           </div>
           <div className="flex flex-wrap gap-[6px]">
-            {DUMMY_MEETING.members.map((member) => (
-              <div key={member} className="rounded-[10px] bg-[#F7F8F9] px-3 py-[7px]">
-                <p className="pretendard-m-14 text-sub-gray-1">{member}</p>
+            {meetingInfo?.participants.map((participant) => (
+              <div key={participant.groupMemberId} className="rounded-[10px] bg-[#F7F8F9] px-3 py-[7px]">
+                <p className="pretendard-m-14 text-sub-gray-1">{participant.nickname}{participant.meetingCreator && ( <span> · 모임장</span> )}</p>
               </div>
             ))}
           </div>
@@ -58,10 +79,19 @@ export default function MeetingInfoTab() {
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 flex h-[114px] gap-[9px] bg-white px-4 py-[28px]">
-        <Button bare variant="light" onClick={() => {}} className="w-[114px] shrink-0 border border-[#CDD3DE] bg-sub-white text-main-black">
+        <Button bare variant="light" 
+          disabled={memo.trim().length === 0} 
+          onClick={() => saveDraft(
+            { meetingId, memory: memo },
+            { onSuccess: () => queryClient.invalidateQueries({ queryKey: ["postLogMeetingInfo", meetingId] }) }
+          )}
+          className="w-[114px] shrink-0 border border-[#CDD3DE] bg-sub-white text-main-black">
           저장
         </Button>
-        <Button bare variant="primary" onClick={() => router.push("/post-log/ticket")} className="flex-1">
+        <Button bare variant="primary" 
+          disabled={memo.trim().length === 0} 
+          onClick={() => createTicket({ meetingId, memory: memo }, { onSuccess: (data) => router.push(`/post-log/ticket?ticketId=${data.ticketId}`) })} 
+          className="flex-1">
           티켓 생성
         </Button>
       </div>
