@@ -16,6 +16,7 @@ export const ENDPOINTS = {
   },
   postLog: {
     getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,
+    getPhotoList: (meetingId: number) => `/meetings/${meetingId}/post-log-photos`,
   },
   group: {
     list: "/groups",
