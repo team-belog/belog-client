@@ -48,6 +48,16 @@ export type MeetingDateRange = {
   endDate: string;
 };
 
+export type CandidateDateRange = MeetingDateRange & {
+  id: number;
+};
+
+export type DatePollData = {
+  meetingId: number;
+  status: MeetingStatus;
+  candidateDateRanges: CandidateDateRange[];
+};
+
 export type CreateMeetingRequest = {
   name: string;
   location: string | null;

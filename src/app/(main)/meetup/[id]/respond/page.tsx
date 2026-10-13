@@ -1,11 +1,16 @@
-import MeetupRespondView from "@/features/meetup/components/MeetupRespondView";
+import { notFound } from "next/navigation";
+
+import MeetupRespondContainer from "@/features/meetup/components/MeetupRespondContainer";
 
 export default async function MeetupRespondPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await params;
+  const { id } = await params;
+  const meetingId = Number(id);
 
-  return <MeetupRespondView />;
+  if (!Number.isInteger(meetingId) || meetingId <= 0) notFound();
+
+  return <MeetupRespondContainer meetingId={meetingId} />;
 }

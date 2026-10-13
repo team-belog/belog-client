@@ -4,6 +4,7 @@ import { ENDPOINTS } from "@/constants/endpoints";
 import type {
   CreateMeetingData,
   CreateMeetingRequest,
+  DatePollData,
   MeetingDetailData,
   UpdateMeetingRequest,
 } from "@/features/meetup/types";
@@ -11,6 +12,13 @@ import type {
 export async function getMeetingDetail(meetingId: number) {
   const { data } = await api.get<ApiResponse<MeetingDetailData>>(
     ENDPOINTS.meeting.detail(meetingId),
+  );
+  return data.data;
+}
+
+export async function getDatePoll(meetingId: number) {
+  const { data } = await api.get<ApiResponse<DatePollData>>(
+    ENDPOINTS.meeting.datePoll(meetingId),
   );
   return data.data;
 }

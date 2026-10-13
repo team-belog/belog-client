@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -9,19 +9,30 @@ import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
 import { DUMMY_MEETUP_RESPONSE } from "@/features/meetup/constants/dummy";
 import ChevronIcon from "@/components/ui/ChevronIcon";
+import type { CandidateDateRange } from "@/features/meetup/types";
+import { formatKoreanDateRange } from "@/lib/date";
 
-export default function MeetupRespondView() {
-  const { totalMembers, respondedMembers, candidateDates } =
-    DUMMY_MEETUP_RESPONSE;
+type MeetupRespondViewProps = {
+  meetingId: number;
+  candidateDateRanges: CandidateDateRange[];
+};
+
+export default function MeetupRespondView({
+  meetingId,
+  candidateDateRanges,
+}: MeetupRespondViewProps) {
+  // TODO: 응답 현황 API 연결
+  const { totalMembers, respondedMembers } = DUMMY_MEETUP_RESPONSE;
 
   const router = useRouter();
-  const { id } = useParams<{ id: string }>();
   const [selected, setSelected] = useState<number[]>([]);
   const [hasResponded, setHasResponded] = useState(false);
 
-  const toggle = (index: number) =>
+  const toggle = (candidateId: number) =>
     setSelected((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
+      prev.includes(candidateId)
+        ? prev.filter((id) => id !== candidateId)
+        : [...prev, candidateId],
     );
 
   const handleSubmit = () => {
@@ -48,7 +59,7 @@ export default function MeetupRespondView() {
 
         <button
           type="button"
-          onClick={() => router.push(`/meetup/${id}/status`)}
+          onClick={() => router.push(`/meetup/${meetingId}/status`)}
           className="pretendard-sb-14 flex items-center gap-0 self-end text-main-mint"
         >
           조율 현황 보기
@@ -75,19 +86,19 @@ export default function MeetupRespondView() {
         </div>
       ) : (
         <ul className="mt-[10px] flex flex-col gap-[10px] px-4">
-          {candidateDates.map((date, index) => {
-            const checked = selected.includes(index);
+          {candidateDateRanges.map((range) => {
+            const checked = selected.includes(range.id);
             return (
-              <li key={date + index}>
+              <li key={range.id}>
                 <button
                   type="button"
                   role="checkbox"
                   aria-checked={checked}
-                  onClick={() => toggle(index)}
+                  onClick={() => toggle(range.id)}
                   className="flex h-[57px] w-full items-center justify-between rounded-[12px] bg-main-cool-gray px-[22px]"
                 >
                   <span className="pretendard-sb-16 text-main-black">
-                    {date}
+                    {formatKoreanDateRange(range)}
                   </span>
                   {checked ? (
                     <Image
