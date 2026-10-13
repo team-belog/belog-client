@@ -16,7 +16,7 @@ export default function PhotoItem({ src, likeCount = 0, onLike, onClick }: Photo
     <div className="relative size-[80px] shrink-0" onClick={onClick}>
       <div className="size-[80px] overflow-hidden rounded-[10px] bg-sub-gray-3">
         {src && (
-          <Image src={src} alt="사진" fill className="object-cover" />
+          <Image src={src} alt="사진" fill className="object-cover rounded-[10px]" />
         )}
       </div>
       <button

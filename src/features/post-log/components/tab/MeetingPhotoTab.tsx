@@ -1,14 +1,17 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
 import Button from "@/components/ui/Button";
 import GuideField from "@/components/ui/GuideField";
 import TimePhotoGroup from "../TimePhotoGroup";
-import { useGetPostLogPhotoList } from "@/features/post-log/hooks/useGetPostLogPhotoList"
-import { PostLogPhoto } from "../../types";
+import { useGetPostLogPhotoList } from "@/features/post-log/hooks/useGetPostLogPhotoList";
+import { useUploadPostLogPhotos } from "@/features/post-log/hooks/useUploadPostLogPhotos";
+import { PostLogPhoto } from "@/features/post-log/types/index"
+import { useLikePhoto } from "@/features/post-log/hooks/useLikePhoto"
+import { useUnlikePhoto } from "../../hooks/useUnLikePhoto";
 
 function groupByTime(photos: PostLogPhoto[]) {
   const map: Record<string, PostLogPhoto[]> = {};
@@ -28,8 +31,13 @@ export default function MeetingPhotoTab() {
   const searchParams = useSearchParams();
   const meetingId = Number(searchParams.get("meetingId"))
   const router = useRouter();
-  const [likedIds, setLikedIds] = useState<number[]>([]);
+
   const bottomRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { mutate: uploadPhotos, isPending: isUploading } = useUploadPostLogPhotos(meetingId);
+  const { mutate: like } = useLikePhoto(meetingId);
+  const { mutate: unlike } = useUnlikePhoto(meetingId);
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useGetPostLogPhotoList(meetingId);
   const allPhotos = data?.pages.flatMap((page) => page.items ?? []) ?? [];
@@ -50,10 +58,10 @@ export default function MeetingPhotoTab() {
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleLike = (id: number) => {
-    setLikedIds((prev) =>
-      prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]
-    );
+  const handleLike = (photoId: number) => {
+    const photo = allPhotos.find((p) => p.photoId === photoId);
+    if (!photo) return;
+    photo.likedByMe ? unlike(photoId) : like(photoId);
   };
 
   if (isLoading) return <div className="flex items-center justify-center h-dvh">로딩 중...</div>;
@@ -69,10 +77,14 @@ export default function MeetingPhotoTab() {
             photos={group.photos.map((p) => ({
               id: p.photoId,
               src: p.photoUrl,
-              likeCount: likedIds.includes(p.photoId) ? p.likeCount + 1 : p.likeCount,
+              likeCount: p.likeCount,
+              likedByMe: p.likedByMe,
             }))}
             onLike={handleLike}
-            onClick={() => router.push(`/post-log/1`)}
+            onClick={(id) => {
+              const photo = allPhotos.find((p) => p.photoId === id);
+              if (photo) router.push(`/post-log/${id}?photoUrl=${encodeURIComponent(photo.photoUrl)}`);
+            }}
           />
         ))}
         <div ref={bottomRef} className="h-1" />
@@ -80,8 +92,20 @@ export default function MeetingPhotoTab() {
           <div className="flex justify-center py-4 text-sm text-sub-gray-2">불러오는 중...</div>
         )}
       </div>
-      <Button variant="primary" disabled={false} onClick={() => {}} className="fixed bottom-0 left-0 right-0 bg-white">
-        사진 추가
+      <input
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+        ref={fileInputRef}
+        onChange={(e) => {
+          const files = Array.from(e.target.files ?? []);
+          if (files.length > 0) uploadPhotos(files);
+          e.target.value = "";
+        }}
+      />
+      <Button variant="primary" disabled={isUploading} onClick={() => fileInputRef.current?.click()} className="fixed bottom-0 left-0 right-0 bg-white">
+        {isUploading ? "업로드 중..." : "사진 추가"}
       </Button>
     </>
   );
