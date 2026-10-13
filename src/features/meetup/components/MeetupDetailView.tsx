@@ -176,14 +176,14 @@ export default function MeetupDetailView({
           title="Bill-log"
           status={BILL_LOG_STATUS_LABEL[logStatuses.billLog]}
           description="영수증으로 정산해요"
-          onClick={() => router.push("/bill-log")}
+          onClick={() => router.push(`/bill-log?meetingId=${meeting.meetingId}&groupId=${meeting.groupId}`)}
         />
         <MeetupLogRow
           iconSrc="/icons/post-log.png"
           title="Post-log"
           status={POST_LOG_STATUS_LABEL[logStatuses.postLog]}
           description="사진을 기록하고 티켓을 생성해요"
-          onClick={() => router.push("/post-log")}
+          onClick={() => router.push(`/post-log?meetingId=${meeting.meetingId}`)}
         />
       </div>
 

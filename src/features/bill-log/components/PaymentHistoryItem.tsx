@@ -2,7 +2,7 @@ import Image from "next/image";
 import ChevronIcon from "@/components/ui/ChevronIcon";
 
 interface PaymentHistoryItemProps {
-  thumbnailUrl: string;
+  thumbnailUrl: string | null;
   name: string;
   amount: string;
   payer: string;
@@ -23,7 +23,7 @@ export default function PaymentHistoryItem({
     >
       <div className="flex items-center gap-2">
         <div className="relative size-[53px] bg-gray-100 shrink-0 overflow-hidden rounded-[9px]">
-          <Image src={thumbnailUrl} alt={name} fill className="object-cover" />
+          {thumbnailUrl && <Image src={thumbnailUrl} alt={name} fill className="object-cover" />}
         </div>
         <div className="flex flex-col items-start gap-[7px]">
           <p className="pretendard-sb-16 text-main-black">{name}</p>

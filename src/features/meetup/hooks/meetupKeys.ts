@@ -4,4 +4,5 @@ export const meetupKeys = {
   datePoll: (id: number) => [...meetupKeys.all, "datePoll", id] as const,
   datePollResults: (id: number) =>
     [...meetupKeys.all, "datePollResults", id] as const,
+  members: (id: number) => [...meetupKeys.all, "members", id] as const,
 };

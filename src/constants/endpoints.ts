@@ -4,6 +4,19 @@ export const ENDPOINTS = {
     refresh: "/auth/refresh",
     logout: "/auth/logout",
   },
+  billLog: {
+    create: "/bill-log",
+    getList: "/bill-log",
+    getSummary: (meetingId: number) => `/meetings/${meetingId}/bill-log`,
+    getSettlement: (meetingId: number) => `/meetings/${meetingId}/bill-log/settlement-requests`,
+    getBills: (meetingId: number) => `/meetings/${meetingId}/bill-log/bills`,
+    createBill: (meetingId: number) => `/meetings/${meetingId}/bill-log/bills`,
+    getBillDetail: (billId: number) => `/bills/${billId}`,
+    getUploadUrl: (meetingId: number) => `/meetings/${meetingId}/bill-log/receipt-images/upload-url`,
+    analyzeReceipt: (meetingId: number) => `/meetings/${meetingId}/bill-log/receipt-analysis`,
+    completeSettlement: (settlementRequestId: number) => `/settlement-requests/${settlementRequestId}/completion`,
+    sendReminder: (settlementRequestId: number) => `/settlement-requests/${settlementRequestId}/reminders`,
+  },
   user: {
     onboarding: "/users/me/onboarding",
     profileImageUploadUrl: "/users/me/profile-image/upload-url",
@@ -42,6 +55,7 @@ export const ENDPOINTS = {
       `/meetings/${meetingId}/confirmed-date`,
     datePollReminders: (meetingId: number) =>
       `/meetings/${meetingId}/date-poll/reminders`,
+    members: (meetingId: number) => `/meetings/${meetingId}/members`,
   },
   groupMembership: {
     join: "/group-memberships",
