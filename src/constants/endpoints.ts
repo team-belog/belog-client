@@ -34,6 +34,8 @@ export const ENDPOINTS = {
     update: (meetingId: number) => `/meetings/${meetingId}`,
     delete: (meetingId: number) => `/meetings/${meetingId}`,
     datePoll: (meetingId: number) => `/meetings/${meetingId}/date-poll`,
+    datePollResults: (meetingId: number) =>
+      `/meetings/${meetingId}/date-poll/results`,
   },
   groupMembership: {
     join: "/group-memberships",

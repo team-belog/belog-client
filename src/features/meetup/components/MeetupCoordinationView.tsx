@@ -5,32 +5,37 @@ import { useState } from "react";
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
-import { DUMMY_MEETUP_COORDINATION } from "@/features/meetup/constants/dummy";
 import ChevronIcon from "@/components/ui/ChevronIcon";
+import type {
+  DatePollMember,
+  DatePollResultsData,
+} from "@/features/meetup/types";
+import { formatKoreanDateRange } from "@/lib/date";
 
 interface MeetupCoordinationViewProps {
   isHost: boolean;
+  results: DatePollResultsData;
 }
 
 function MemberChips({
   label,
   labelClassName,
-  names,
+  members,
 }: {
   label: string;
   labelClassName: string;
-  names: string[];
+  members: DatePollMember[];
 }) {
   return (
     <div className="flex flex-col gap-2">
       <p className={`pretendard-m-12 ${labelClassName}`}>{label}</p>
       <div className="flex flex-wrap gap-[5px]">
-        {names.map((name, i) => (
+        {members.map((member) => (
           <span
-            key={name + i}
+            key={member.groupMemberId}
             className="pretendard-m-12 rounded-[5px] bg-[#E9E9E9]/70 px-[10px] py-[5px] text-sub-gray-2"
           >
-            {name}
+            {member.nickname}
           </span>
         ))}
       </div>
@@ -40,10 +45,15 @@ function MemberChips({
 
 export default function MeetupCoordinationView({
   isHost,
+  results,
 }: MeetupCoordinationViewProps) {
-  const { totalMembers, respondedMembers, unrespondedMembers, dates } =
-    DUMMY_MEETUP_COORDINATION;
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const {
+    totalParticipantCount,
+    respondedParticipantCount,
+    candidateDateResults,
+  } = results;
+  const unrespondedCount = totalParticipantCount - respondedParticipantCount;
+  const [openId, setOpenId] = useState<number | null>(null);
 
   const handleRemind = () => {
     // TODO: 미응답 멤버 리마인드 API 연결
@@ -70,33 +80,35 @@ export default function MeetupCoordinationView({
         <div className="flex flex-col gap-[9px] px-[3px]">
           <p className="pretendard-sb-18 text-main-black">날짜별 가능 인원</p>
           <p className="pretendard-m-15 text-sub-gray-1">
-            현재까지 {totalMembers}명 중{" "}
-            <span className="text-main-mint">{respondedMembers}</span>명이
-            응답했어요
+            현재까지 {totalParticipantCount}명 중{" "}
+            <span className="text-main-mint">{respondedParticipantCount}</span>
+            명이 응답했어요
           </p>
         </div>
 
         <ul className="mt-5 flex flex-col gap-[10px]">
-          {dates.map((item, index) => {
-            const isOpen = openIndex === index;
+          {candidateDateResults.map((item) => {
+            const isOpen = openId === item.candidateDateRangeId;
             return (
               <li
-                key={item.date + index}
+                key={item.candidateDateRangeId}
                 className="rounded-[12px] bg-main-cool-gray"
               >
                 <button
                   type="button"
                   aria-expanded={isOpen}
-                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  onClick={() =>
+                    setOpenId(isOpen ? null : item.candidateDateRangeId)
+                  }
                   className="relative flex h-[77px] w-full flex-col items-start gap-2 px-[22px] pt-[15px] text-left"
                 >
                   <span className="pretendard-sb-16 text-main-black">
-                    {item.date}
+                    {formatKoreanDateRange(item)}
                   </span>
                   <span
-                    className={`pretendard-m-14 ${index === 0 ? "text-main-mint" : "text-sub-gray-2"}`}
+                    className={`pretendard-m-14 ${item.rank === 1 ? "text-main-mint" : "text-sub-gray-2"}`}
                   >
-                    현재까지 {index + 1}위
+                    현재까지 {item.rank}위
                   </span>
                   <span className="absolute right-[19px] top-[25px] flex h-[26px] w-[32px] items-center justify-center">
                     <ChevronIcon
@@ -113,12 +125,12 @@ export default function MeetupCoordinationView({
                     <MemberChips
                       label="가능한 멤버"
                       labelClassName="text-[#2B72F4]"
-                      names={item.availableMembers}
+                      members={item.availableMembers}
                     />
                     <MemberChips
                       label="불가능한 멤버"
                       labelClassName="text-[#F42B2B]"
-                      names={item.unavailableMembers}
+                      members={item.unavailableMembers}
                     />
                   </div>
                 )}
@@ -127,13 +139,13 @@ export default function MeetupCoordinationView({
           })}
         </ul>
 
-        {isHost && (
+        {isHost && unrespondedCount > 0 && (
           <button
             type="button"
             onClick={handleRemind}
             className="pretendard-sb-16 mt-[10px] h-[56px] w-full rounded-[12px] bg-main-mint text-main-white"
           >
-            응답하지 않은 {unrespondedMembers}명에게 리마인드 보내기
+            응답하지 않은 {unrespondedCount}명에게 리마인드 보내기
           </button>
         )}
       </div>

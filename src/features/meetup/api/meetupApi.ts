@@ -5,6 +5,7 @@ import type {
   CreateMeetingData,
   CreateMeetingRequest,
   DatePollData,
+  DatePollResultsData,
   MeetingDetailData,
   UpdateMeetingRequest,
 } from "@/features/meetup/types";
@@ -19,6 +20,13 @@ export async function getMeetingDetail(meetingId: number) {
 export async function getDatePoll(meetingId: number) {
   const { data } = await api.get<ApiResponse<DatePollData>>(
     ENDPOINTS.meeting.datePoll(meetingId),
+  );
+  return data.data;
+}
+
+export async function getDatePollResults(meetingId: number) {
+  const { data } = await api.get<ApiResponse<DatePollResultsData>>(
+    ENDPOINTS.meeting.datePollResults(meetingId),
   );
   return data.data;
 }

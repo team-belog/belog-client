@@ -58,6 +58,27 @@ export type DatePollData = {
   candidateDateRanges: CandidateDateRange[];
 };
 
+export type DatePollMember = {
+  groupMemberId: number;
+  nickname: string;
+};
+
+export type CandidateDateResult = MeetingDateRange & {
+  candidateDateRangeId: number;
+  rank: number;
+  availableCount: number;
+  availableMembers: DatePollMember[];
+  unavailableMembers: DatePollMember[];
+};
+
+export type DatePollResultsData = {
+  meetingId: number;
+  // 만남 생성자도 응답 인원에 포함
+  totalParticipantCount: number;
+  respondedParticipantCount: number;
+  candidateDateResults: CandidateDateResult[];
+};
+
 export type CreateMeetingRequest = {
   name: string;
   location: string | null;

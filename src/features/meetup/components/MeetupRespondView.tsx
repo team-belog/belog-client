@@ -7,7 +7,6 @@ import { useState } from "react";
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
-import { DUMMY_MEETUP_RESPONSE } from "@/features/meetup/constants/dummy";
 import ChevronIcon from "@/components/ui/ChevronIcon";
 import type { CandidateDateRange } from "@/features/meetup/types";
 import { formatKoreanDateRange } from "@/lib/date";
@@ -15,15 +14,16 @@ import { formatKoreanDateRange } from "@/lib/date";
 type MeetupRespondViewProps = {
   meetingId: number;
   candidateDateRanges: CandidateDateRange[];
+  totalParticipantCount: number;
+  respondedParticipantCount: number;
 };
 
 export default function MeetupRespondView({
   meetingId,
   candidateDateRanges,
+  totalParticipantCount,
+  respondedParticipantCount,
 }: MeetupRespondViewProps) {
-  // TODO: 응답 현황 API 연결
-  const { totalMembers, respondedMembers } = DUMMY_MEETUP_RESPONSE;
-
   const router = useRouter();
   const [selected, setSelected] = useState<number[]>([]);
   const [hasResponded, setHasResponded] = useState(false);
@@ -51,10 +51,10 @@ export default function MeetupRespondView({
         </div>
 
         <p className="pretendard-sb-20 mt-[20px] leading-[30px] text-main-black">
-          현재까지 {totalMembers}명 중
+          현재까지 {totalParticipantCount}명 중
           <br />
-          <span className="text-main-mint">{respondedMembers}</span>명이
-          응답했어요
+          <span className="text-main-mint">{respondedParticipantCount}</span>
+          명이 응답했어요
         </p>
 
         <button
