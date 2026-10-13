@@ -33,6 +33,7 @@ export const ENDPOINTS = {
     create: (groupId: number) => `/groups/${groupId}/meetings`,
     update: (meetingId: number) => `/meetings/${meetingId}`,
     delete: (meetingId: number) => `/meetings/${meetingId}`,
+    members: (meetingId: number) => `/meetings/${meetingId}/members`,
   },
   groupMembership: {
     join: "/group-memberships",

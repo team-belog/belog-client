@@ -71,3 +71,16 @@ export type UpdateMeetingRequest = {
   startDate: string | null;
   endDate: string | null;
 };
+
+export type MeetingMembersData = {
+  items: MeetingMemberDto[];
+};
+
+// 요청자가 참여자면 첫 번째, 나머지는 groupMemberId 오름차순
+export type MeetingMemberDto = {
+  // 결제 등록의 payerMemberId, participantMemberId로 사용
+  groupMemberId: number;
+  nickname: string;
+  profileImageUrl: string | null;
+  isMe: boolean;
+};
