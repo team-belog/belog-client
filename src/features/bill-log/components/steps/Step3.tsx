@@ -168,7 +168,7 @@ export default function Step3({ onNext }: Step3Props) {
         className="fixed bottom-0 left-0 right-0"
       >
         {(settlementMethod === "ITEM_TAG" || settlementMethod === "MANUAL") && remainingAmount > 0
-          ? `남은 정산금 ${remainingAmount}원`
+          ? `남은 정산금 ${remainingAmount.toLocaleString()}원`
           : "다음"
         }
       </Button>
