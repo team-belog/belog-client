@@ -2,8 +2,6 @@ import { format, isSameDay, isSameMonth, parseISO } from "date-fns";
 
 import type { Schedule } from "@/features/home/types";
 
-export type MeetupTab = "ongoing" | "ended";
-
 export function formatMemoryDateRange(schedule: Schedule): string {
   const start = parseISO(schedule.startDate);
   const end = parseISO(schedule.endDate);
@@ -19,18 +17,17 @@ export function formatMemoryDateRange(schedule: Schedule): string {
   return `${format(start, "yyyy / MM / dd")} - ${format(end, "yyyy / MM / dd")}`;
 }
 
-export function formatMemberLabel(schedule: Pick<Schedule, "leaderName" | "memberCount">): string {
-  const { leaderName, memberCount } = schedule;
-  return memberCount > 0 ? `${leaderName} 외 ${memberCount}명` : leaderName;
+export function formatMemberLabel(leaderName: string, memberCount: number): string {
+  const otherCount = memberCount - 1;
+  return otherCount > 0 ? `${leaderName} 외 ${otherCount}명` : leaderName;
 }
 
-export function filterMeetups(schedules: Schedule[], tab: MeetupTab, query: string): Schedule[] {
+export function filterEndedMeetups(schedules: Schedule[], query: string): Schedule[] {
   const normalizedQuery = query.trim().toLowerCase();
 
-  return schedules.filter((schedule) => {
-    const matchesTab = tab === "ongoing" ? schedule.status !== "done" : schedule.status === "done";
-    const matchesQuery =
-      normalizedQuery === "" || schedule.title.toLowerCase().includes(normalizedQuery);
-    return matchesTab && matchesQuery;
-  });
+  return schedules.filter(
+    (schedule) =>
+      schedule.status === "done" &&
+      (normalizedQuery === "" || schedule.title.toLowerCase().includes(normalizedQuery))
+  );
 }

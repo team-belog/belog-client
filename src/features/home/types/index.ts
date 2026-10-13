@@ -31,3 +31,35 @@ export type HomeCalendarResponse = {
 };
 
 export type HomeCalendarDay = CalendarDay & { meetings: HomeCalendarMeeting[] };
+
+export type ProgressStatus = "SCHEDULING" | "UPCOMING" | "IN_PROGRESS";
+
+export type ActiveMeetingParticipant = {
+  groupMemberId: number;
+  nickname: string;
+  profileImageUrl: string | null;
+};
+
+export type ActiveMeeting = {
+  meetingId: number;
+  name: string;
+  // 일정 조율 중(SCHEDULING)에는 null
+  startDate: string | null;
+  endDate: string | null;
+  groupName: string;
+  progressStatus: ProgressStatus;
+  participantCount: number;
+  previewParticipants: ActiveMeetingParticipant[];
+};
+
+export type ActiveMeetingsParams = {
+  query?: string;
+  cursor?: string;
+  size?: number;
+};
+
+export type ActiveMeetingsData = {
+  items: ActiveMeeting[];
+  nextCursor: string | null;
+  hasNext: boolean;
+};

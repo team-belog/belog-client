@@ -29,6 +29,7 @@ export const ENDPOINTS = {
   },
   home: {
     calendar: "/home/calendar",
+    activeMeetings: "/home/meetings/active",
   },
   bank: {
     list: "/banks",

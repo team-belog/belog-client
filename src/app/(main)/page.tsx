@@ -10,7 +10,7 @@ export default function HomePage() {
       <Header />
       <HomeCalendar />
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
-      <MeetupSection schedules={DUMMY_SCHEDULES} />
+      <MeetupSection endedSchedules={DUMMY_SCHEDULES} />
       <HomeFab />
     </main>
   );
