@@ -6,6 +6,7 @@ import type {
   CreateMeetingRequest,
   DatePollData,
   DatePollResultsData,
+  SubmitDatePollResponseRequest,
   MeetingDetailData,
   UpdateMeetingRequest,
 } from "@/features/meetup/types";
@@ -29,6 +30,13 @@ export async function getDatePollResults(meetingId: number) {
     ENDPOINTS.meeting.datePollResults(meetingId),
   );
   return data.data;
+}
+
+export async function submitDatePollResponse(
+  meetingId: number,
+  body: SubmitDatePollResponseRequest,
+) {
+  await api.put(ENDPOINTS.meeting.myDatePollResponse(meetingId), body);
 }
 
 export async function createMeeting(

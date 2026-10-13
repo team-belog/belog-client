@@ -16,6 +16,10 @@ type MeetupRespondViewProps = {
   candidateDateRanges: CandidateDateRange[];
   totalParticipantCount: number;
   respondedParticipantCount: number;
+  hasResponded: boolean;
+  isSubmitting: boolean;
+  submitErrorMessage?: string;
+  onSubmit: (candidateDateRangeIds: number[]) => void;
 };
 
 export default function MeetupRespondView({
@@ -23,10 +27,13 @@ export default function MeetupRespondView({
   candidateDateRanges,
   totalParticipantCount,
   respondedParticipantCount,
+  hasResponded,
+  isSubmitting,
+  submitErrorMessage,
+  onSubmit,
 }: MeetupRespondViewProps) {
   const router = useRouter();
   const [selected, setSelected] = useState<number[]>([]);
-  const [hasResponded, setHasResponded] = useState(false);
 
   const toggle = (candidateId: number) =>
     setSelected((prev) =>
@@ -34,11 +41,6 @@ export default function MeetupRespondView({
         ? prev.filter((id) => id !== candidateId)
         : [...prev, candidateId],
     );
-
-  const handleSubmit = () => {
-    // TODO: 응답 제출 API 연결
-    setHasResponded(true);
-  };
 
   return (
     <main className="flex min-h-screen flex-col pb-[114px]">
@@ -117,10 +119,16 @@ export default function MeetupRespondView({
         </ul>
       )}
 
+      {!hasResponded && submitErrorMessage && (
+        <p className="pretendard-m-12 px-4 pt-[10px] text-red-500">
+          {submitErrorMessage}
+        </p>
+      )}
+
       <Button
         variant="primary"
-        disabled={hasResponded || selected.length === 0}
-        onClick={handleSubmit}
+        disabled={hasResponded || isSubmitting || selected.length === 0}
+        onClick={() => onSubmit(selected)}
         className="fixed bottom-0 left-0 right-0"
       >
         응답 완료

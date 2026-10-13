@@ -3,6 +3,7 @@
 import MeetupRespondView from "@/features/meetup/components/MeetupRespondView";
 import { useDatePoll } from "@/features/meetup/hooks/useDatePoll";
 import { useDatePollResults } from "@/features/meetup/hooks/useDatePollResults";
+import { useSubmitDatePollResponse } from "@/features/meetup/hooks/useSubmitDatePollResponse";
 
 export default function MeetupRespondContainer({
   meetingId,
@@ -12,6 +13,7 @@ export default function MeetupRespondContainer({
   const datePoll = useDatePoll(meetingId);
   // 응답 인원 표시용
   const results = useDatePollResults(meetingId);
+  const submitResponse = useSubmitDatePollResponse(meetingId);
 
   if (datePoll.isPending || results.isPending) {
     return (
@@ -48,6 +50,12 @@ export default function MeetupRespondContainer({
       candidateDateRanges={datePoll.data.candidateDateRanges}
       totalParticipantCount={results.data.totalParticipantCount}
       respondedParticipantCount={results.data.respondedParticipantCount}
+      hasResponded={submitResponse.isSuccess}
+      isSubmitting={submitResponse.isPending}
+      submitErrorMessage={submitResponse.error?.message}
+      onSubmit={(candidateDateRangeIds) =>
+        submitResponse.mutate({ candidateDateRangeIds })
+      }
     />
   );
 }

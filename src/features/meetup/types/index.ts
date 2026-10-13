@@ -79,6 +79,11 @@ export type DatePollResultsData = {
   candidateDateResults: CandidateDateResult[];
 };
 
+export type SubmitDatePollResponseRequest = {
+  // 빈 배열이면 모든 후보 일정에 참석 불가
+  candidateDateRangeIds: number[];
+};
+
 export type CreateMeetingRequest = {
   name: string;
   location: string | null;
