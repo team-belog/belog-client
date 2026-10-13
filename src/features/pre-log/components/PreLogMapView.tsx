@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import Image from "next/image";
+import Script from "next/script";
 
 import PreLogEmptyState from "@/features/pre-log/components/PreLogEmptyState";
 import PreLogPlaceItem from "@/features/pre-log/components/PreLogPlaceItem";
@@ -24,8 +24,21 @@ export default function PreLogMapView({
   onDeletePlace,
 }: PreLogMapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ startY: number; startHeight: number } | null>(null);
   const [sheetHeight, setSheetHeight] = useState(SHEET_DEFAULT_HEIGHT);
+
+  const initMap = () => {
+    if (!mapRef.current) return;
+    const kakao = (window as any).kakao;
+    if (!kakao?.maps) return;
+    kakao.maps.load(() => {
+      new kakao.maps.Map(mapRef.current, {
+        center: new kakao.maps.LatLng(37.5665, 126.9780),
+        level: 5,
+      });
+    });
+  };
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -50,15 +63,12 @@ export default function PreLogMapView({
       ref={containerRef}
       className="relative min-h-0 w-full flex-1 overflow-hidden"
     >
-      <div className="absolute inset-0">
-        <Image
-          src="/icons/pre-log/map-placeholder.png"
-          alt=""
-          fill
-          unoptimized
-          className="object-cover"
-        />
-      </div>
+      <Script
+        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false`}
+        strategy="afterInteractive"
+        onLoad={initMap}
+      />
+      <div ref={mapRef} className="absolute inset-0" />
 
       <div
         className="absolute inset-x-0 bottom-0 z-10 flex flex-col overflow-hidden rounded-t-[38px] bg-main-white shadow-[0_-4px_20px_0_rgba(0,0,0,0.05)]"
