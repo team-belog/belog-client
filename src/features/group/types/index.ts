@@ -70,31 +70,21 @@ export type GroupDetailData = {
   memberCount: number;
   canEditCoverImage: boolean;
   canDeleteGroup: boolean;
-  schedulingMeetings: SchedulingMeetingDto[];
-  activeMeetings: ActiveMeetingDto[];
+  schedulingMeetings: GroupMeetingDto[];
+  activeMeetings: GroupMeetingDto[];
 };
 
-export type SchedulingMeetingDto = {
+export type GroupMeetingDto = {
   meetingId: number;
   name: string;
-  participantNicknames: string[];
+  participants: MeetingParticipantDto[];
   participantCount: number;
+  isMeetingOwner: boolean;
 };
 
-export type ActiveMeetingDto = {
-  meetingId: number;
-  name: string;
-  startDate: string;
-  endDate: string;
-};
-
-export type GroupMemberRole = "leader" | "member";
-
-export type GroupMember = {
-  id: number;
-  name: string;
-  role: GroupMemberRole;
-  avatarUrl?: string;
+export type MeetingParticipantDto = {
+  nickname: string;
+  isMeetingOwner: boolean;
 };
 
 export type GroupMembersParams = {

@@ -14,7 +14,7 @@ export default function GroupDeleteModal({
   onConfirm,
 }: GroupDeleteModalProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/65">
       <div className="relative h-[200px] w-[310px] rounded-[12px] bg-main-white">
         <div className="absolute left-1/2 top-[48px] flex w-[167px] -translate-x-1/2 flex-col items-center gap-2 text-center">
           <p className="pretendard-m-15 text-main-black">그룹을 삭제하시겠습니까?</p>

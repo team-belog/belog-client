@@ -6,14 +6,12 @@ import { useRouter } from "next/navigation";
 import GroupHomeView from "@/features/group/components/GroupHomeView";
 import { useDeleteGroup } from "@/features/group/hooks/useDeleteGroup";
 import { useGroupDetail } from "@/features/group/hooks/useGroupDetail";
-import { useGroupMembers } from "@/features/group/hooks/useGroupMembers";
 import { usePastMeetings } from "@/features/group/hooks/usePastMeetings";
 import { useUpdateGroupCoverImage } from "@/features/group/hooks/useUpdateGroupCoverImage";
 
 export default function GroupHomeContainer({ groupId }: { groupId: number }) {
   const { data, isPending, isError, error, refetch } = useGroupDetail(groupId);
-  // 멤버와 지난 만남은 각자 로딩되며, 실패해도 그룹 홈은 그대로 보여준다
-  const { data: members } = useGroupMembers(groupId);
+  // 지난 만남은 따로 로딩되며, 실패해도 그룹 홈은 그대로 보여준다
   const {
     data: pastMeetings,
     hasNextPage,
@@ -23,10 +21,6 @@ export default function GroupHomeContainer({ groupId }: { groupId: number }) {
   const updateCoverImage = useUpdateGroupCoverImage(groupId);
   const deleteGroup = useDeleteGroup();
   const router = useRouter();
-
-  const ownerNickname = members?.items.find(
-    (member) => member.role === "OWNER",
-  )?.nickname;
 
   const handleDeleteGroup = () => {
     deleteGroup.mutate(groupId, {
@@ -64,7 +58,6 @@ export default function GroupHomeContainer({ groupId }: { groupId: number }) {
   return (
     <GroupHomeView
       group={data}
-      ownerNickname={ownerNickname}
       pastMeetings={pastMeetings}
       hasMorePastMeetings={hasNextPage}
       onLoadMorePastMeetings={handleLoadMorePastMeetings}

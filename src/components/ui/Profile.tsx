@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 interface ProfileProps {
   src?: string;
   width: number;
@@ -25,12 +29,20 @@ function DefaultProfile({ width, height }: { width: number; height: number }) {
 }
 
 export default function Profile({ src, width, height }: ProfileProps) {
-  if (!src) return <DefaultProfile width={width} height={height} />;
+  // 불러오지 못한 주소를 기억해 두고, src가 바뀌면 다시 시도
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+
+  if (!src || failedSrc === src) {
+    return <DefaultProfile width={width} height={height} />;
+  }
 
   return (
     <img
       src={src}
       alt="프로필"
+      // 구글 프로필 이미지는 referer가 붙으면 요청을 막는 경우가 있음 (403/429)
+      referrerPolicy="no-referrer"
+      onError={() => setFailedSrc(src)}
       style={{ width, height }}
       className="shrink-0 rounded-full object-cover"
     />

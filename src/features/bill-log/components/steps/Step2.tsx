@@ -1,30 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import InputField from "@/components/ui/InputField";
 import SplitInputField from "@/features/bill-log/components/SplitInputField";
 import Button from "@/components/ui/Button";
-import BillTotal from "../BillTotal";
+import BillTotal from "@/features/bill-log/components/BillTotal"
+import { useBillFormStore } from "@/features/bill-log/store/useBillFormStore";
 
 interface Step2Props {
   onNext: () => void;
 }
 
-interface ItemData {
-  item: string;
-  price: string;
-}
-
 export default function Step2({ onNext }: Step2Props) {
+  const analyzedData = useBillFormStore((state) => state.analyzedData)
+  const setStep2Data = useBillFormStore((state) => state.setStep2Data)
+
   const [title, setTitle] = useState("");
-  const[item, setItem] = useState("")
-  const[price, setPrice] = useState("")
   const [items, setItems] = useState<{ item: string; price: string }[]>([{ item: "", price: "" }]);
+  
+  const isDisabled = !title.trim() || items.some((i) => !i.item.trim() || !i.price.trim());
+
+  useEffect(() => {
+    if (analyzedData) {
+      setTitle(analyzedData.title);
+      setItems(analyzedData.items.map((i) => ({
+        item: i.name,
+        price: String(i.amount),
+      })));
+    }
+  }, [analyzedData]);
+
+  const totalAmount = items.reduce((sum, i) => sum + (Number(i.price) || 0), 0);
 
   const addItem = () => {
-    setItems((prev) => [...prev, { item: "", price: ""}])
-  }
+    setItems((prev) => [...prev, { item: "", price: "" }]);
+  };
 
   return (
     <div className="flex flex-col pb-[230px]">
@@ -43,19 +54,37 @@ export default function Step2({ onNext }: Step2Props) {
           {items.map((it, index) => (
             <SplitInputField
               key={index}
-              left={{ placeholder: "ex) 아메리카노", value: it.item }}
-              right={{ placeholder: "4,000원", value: it.price }}
+              left={{ 
+                placeholder: "ex) 아메리카노", 
+                value: it.item ,
+                onChange: (value) => setItems((prev) => prev.map((item,i) => i === index ? {...item, item: value} : item))
+              }}
+              right={{ 
+                placeholder: "4,000원", 
+                value: it.price,
+                onChange: (value) => setItems((prev) => prev.map((item,i) => i === index ? {...item, price: value} : item))
+              }}
             />
           ))}
         </div>
-        <Button variant="secondary" disabled={false} onClick={addItem}>
+        <Button className="pt-0" variant="secondary" disabled={false} onClick={addItem}>
           항목 추가
         </Button>
       </div>
 
       <div className="fixed bottom-0 left-0 w-full bg-white">
-        <BillTotal amount="0원" />
-        <Button variant="primary" disabled={false} onClick={onNext}>
+        <BillTotal amount={`${totalAmount.toLocaleString()}원`} />
+        <Button 
+          variant="primary" 
+          disabled={isDisabled} 
+          onClick={() => {
+              setStep2Data({
+                title,
+                items: items.map((i) => ({ name: i.item, amount: Number(i.price) })),
+                totalAmount,
+              });
+              onNext();
+          }}>
           다음
         </Button>
       </div>

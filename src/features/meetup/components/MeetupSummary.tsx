@@ -1,9 +1,10 @@
 import Image from "next/image";
 
-import type { MeetupDetail } from "@/features/meetup/types";
+import type { MeetupSummaryInfo } from "@/features/meetup/types";
 
 interface MeetupSummaryProps {
-  meetup: MeetupDetail;
+  meetup: MeetupSummaryInfo;
+  canEdit?: boolean;
   isEditing?: boolean;
   onEdit?: () => void;
   onTitleChange?: (value: string) => void;
@@ -13,6 +14,7 @@ interface MeetupSummaryProps {
 
 export default function MeetupSummary({
   meetup,
+  canEdit = true,
   isEditing = false,
   onEdit,
   onTitleChange,
@@ -20,6 +22,7 @@ export default function MeetupSummary({
   onDateClick,
 }: MeetupSummaryProps) {
   const { title, groupName, dDay, startDate, endDate, location } = meetup;
+  const dateText = endDate ? `${startDate} - ${endDate}` : startDate;
 
   return (
     <div className="px-4 pb-[30px] pt-[37px]">
@@ -36,7 +39,11 @@ export default function MeetupSummary({
           )}
           <p className="pretendard-m-15 text-main-black">{groupName}</p>
         </div>
-        <p className="pretendard-sb-20 text-main-mint">D-{dDay}</p>
+        {dDay !== null && dDay >= 0 && (
+          <p className="pretendard-sb-20 text-main-mint">
+            {dDay === 0 ? "D-Day" : `D-${dDay}`}
+          </p>
+        )}
       </div>
 
       <div className="mt-[30px] flex items-center justify-between gap-2">
@@ -49,14 +56,14 @@ export default function MeetupSummary({
             >
               <Image src="/icons/meetup/calendar.svg" alt="" width={18} height={18} />
               <p className="pretendard-r-15 text-sub-gray-2">
-                {startDate} - {endDate}
+                {dateText}
               </p>
             </button>
           ) : (
             <div className="flex items-center gap-[5px]">
               <Image src="/icons/meetup/calendar.svg" alt="" width={18} height={18} />
               <p className="pretendard-r-15 text-sub-gray-2">
-                {startDate} - {endDate}
+                {dateText}
               </p>
             </div>
           )}
@@ -78,9 +85,11 @@ export default function MeetupSummary({
           )}
         </div>
 
-        <button type="button" onClick={onEdit} aria-label="만남 정보 수정" className="shrink-0">
-          <Image src="/icons/edit.svg" alt="" width={40} height={40} />
-        </button>
+        {canEdit && (
+          <button type="button" onClick={onEdit} aria-label="만남 정보 수정" className="shrink-0">
+            <Image src="/icons/edit.svg" alt="" width={40} height={40} />
+          </button>
+        )}
       </div>
     </div>
   );
