@@ -6,7 +6,7 @@ import SelectableToggle from "../SelectableToggle";
 import TextLayout from "@/components/ui/TextLayout";
 import ReadOnlyField from "@/features/bill-log/components/ReadOnlyField";
 import Button from "@/components/ui/Button";
-import { useGetGroupMembers } from "@/features/group/hooks/useGetGroupMembers";
+import { useMeetingMembers } from "@/features/meetup/hooks/useMeetingMembers";
 import { useBillFormStore } from "@/features/bill-log/store/useBillFormStore";
 import type { BillSplitType } from "@/features/bill-log/types";
 import { SETTLEMENT_METHODS } from "@/features/bill-log/constants/billLog";
@@ -16,9 +16,9 @@ interface Step3Props {
 }
 
 export default function Step3({ onNext }: Step3Props) {
-  const groupId = Number(useSearchParams().get("groupId"));
+  const meetingId = Number(useSearchParams().get("meetingId"));
 
-  const { data: groupMemberData } = useGetGroupMembers(groupId);
+  const { data: meetingMembersData } = useMeetingMembers(meetingId);
 
   // store
   const setStep3Data = useBillFormStore((state) => state.setStep3Data);
@@ -30,7 +30,7 @@ export default function Step3({ onNext }: Step3Props) {
   const [memberItemSelections, setMemberItemSelections] = useState<Record<number, string[]>>({});
   const [customAmounts, setCustomAmounts] = useState<Record<number, string>>({});
 
-  const members = groupMemberData?.items ?? [];
+  const members = meetingMembersData?.items ?? [];
 
   const toggleMember = (id: number) => {
     setSelectedMemberIds((prev) =>
@@ -168,7 +168,7 @@ export default function Step3({ onNext }: Step3Props) {
         className="fixed bottom-0 left-0 right-0"
       >
         {(settlementMethod === "ITEM_TAG" || settlementMethod === "MANUAL") && remainingAmount > 0
-          ? `남은 정산금 ${remainingAmount}원`
+          ? `남은 정산금 ${remainingAmount.toLocaleString()}원`
           : "다음"
         }
       </Button>

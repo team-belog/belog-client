@@ -1,21 +1,42 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-import type { Schedule } from "@/features/home/types";
-import { filterMeetups, type MeetupTab } from "@/features/home/utils/meetup";
+import { useGetActiveMeetings } from "@/features/home/hooks/useGetActiveMeetings";
+import { useGetCompletedTickets } from "@/features/home/hooks/useGetCompletedTickets";
+import { toTicketSchedule } from "@/features/home/utils/meetup";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 
-const TABS: MeetupTab[] = ["ongoing", "ended"];
-
-export function useMeetupItemList(schedules: Schedule[]) {
+export function useMeetupItemList() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedQuery = useDebouncedValue(searchQuery.trim());
 
-  const activeTab = TABS[activeIndex];
+  const {
+    data: activeMeetings,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useGetActiveMeetings(debouncedQuery);
 
-  const filteredSchedules = useMemo(
-    () => filterMeetups(schedules, activeTab, searchQuery),
-    [schedules, activeTab, searchQuery]
+  const loadMoreActiveMeetings = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const {
+    data: completedTickets,
+    hasNextPage: hasNextCompletedPage,
+    isFetchingNextPage: isFetchingNextCompletedPage,
+    fetchNextPage: fetchNextCompletedPage,
+  } = useGetCompletedTickets(activeIndex === 1);
+
+  const loadMoreEndedSchedules = useCallback(() => {
+    if (hasNextCompletedPage && !isFetchingNextCompletedPage) fetchNextCompletedPage();
+  }, [hasNextCompletedPage, isFetchingNextCompletedPage, fetchNextCompletedPage]);
+
+  const endedSchedules = useMemo(
+    () => completedTickets?.map(toTicketSchedule),
+    [completedTickets]
   );
 
   return {
@@ -23,7 +44,12 @@ export function useMeetupItemList(schedules: Schedule[]) {
     onTabChange: setActiveIndex,
     searchQuery,
     onSearchChange: setSearchQuery,
-    filteredSchedules,
     hasQuery: searchQuery.trim() !== "",
+    activeMeetings,
+    hasMoreActiveMeetings: Boolean(hasNextPage),
+    loadMoreActiveMeetings,
+    endedSchedules,
+    hasMoreEndedSchedules: Boolean(hasNextCompletedPage),
+    loadMoreEndedSchedules,
   };
 }

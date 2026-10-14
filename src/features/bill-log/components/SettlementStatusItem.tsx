@@ -54,7 +54,7 @@ export default function SettlementStatusItem({
           <p className="pretendard-m-16 text-sub-gray-1">
             {sender.nickname} → {receiver.nickname}{receiver.isMe ? "(나)" : ""}
           </p>
-          <p className="pretendard-sb-18 text-sub-black">{amount}원</p>
+          <p className="pretendard-sb-18 text-sub-black">{amount.toLocaleString()}원</p>
         </div>
       </div>
       <button

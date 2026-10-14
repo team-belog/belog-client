@@ -70,7 +70,7 @@ export type GroupDetailData = {
   memberCount: number;
   canEditCoverImage: boolean;
   canDeleteGroup: boolean;
-  schedulingMeetings: GroupMeetingDto[];
+  schedulingMeetings: SchedulingMeetingDto[];
   activeMeetings: GroupMeetingDto[];
 };
 
@@ -80,6 +80,11 @@ export type GroupMeetingDto = {
   participants: MeetingParticipantDto[];
   participantCount: number;
   isMeetingOwner: boolean;
+};
+
+export type SchedulingMeetingDto = GroupMeetingDto & {
+  // 로그인 유저가 후보 일정에 응답했는지
+  hasResponded: boolean;
 };
 
 export type MeetingParticipantDto = {

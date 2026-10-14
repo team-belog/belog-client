@@ -15,7 +15,7 @@ export default function PostLogPage() {
     <main className="flex flex-col">
       <BackHeader title="Post-log" />
       <Divider />
-      <TabBar tabs={["만남 요약", "만남 정리"]} activeIndex={activeTab} onChange={setActiveTab} />
+      <TabBar tabs={["만남 타임라인", "만남 정리"]} activeIndex={activeTab} onChange={setActiveTab} />
       {activeTab === 0 && <MeetingPhotoTab />}
       {activeTab === 1 && <MeetingInfoTab />}
     </main>

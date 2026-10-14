@@ -5,6 +5,11 @@ export type BankCode =
   | "SAEMAUL" | "SHINHYUP" | "SAVINGS_BANK" | "POST_OFFICE"
   | "HANA" | "SHINHAN" | "K_BANK" | "KAKAO_BANK" | "TOSS_BANK"
 
+export type BankResponse = {
+  code: BankCode
+  displayName: string
+}
+
 export type OnboardingRequest = {
   nickname: string
   name: string

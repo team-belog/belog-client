@@ -27,8 +27,24 @@ export const ENDPOINTS = {
     withdraw: "/users/me",
     postLogCalendar: "/users/me/post-logs/calendar",
   },
+  home: {
+    calendar: "/home/calendar",
+    activeMeetings: "/home/meetings/active",
+    completedMeetings: "/home/meetings/completed",
+  },
+  bank: {
+    list: "/banks",
+  },
   postLog: {
     getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,
+    getPhotoList: (meetingId: number) => `/meetings/${meetingId}/post-log-photos`,
+    createTicket: (meetingId: number) => `/meetings/${meetingId}/post-log/ticket`,
+    getMeetingInfo: (meetingId: number) => `/meetings/${meetingId}/post-log`,
+    saveDraft: (meetingId: number) => `/meetings/${meetingId}/post-log/draft`,
+    getPhotoUploadUrls: (meetingId: number) => `/meetings/${meetingId}/post-log-photos/upload-urls`,
+    registerPhotoMetadata: (meetingId: number) => `/meetings/${meetingId}/post-log-photos`,
+    likePhoto: (photoId: number) => `/post-log-photos/${photoId}/likes/me`,
+    unlikePhoto: (photoId: number) => `/post-log-photos/${photoId}/likes/me`,
   },
   group: {
     list: "/groups",
@@ -46,6 +62,15 @@ export const ENDPOINTS = {
     create: (groupId: number) => `/groups/${groupId}/meetings`,
     update: (meetingId: number) => `/meetings/${meetingId}`,
     delete: (meetingId: number) => `/meetings/${meetingId}`,
+    datePoll: (meetingId: number) => `/meetings/${meetingId}/date-poll`,
+    datePollResults: (meetingId: number) =>
+      `/meetings/${meetingId}/date-poll/results`,
+    myDatePollResponse: (meetingId: number) =>
+      `/meetings/${meetingId}/date-poll/responses/me`,
+    confirmedDate: (meetingId: number) =>
+      `/meetings/${meetingId}/confirmed-date`,
+    datePollReminders: (meetingId: number) =>
+      `/meetings/${meetingId}/date-poll/reminders`,
     members: (meetingId: number) => `/meetings/${meetingId}/members`,
   },
   groupMembership: {

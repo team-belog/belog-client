@@ -35,12 +35,12 @@ export default function PaymentHistoryTab() {
         <DailyPaymentGroup
           key={group.dayNumber}
           date={`Day ${group.dayNumber} (${group.paymentDate})`}
-          totalAmount={`${group.dailyTotalAmount}원`}
+          totalAmount={`${group.dailyTotalAmount.toLocaleString()}원`}
           items={group.bills.map(bill => ({
             id: bill.billId,
             thumbnailUrl: "",
             name: bill.title,
-            amount: `${bill.totalAmount}원`,
+            amount: `${bill.totalAmount.toLocaleString()}원`,
             payer: bill.payerNickname,
           }))}
           onItemClick={(id) => router.push(`/bill-log/${id}`)}

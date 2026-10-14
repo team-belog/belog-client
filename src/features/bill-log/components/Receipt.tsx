@@ -51,11 +51,11 @@ export default function Receipt({ title, payerNickname, settlementMethod, items,
               <p className="pretendard-m-16 text-sub-black">결제 항목 ({items.length})</p>
               <div className="flex flex-col gap-2">
                 {items.map((item, index) => (
-                  <BillItem key={index} name={item.name} amount={`${item.amount}원`} />
+                  <BillItem key={index} name={item.name} amount={`${item.amount.toLocaleString()}원`} />
                 ))}
               </div>
             </div>
-            <BillTotal amount={`${totalAmount}원`} />
+            <BillTotal amount={`${totalAmount.toLocaleString()}원`} />
           </div>
 
           {/* 정산 요청 받을 사람 */}
@@ -66,7 +66,7 @@ export default function Receipt({ title, payerNickname, settlementMethod, items,
                 <BillItem
                   key={share.meetingParticipantId}
                   name={share.nickname}
-                  amount={`${share.amount}원`}
+                  amount={`${share.amount.toLocaleString()}원`}
                   isPayer={share.payer}
                   profileSrc={share.profileImageUrl ?? ""}
                 />

@@ -3,7 +3,11 @@ import { ApiResponse } from "@/lib/apiError";
 import { ENDPOINTS } from "@/constants/endpoints";
 import type {
   CreateMeetingData,
+  ConfirmMeetingDateRequest,
   CreateMeetingRequest,
+  DatePollData,
+  DatePollResultsData,
+  SubmitDatePollResponseRequest,
   MeetingDetailData,
   MeetingMembersData,
   UpdateMeetingRequest,
@@ -14,6 +18,38 @@ export async function getMeetingDetail(meetingId: number) {
     ENDPOINTS.meeting.detail(meetingId),
   );
   return data.data;
+}
+
+export async function getDatePoll(meetingId: number) {
+  const { data } = await api.get<ApiResponse<DatePollData>>(
+    ENDPOINTS.meeting.datePoll(meetingId),
+  );
+  return data.data;
+}
+
+export async function getDatePollResults(meetingId: number) {
+  const { data } = await api.get<ApiResponse<DatePollResultsData>>(
+    ENDPOINTS.meeting.datePollResults(meetingId),
+  );
+  return data.data;
+}
+
+export async function submitDatePollResponse(
+  meetingId: number,
+  body: SubmitDatePollResponseRequest,
+) {
+  await api.put(ENDPOINTS.meeting.myDatePollResponse(meetingId), body);
+}
+
+export async function confirmMeetingDate(
+  meetingId: number,
+  body: ConfirmMeetingDateRequest,
+) {
+  await api.put(ENDPOINTS.meeting.confirmedDate(meetingId), body);
+}
+
+export async function sendDatePollReminder(meetingId: number) {
+  await api.post(ENDPOINTS.meeting.datePollReminders(meetingId));
 }
 
 export async function createMeeting(

@@ -106,15 +106,20 @@ export default function GroupHomeView({
                   key={meeting.meetingId}
                   meeting={meeting}
                   inviteCode={group.inviteCode}
-                  // 만남장은 일정을 확정하고, 멤버는 응답 현황만 볼 수 있음
                   actionLabel={
                     meeting.isMeetingOwner ? "일정 확정하기" : "일정 현황 보기"
                   }
-                  onAction={() =>
-                    router.push(
-                      `/meetup/${meeting.meetingId}/status${meeting.isMeetingOwner ? "?role=host" : ""}`,
-                    )
-                  }
+                  onAction={() => {
+                    const { meetingId, isMeetingOwner, hasResponded } = meeting;
+                    // 만남장: 일정 확정 / 멤버: 응답 전이면 날짜 응답, 응답 후면 조율 현황
+                    if (isMeetingOwner) {
+                      router.push(`/meetup/${meetingId}/status?role=host`);
+                    } else if (hasResponded) {
+                      router.push(`/meetup/${meetingId}/status`);
+                    } else {
+                      router.push(`/meetup/${meetingId}/respond`);
+                    }
+                  }}
                 />
               ))}
             </div>

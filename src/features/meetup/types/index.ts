@@ -48,6 +48,46 @@ export type MeetingDateRange = {
   endDate: string;
 };
 
+export type CandidateDateRange = MeetingDateRange & {
+  id: number;
+};
+
+export type DatePollData = {
+  meetingId: number;
+  status: MeetingStatus;
+  candidateDateRanges: CandidateDateRange[];
+};
+
+export type DatePollMember = {
+  groupMemberId: number;
+  nickname: string;
+};
+
+export type CandidateDateResult = MeetingDateRange & {
+  candidateDateRangeId: number;
+  rank: number;
+  availableCount: number;
+  availableMembers: DatePollMember[];
+  unavailableMembers: DatePollMember[];
+};
+
+export type DatePollResultsData = {
+  meetingId: number;
+  // 만남 생성자도 응답 인원에 포함
+  totalParticipantCount: number;
+  respondedParticipantCount: number;
+  candidateDateResults: CandidateDateResult[];
+};
+
+export type SubmitDatePollResponseRequest = {
+  // 빈 배열이면 모든 후보 일정에 참석 불가
+  candidateDateRangeIds: number[];
+};
+
+export type ConfirmMeetingDateRequest = {
+  candidateDateRangeId: number;
+};
+
 export type CreateMeetingRequest = {
   name: string;
   location: string | null;
