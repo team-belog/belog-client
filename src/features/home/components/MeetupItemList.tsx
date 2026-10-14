@@ -1,56 +1,48 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
+import MeetupEmptyState from "@/features/home/components/MeetupEmptyState";
 import MeetupTicketCard from "@/features/home/components/MeetupTicketCard";
-import MeetupTicketItem from "@/features/home/components/MeetupTicketItem";
 import type { Schedule } from "@/features/home/types";
 
 interface MeetupListProps {
-  schedules: Schedule[];
-  hasQuery: boolean;
-  variant?: "ticket" | "memory";
+  // undefined면 아직 불러오는 중
+  schedules?: Schedule[];
+  hasMore: boolean;
+  onLoadMore: () => void;
   onSelectSchedule?: (schedule: Schedule) => void;
 }
 
 export default function MeetupList({
   schedules,
-  hasQuery,
-  variant = "ticket",
+  hasMore,
+  onLoadMore,
   onSelectSchedule,
 }: MeetupListProps) {
-  if (schedules.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-[15px] py-[60px]">
-        <p className="pretendard-sb-18 text-main-black">
-          {hasQuery ? "검색 결과가 없어요" : "아직 등록된 만남이 없어요"}
-        </p>
-        <p className="pretendard-m-15 text-sub-gray-2">
-          {hasQuery
-            ? "다른 검색어로 다시 찾아보세요"
-            : "새로운 만남을 등록해 보세요"}
-        </p>
-      </div>
-    );
-  }
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
-  if (variant === "memory") {
-    return (
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || !hasMore) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) onLoadMore();
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasMore, onLoadMore]);
+
+  if (!schedules) return null;
+  if (schedules.length === 0) return <MeetupEmptyState hasQuery={false} />;
+
+  return (
+    <div className="flex flex-col gap-3">
       <div className="grid grid-cols-2 gap-3">
         {schedules.map((schedule) => (
           <MeetupTicketCard key={schedule.id} schedule={schedule} onClick={onSelectSchedule} />
         ))}
       </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col gap-[23px]">
-      {schedules.map((schedule) => (
-        <MeetupTicketItem
-          key={schedule.id}
-          schedule={schedule}
-          onClick={onSelectSchedule}
-        />
-      ))}
+      {hasMore && <div ref={sentinelRef} className="h-px" />}
     </div>
   );
 }

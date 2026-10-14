@@ -1,14 +1,14 @@
 "use client";
 
-import { addMonths, subMonths } from "date-fns";
+import { addMonths, format, subMonths } from "date-fns";
 import { useMemo, useState } from "react";
 
-import type { HomeCalendarDay, Schedule } from "@/features/home/types";
+import { useGetHomeCalendar } from "@/features/home/hooks/useGetHomeCalendar";
+import type { HomeCalendarDay } from "@/features/home/types";
 import { buildCalendarDay } from "@/features/home/utils/calendar";
 import { getMonthLabel, getMonthMatrix } from "@/lib/calendar";
 
 export function useHomeCalendar(
-  schedules: Schedule[],
   initialMonth: Date = new Date(),
   initialSelectedDate: Date | null = null
 ) {
@@ -17,10 +17,14 @@ export function useHomeCalendar(
   );
   const [selectedDate, setSelectedDate] = useState<Date | null>(initialSelectedDate);
 
+  const yearMonth = format(viewMonth, "yyyy-MM");
+  const { data } = useGetHomeCalendar(yearMonth);
+
   const days = useMemo<HomeCalendarDay[]>(() => {
+    const meetings = data?.meetings ?? [];
     const weeks = getMonthMatrix(viewMonth.getFullYear(), viewMonth.getMonth() + 1);
-    return weeks.flat().map((date) => buildCalendarDay(date, viewMonth, selectedDate, schedules));
-  }, [viewMonth, selectedDate, schedules]);
+    return weeks.flat().map((date) => buildCalendarDay(date, viewMonth, selectedDate, meetings, data?.today));
+  }, [viewMonth, selectedDate, data]);
 
   const monthLabel = useMemo(() => getMonthLabel(viewMonth), [viewMonth]);
 

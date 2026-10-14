@@ -1,25 +1,29 @@
-import Image from "next/image";
-
+import Profile from "@/components/ui/Profile";
+import type { ActiveMeetingParticipant } from "@/features/home/types";
 import { formatMemberLabel } from "@/features/home/utils/meetup";
 
 interface MeetupMembersProps {
-  leaderName: string;
-  memberCount: number;
+  participants: ActiveMeetingParticipant[];
+  participantCount: number;
 }
 
-export default function MeetupMembers({ leaderName, memberCount }: MeetupMembersProps) {
+export default function MeetupMembers({ participants, participantCount }: MeetupMembersProps) {
+  const avatarUrls = participants.length
+    ? participants.slice(0, 3).map((participant) => participant.profileImageUrl ?? undefined)
+    : [undefined, undefined, undefined];
+  const leaderName = participants[0]?.nickname ?? "";
+
   return (
     <div className="flex items-center gap-2">
       <div className="flex items-center">
-        <div className="relative size-[30px] overflow-hidden rounded-full border-2 border-main-white">
-          <Image src="/icons/default-profile.svg" alt="" width={30} height={30} />
-        </div>
-        <div className="relative -ml-3 size-[30px] overflow-hidden rounded-full border-2 border-main-white">
-          <Image src="/icons/default-profile.svg" alt="" width={30} height={30} />
-        </div>
+        {avatarUrls.map((src, index) => (
+          <div key={index} className={index === 0 ? "" : "-ml-[15px]"}>
+            <Profile src={src} width={30} height={30} />
+          </div>
+        ))}
       </div>
       <p className="pretendard-sb-10 whitespace-nowrap text-main-black underline">
-        {formatMemberLabel({ leaderName, memberCount })}
+        {formatMemberLabel(leaderName, participantCount)}
       </p>
     </div>
   );

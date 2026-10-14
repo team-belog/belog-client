@@ -1,8 +1,6 @@
 import { format, isSameDay, isSameMonth, parseISO } from "date-fns";
 
-import type { Schedule } from "@/features/home/types";
-
-export type MeetupTab = "ongoing" | "ended";
+import type { CompletedTicket, Schedule } from "@/features/home/types";
 
 export function formatMemoryDateRange(schedule: Schedule): string {
   const start = parseISO(schedule.startDate);
@@ -19,18 +17,24 @@ export function formatMemoryDateRange(schedule: Schedule): string {
   return `${format(start, "yyyy / MM / dd")} - ${format(end, "yyyy / MM / dd")}`;
 }
 
-export function formatMemberLabel(schedule: Pick<Schedule, "leaderName" | "memberCount">): string {
-  const { leaderName, memberCount } = schedule;
-  return memberCount > 0 ? `${leaderName} 외 ${memberCount}명` : leaderName;
+export function formatMemberLabel(leaderName: string, memberCount: number): string {
+  const otherCount = memberCount - 1;
+  return otherCount > 0 ? `${leaderName} 외 ${otherCount}명` : leaderName;
 }
 
-export function filterMeetups(schedules: Schedule[], tab: MeetupTab, query: string): Schedule[] {
-  const normalizedQuery = query.trim().toLowerCase();
-
-  return schedules.filter((schedule) => {
-    const matchesTab = tab === "ongoing" ? schedule.status !== "done" : schedule.status === "done";
-    const matchesQuery =
-      normalizedQuery === "" || schedule.title.toLowerCase().includes(normalizedQuery);
-    return matchesTab && matchesQuery;
-  });
+// 종료된 만남 티켓을 티켓 카드(MeetupTicketCard)가 쓰는 Schedule 형태로 변환한다
+export function toTicketSchedule(ticket: CompletedTicket): Schedule {
+  return {
+    id: ticket.ticketId,
+    title: ticket.name,
+    description: ticket.memory,
+    photoUrl: ticket.coverPhotoUrl ?? undefined,
+    startDate: ticket.startDate,
+    endDate: ticket.endDate,
+    destinationCity: ticket.location,
+    memberHandles: ticket.participants.map((participant) => participant.nickname),
+    status: "done",
+    leaderName: ticket.participants[0]?.nickname ?? "",
+    memberCount: ticket.participantCount,
+  };
 }
