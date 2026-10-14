@@ -35,6 +35,9 @@ export const ENDPOINTS = {
   bank: {
     list: "/banks",
   },
+  preLog: {
+    main: (meetingId: number) => `/meetings/${meetingId}/pre-log`,
+  },
   postLog: {
     getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,
     getPhotoList: (meetingId: number) => `/meetings/${meetingId}/post-log-photos`,

@@ -1,7 +1,16 @@
-import { DUMMY_MEETUP_DETAIL } from "@/features/meetup/constants/dummy";
-import PreLogView from "@/features/pre-log/components/PreLogView";
-import { DUMMY_PRE_LOG_PLACES } from "@/features/pre-log/constants/dummy";
+import { notFound } from "next/navigation";
 
-export default function PreLogPage() {
-  return <PreLogView meetup={DUMMY_MEETUP_DETAIL} places={DUMMY_PRE_LOG_PLACES} />;
+import PreLogContainer from "@/features/pre-log/components/PreLogContainer";
+
+export default async function PreLogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ meetingId?: string }>;
+}) {
+  const { meetingId: rawMeetingId } = await searchParams;
+  const meetingId = Number(rawMeetingId);
+
+  if (!Number.isInteger(meetingId) || meetingId <= 0) notFound();
+
+  return <PreLogContainer meetingId={meetingId} />;
 }
