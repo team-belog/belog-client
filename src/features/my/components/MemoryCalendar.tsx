@@ -5,8 +5,7 @@ import Image from "next/image";
 import { useGetPostLogCalendar } from "../hooks/useGetPostLogCalendar";
 import type { PostLogTicket } from "../types";
 import { useGetPostLogTicket } from "@/features/post-log/hooks/useGetPostLogTicket";
-import MeetupTicketCard from "@/features/home/components/MeetupTicketCard";
-import type { Schedule } from "@/features/home/types";
+import PostLogTicketCard from "@/features/post-log/components/PostLogTicketCard";
 import ChevronIcon from "@/components/ui/ChevronIcon";
 
 const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
@@ -58,23 +57,6 @@ export default function MemoryCalendar() {
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
   const { data: ticketDetail } = useGetPostLogTicket(selectedTicketId);
 
-  const ticketSchedule: Schedule | null = ticketDetail
-    ? {
-        id: ticketDetail.ticketId,
-        title: ticketDetail.meetingName,
-        description: ticketDetail.memory,
-        photoUrl: ticketDetail.coverPhotoUrl ?? undefined,
-        startDate: ticketDetail.startDate,
-        endDate: ticketDetail.endDate,
-        destinationCountry: ticketDetail.location.split(" ")[0],
-        destinationCity: ticketDetail.location.split(" ").slice(1).join(" "),
-        memberHandles: ticketDetail.members.map((m) => m.nickname),
-        status: "done",
-        leaderName: "",
-        memberCount: ticketDetail.members.length,
-      }
-    : null;
-
   const handlePrev = () => {
     if (month === 1) { setYear((y) => y - 1); setMonth(12); }
     else setMonth((m) => m - 1);
@@ -112,7 +94,7 @@ export default function MemoryCalendar() {
         </div>
       </div>
 
-      {selectedTicketId && ticketSchedule && (
+      {selectedTicketId && ticketDetail && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/65"
           onClick={() => setSelectedTicketId(null)}
@@ -124,8 +106,8 @@ export default function MemoryCalendar() {
           >
             <Image src="/icons/my/close.svg" alt="닫기" width={28} height={28} />
           </button>
-          <div className="w-[280px]" onClick={(e) => e.stopPropagation()}>
-            <MeetupTicketCard schedule={ticketSchedule} />
+          <div className="w-[309px]" onClick={(e) => e.stopPropagation()}>
+            <PostLogTicketCard ticket={ticketDetail} />
           </div>
         </div>
       )}
