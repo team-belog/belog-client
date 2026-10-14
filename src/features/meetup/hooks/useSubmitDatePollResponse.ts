@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { submitDatePollResponse } from "@/features/meetup/api/meetupApi";
 import { meetupKeys } from "@/features/meetup/hooks/meetupKeys";
+import { groupKeys } from "@/features/group/hooks/groupKeys";
 import type { SubmitDatePollResponseRequest } from "@/features/meetup/types";
 import type { ApiError } from "@/lib/apiError";
 
@@ -14,6 +15,8 @@ export function useSubmitDatePollResponse(meetingId: number) {
       queryClient.invalidateQueries({
         queryKey: meetupKeys.datePollResults(meetingId),
       });
+      // 그룹 홈 카드의 내 응답 여부(hasResponded)도 바뀜
+      queryClient.invalidateQueries({ queryKey: groupKeys.all });
     },
   });
 }
