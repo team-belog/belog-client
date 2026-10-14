@@ -46,6 +46,15 @@ export const ENDPOINTS = {
     create: (groupId: number) => `/groups/${groupId}/meetings`,
     update: (meetingId: number) => `/meetings/${meetingId}`,
     delete: (meetingId: number) => `/meetings/${meetingId}`,
+    datePoll: (meetingId: number) => `/meetings/${meetingId}/date-poll`,
+    datePollResults: (meetingId: number) =>
+      `/meetings/${meetingId}/date-poll/results`,
+    myDatePollResponse: (meetingId: number) =>
+      `/meetings/${meetingId}/date-poll/responses/me`,
+    confirmedDate: (meetingId: number) =>
+      `/meetings/${meetingId}/confirmed-date`,
+    datePollReminders: (meetingId: number) =>
+      `/meetings/${meetingId}/date-poll/reminders`,
     members: (meetingId: number) => `/meetings/${meetingId}/members`,
   },
   groupMembership: {

@@ -1,33 +1,46 @@
 "use client";
 
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
-import { DUMMY_MEETUP_RESPONSE } from "@/features/meetup/constants/dummy";
 import ChevronIcon from "@/components/ui/ChevronIcon";
+import type { CandidateDateRange } from "@/features/meetup/types";
+import { formatKoreanDateRange } from "@/lib/date";
 
-export default function MeetupRespondView() {
-  const { totalMembers, respondedMembers, candidateDates } =
-    DUMMY_MEETUP_RESPONSE;
+type MeetupRespondViewProps = {
+  meetingId: number;
+  candidateDateRanges: CandidateDateRange[];
+  totalParticipantCount: number;
+  respondedParticipantCount: number;
+  hasResponded: boolean;
+  isSubmitting: boolean;
+  submitErrorMessage?: string;
+  onSubmit: (candidateDateRangeIds: number[]) => void;
+};
 
+export default function MeetupRespondView({
+  meetingId,
+  candidateDateRanges,
+  totalParticipantCount,
+  respondedParticipantCount,
+  hasResponded,
+  isSubmitting,
+  submitErrorMessage,
+  onSubmit,
+}: MeetupRespondViewProps) {
   const router = useRouter();
-  const { id } = useParams<{ id: string }>();
   const [selected, setSelected] = useState<number[]>([]);
-  const [hasResponded, setHasResponded] = useState(false);
 
-  const toggle = (index: number) =>
+  const toggle = (candidateId: number) =>
     setSelected((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
+      prev.includes(candidateId)
+        ? prev.filter((id) => id !== candidateId)
+        : [...prev, candidateId],
     );
-
-  const handleSubmit = () => {
-    // TODO: 응답 제출 API 연결
-    setHasResponded(true);
-  };
 
   return (
     <main className="flex min-h-screen flex-col pb-[114px]">
@@ -40,15 +53,15 @@ export default function MeetupRespondView() {
         </div>
 
         <p className="pretendard-sb-20 mt-[20px] leading-[30px] text-main-black">
-          현재까지 {totalMembers}명 중
+          현재까지 {totalParticipantCount}명 중
           <br />
-          <span className="text-main-mint">{respondedMembers}</span>명이
-          응답했어요
+          <span className="text-main-mint">{respondedParticipantCount}</span>
+          명이 응답했어요
         </p>
 
         <button
           type="button"
-          onClick={() => router.push(`/meetup/${id}/status`)}
+          onClick={() => router.push(`/meetup/${meetingId}/status`)}
           className="pretendard-sb-14 flex items-center gap-0 self-end text-main-mint"
         >
           조율 현황 보기
@@ -75,19 +88,19 @@ export default function MeetupRespondView() {
         </div>
       ) : (
         <ul className="mt-[10px] flex flex-col gap-[10px] px-4">
-          {candidateDates.map((date, index) => {
-            const checked = selected.includes(index);
+          {candidateDateRanges.map((range) => {
+            const checked = selected.includes(range.id);
             return (
-              <li key={date + index}>
+              <li key={range.id}>
                 <button
                   type="button"
                   role="checkbox"
                   aria-checked={checked}
-                  onClick={() => toggle(index)}
+                  onClick={() => toggle(range.id)}
                   className="flex h-[57px] w-full items-center justify-between rounded-[12px] bg-main-cool-gray px-[22px]"
                 >
                   <span className="pretendard-sb-16 text-main-black">
-                    {date}
+                    {formatKoreanDateRange(range)}
                   </span>
                   {checked ? (
                     <Image
@@ -106,10 +119,16 @@ export default function MeetupRespondView() {
         </ul>
       )}
 
+      {!hasResponded && submitErrorMessage && (
+        <p className="pretendard-m-12 px-4 pt-[10px] text-red-500">
+          {submitErrorMessage}
+        </p>
+      )}
+
       <Button
         variant="primary"
-        disabled={hasResponded || selected.length === 0}
-        onClick={handleSubmit}
+        disabled={hasResponded || isSubmitting || selected.length === 0}
+        onClick={() => onSubmit(selected)}
         className="fixed bottom-0 left-0 right-0"
       >
         응답 완료
