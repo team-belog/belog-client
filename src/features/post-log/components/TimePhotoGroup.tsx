@@ -10,7 +10,7 @@ interface TimePhotoGroupProps {
   time: string;
   photos: Photo[];
   onLike?: (id: number) => void;
-  onClick?: () => void;
+  onClick?: (id: number) => void;
 }
 
 export default function TimePhotoGroup({ time, photos, onLike, onClick }: TimePhotoGroupProps) {
@@ -24,7 +24,7 @@ export default function TimePhotoGroup({ time, photos, onLike, onClick }: TimePh
             src={photo.src}
             likeCount={photo.likeCount}
             onLike={() => onLike?.(photo.id)}
-            onClick={onClick}
+            onClick={() => onClick?.(photo.id)}
           />
         ))}
       </div>

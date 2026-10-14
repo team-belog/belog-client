@@ -29,6 +29,14 @@ export const ENDPOINTS = {
   },
   postLog: {
     getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,
+    getPhotoList: (meetingId: number) => `/meetings/${meetingId}/post-log-photos`,
+    createTicket: (meetingId: number) => `/meetings/${meetingId}/post-log/ticket`,
+    getMeetingInfo: (meetingId: number) => `/meetings/${meetingId}/post-log`,
+    saveDraft: (meetingId: number) => `/meetings/${meetingId}/post-log/draft`,
+    getPhotoUploadUrls: (meetingId: number) => `/meetings/${meetingId}/post-log-photos/upload-urls`,
+    registerPhotoMetadata: (meetingId: number) => `/meetings/${meetingId}/post-log-photos`,
+    likePhoto: (photoId: number) => `/post-log-photos/${photoId}/likes/me`,
+    unlikePhoto: (photoId: number) => `/post-log-photos/${photoId}/likes/me`,
   },
   group: {
     list: "/groups",
