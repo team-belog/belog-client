@@ -27,7 +27,7 @@ const MODE_TABS = ["링크", "메모"];
 export default function PreLogAddView({ onCancel, onSubmit }: PreLogAddViewProps) {
   const router = useRouter();
   const [modeIndex, setModeIndex] = useState(0);
-  const [category, setCategory] = useState<PreLogCategory>("restaurant");
+  const [category, setCategory] = useState<PreLogCategory>("RESTAURANT");
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [content, setContent] = useState("");

@@ -1,17 +1,47 @@
 import type { MeetingStatus } from "@/features/meetup/types";
 
-export type PreLogCategory = "restaurant" | "cafe" | "stay" | "etc";
+export type PreLogCategory =
+  | "RESTAURANT"
+  | "CAFE"
+  | "ACCOMMODATION"
+  | "ACTIVITY"
+  | "TRANSPORTATION"
+  | "SHOPPING"
+  | "OTHER";
 
 export type PreLogFilter = "all" | "pinned" | PreLogCategory;
 
-export type PreLogPlace = {
-  id: number;
+export type PreLogPlanType = "LOCATION" | "MEMO";
+
+export type PreLogPlan = {
+  planId: number;
+  type: PreLogPlanType;
   category: PreLogCategory;
   title: string;
-  address: string;
+  // LOCATION만 값이 있음
+  url: string | null;
+  // LOCATION은 추출한 주소(없으면 null), MEMO는 본문 전체
+  content: string | null;
+  thumbnailUrl: string | null;
   likeCount: number;
-  isPinned: boolean;
-  thumbnailUrl?: string;
+  likedByMe: boolean;
+  pinned: boolean;
+  canDelete: boolean;
+  createdAt: string;
+};
+
+export type PreLogPlansRequest = {
+  category?: PreLogCategory;
+  pinnedOnly?: boolean;
+  cursor?: string;
+  size?: number;
+};
+
+// 고정 계획 우선, 계획 ID 역순
+export type PreLogPlansData = {
+  items: PreLogPlan[];
+  nextCursor: string | null;
+  hasNext: boolean;
 };
 
 export type PreLogMainData = {

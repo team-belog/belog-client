@@ -1,7 +1,6 @@
 "use client";
 
 import PreLogView from "@/features/pre-log/components/PreLogView";
-import { DUMMY_PRE_LOG_PLACES } from "@/features/pre-log/constants/dummy";
 import { usePreLogMain } from "@/features/pre-log/hooks/usePreLogMain";
 import { useUpdateMeeting } from "@/features/meetup/hooks/useUpdateMeeting";
 
@@ -35,8 +34,6 @@ export default function PreLogContainer({ meetingId }: { meetingId: number }) {
   return (
     <PreLogView
       meeting={data}
-      // 장소 목록 API 연동 전까지 더미 데이터 사용
-      places={DUMMY_PRE_LOG_PLACES}
       isUpdating={updateMeeting.isPending}
       updateErrorMessage={updateMeeting.error?.message}
       onUpdate={updateMeeting.mutate}

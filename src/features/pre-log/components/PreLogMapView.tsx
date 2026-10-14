@@ -4,14 +4,13 @@ import { useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import Image from "next/image";
 
-import PreLogEmptyState from "@/features/pre-log/components/PreLogEmptyState";
-import PreLogPlaceItem from "@/features/pre-log/components/PreLogPlaceItem";
-import type { PreLogPlace } from "@/features/pre-log/types";
+import PreLogPlanList from "@/features/pre-log/components/PreLogPlanList";
+import type { PreLogPlan } from "@/features/pre-log/types";
 
 interface PreLogMapViewProps {
-  places: PreLogPlace[];
-  onSelectPlace?: (place: PreLogPlace) => void;
-  onDeletePlace?: (place: PreLogPlace) => void;
+  meetingId: number;
+  onSelectPlan?: (plan: PreLogPlan) => void;
+  onDeletePlan?: (plan: PreLogPlan) => void;
 }
 
 const SHEET_MIN_HEIGHT = 120;
@@ -19,9 +18,9 @@ const SHEET_DEFAULT_HEIGHT = 320;
 const SHEET_TOP_INSET = 80;
 
 export default function PreLogMapView({
-  places,
-  onSelectPlace,
-  onDeletePlace,
+  meetingId,
+  onSelectPlan,
+  onDeletePlan,
 }: PreLogMapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ startY: number; startHeight: number } | null>(null);
@@ -77,20 +76,15 @@ export default function PreLogMapView({
           <div className="h-[5px] w-[70px] rounded-[8px] bg-sub-gray-3" />
         </div>
 
-        {places.length > 0 ? (
-          <div className="scrollbar-none flex flex-1 flex-col overflow-y-auto overscroll-contain">
-            {places.map((place) => (
-              <PreLogPlaceItem
-                key={place.id}
-                place={place}
-                onClick={onSelectPlace}
-                onDelete={onDeletePlace}
-              />
-            ))}
-          </div>
-        ) : (
-          <PreLogEmptyState message="아직 등록된 목록이 없어요" className="py-[40px]" />
-        )}
+        <PreLogPlanList
+          meetingId={meetingId}
+          filter="all"
+          onSelectPlan={onSelectPlan}
+          onDeletePlan={onDeletePlan}
+          emptyMessage="아직 등록된 목록이 없어요"
+          emptyClassName="py-[40px]"
+          className="scrollbar-none flex flex-1 flex-col overflow-y-auto overscroll-contain"
+        />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { differenceInCalendarDays, format, parseISO } from "date-fns";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -12,14 +12,13 @@ import type { UpdateMeetingRequest } from "@/features/meetup/types";
 import PreLogCategoryTabs from "@/features/pre-log/components/PreLogCategoryTabs";
 import PreLogDateRangeSheet from "@/features/pre-log/components/PreLogDateRangeSheet";
 import PreLogDeleteModal from "@/features/pre-log/components/PreLogDeleteModal";
-import PreLogEmptyState from "@/features/pre-log/components/PreLogEmptyState";
 import PreLogMapView from "@/features/pre-log/components/PreLogMapView";
-import PreLogPlaceItem from "@/features/pre-log/components/PreLogPlaceItem";
+import PreLogPlanList from "@/features/pre-log/components/PreLogPlanList";
 import { PRE_LOG_FILTER_TABS } from "@/features/pre-log/constants/category";
 import type {
   PreLogFilter,
   PreLogMainData,
-  PreLogPlace,
+  PreLogPlan,
 } from "@/features/pre-log/types";
 import { formatDateRange } from "@/lib/date";
 
@@ -27,7 +26,6 @@ const API_DATE_FORMAT = "yyyy-MM-dd";
 
 interface PreLogViewProps {
   meeting: PreLogMainData;
-  places: PreLogPlace[];
   isUpdating: boolean;
   updateErrorMessage?: string;
   onUpdate: (
@@ -35,8 +33,8 @@ interface PreLogViewProps {
     options?: { onSuccess?: () => void },
   ) => void;
   onAddPlace?: () => void;
-  onSelectPlace?: (place: PreLogPlace) => void;
-  onDeletePlace?: (place: PreLogPlace) => void;
+  onSelectPlan?: (plan: PreLogPlan) => void;
+  onDeletePlan?: (plan: PreLogPlan) => void;
 }
 
 const MAIN_TABS = ["목록", "지도"];
@@ -52,22 +50,20 @@ function toDraft(meeting: PreLogMainData): UpdateMeetingRequest {
 
 export default function PreLogView({
   meeting,
-  places,
   isUpdating,
   updateErrorMessage,
   onUpdate,
   onAddPlace,
-  onSelectPlace,
-  onDeletePlace,
+  onSelectPlan,
+  onDeletePlan,
 }: PreLogViewProps) {
   const router = useRouter();
   const [mainTabIndex, setMainTabIndex] = useState(0);
-  const [categoryFilter, setCategoryFilter] = useState<PreLogFilter>("stay");
+  const [categoryFilter, setCategoryFilter] = useState<PreLogFilter>("ACCOMMODATION");
   const [isEditingSummary, setIsEditingSummary] = useState(false);
   const [isEditDatesOpen, setIsEditDatesOpen] = useState(false);
   const [draft, setDraft] = useState(() => toDraft(meeting));
-  const [placeList, setPlaceList] = useState(places);
-  const [deleteTarget, setDeleteTarget] = useState<PreLogPlace | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<PreLogPlan | null>(null);
 
   const { name, location, startDate, endDate } = isEditingSummary
     ? draft
@@ -130,16 +126,20 @@ export default function PreLogView({
     setIsEditDatesOpen(false);
   };
 
-  const filteredPlaces = useMemo(() => {
-    if (categoryFilter === "all") return placeList;
-    if (categoryFilter === "pinned") return placeList.filter((place) => place.isPinned);
-    return placeList.filter((place) => place.category === categoryFilter);
-  }, [placeList, categoryFilter]);
+  // LOCATION은 장소 url로 이동, MEMO 상세 화면은 아직 없음
+  const handleSelectPlan = (plan: PreLogPlan) => {
+    if (onSelectPlan) {
+      onSelectPlan(plan);
+      return;
+    }
+    if (plan.type === "LOCATION" && plan.url) {
+      window.open(plan.url, "_blank", "noopener,noreferrer");
+    }
+  };
 
   const handleConfirmDelete = () => {
     if (!deleteTarget) return;
-    setPlaceList((prev) => prev.filter((place) => place.id !== deleteTarget.id));
-    onDeletePlace?.(deleteTarget);
+    onDeletePlan?.(deleteTarget);
     setDeleteTarget(null);
   };
 
@@ -182,26 +182,18 @@ export default function PreLogView({
             onChange={setCategoryFilter}
           />
 
-          {filteredPlaces.length > 0 ? (
-            <div className="flex flex-col">
-              {filteredPlaces.map((place) => (
-                <PreLogPlaceItem
-                  key={place.id}
-                  place={place}
-                  onClick={onSelectPlace}
-                  onDelete={setDeleteTarget}
-                />
-              ))}
-            </div>
-          ) : (
-            <PreLogEmptyState />
-          )}
+          <PreLogPlanList
+            meetingId={meeting.meetingId}
+            filter={categoryFilter}
+            onSelectPlan={handleSelectPlan}
+            onDeletePlan={setDeleteTarget}
+          />
         </>
       ) : (
         <PreLogMapView
-          places={placeList}
-          onSelectPlace={onSelectPlace}
-          onDeletePlace={setDeleteTarget}
+          meetingId={meeting.meetingId}
+          onSelectPlan={handleSelectPlan}
+          onDeletePlan={setDeleteTarget}
         />
       )}
 
