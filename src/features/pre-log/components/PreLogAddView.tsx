@@ -12,6 +12,7 @@ import type {
   CreatePreLogPlanRequest,
   PreLogCategory,
 } from "@/features/pre-log/types";
+import { isSupportedMapUrl } from "@/features/pre-log/utils/mapUrl";
 
 interface PreLogAddViewProps {
   isSubmitting?: boolean;
@@ -20,7 +21,7 @@ interface PreLogAddViewProps {
   onSubmit?: (body: CreatePreLogPlanRequest) => void;
 }
 
-const MODE_TABS = ["링크", "메모"];
+const MODE_TABS = ["위치", "메모"];
 
 export default function PreLogAddView({
   isSubmitting = false,
@@ -36,7 +37,11 @@ export default function PreLogAddView({
   const [content, setContent] = useState("");
 
   const isLinkMode = modeIndex === 0;
-  const isValid = title.trim() !== "" && (isLinkMode ? url.trim() !== "" : content.trim() !== "");
+  // 입력 중에는 에러를 띄우지 않도록 값이 있을 때만 형식 검사
+  const isUrlInvalid = url.trim() !== "" && !isSupportedMapUrl(url);
+  const isValid =
+    title.trim() !== "" &&
+    (isLinkMode ? url.trim() !== "" && !isUrlInvalid : content.trim() !== "");
 
   const handleCancel = () => {
     if (onCancel) {
@@ -73,7 +78,14 @@ export default function PreLogAddView({
         <InputField label="제목" placeholder="예) 식당 링크" value={title} onChange={setTitle} />
 
         {isLinkMode ? (
-          <InputField label="URL" placeholder="https://..." value={url} onChange={setUrl} />
+          <InputField
+            label="URL"
+            description="지도 내 위치 표시는 카카오맵과 구글지도 링크만 지원해요."
+            placeholder="https://..."
+            value={url}
+            onChange={setUrl}
+            errorMessage={isUrlInvalid ? "카카오맵 또는 구글지도 링크만 등록할 수 있어요." : undefined}
+          />
         ) : (
           <InputField
             label="내용"
