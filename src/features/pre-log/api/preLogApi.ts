@@ -2,6 +2,8 @@ import { api } from "@/lib/axios";
 import { ApiResponse } from "@/lib/apiError";
 import { ENDPOINTS } from "@/constants/endpoints";
 import type {
+  CreatePreLogPlanData,
+  CreatePreLogPlanRequest,
   PreLogMainData,
   PreLogPlansData,
   PreLogPlansRequest,
@@ -21,6 +23,17 @@ export async function getPreLogPlans(
   const { data } = await api.get<ApiResponse<PreLogPlansData>>(
     ENDPOINTS.preLog.plans(meetingId),
     { params },
+  );
+  return data.data;
+}
+
+export async function createPreLogPlan(
+  meetingId: number,
+  body: CreatePreLogPlanRequest,
+) {
+  const { data } = await api.post<ApiResponse<CreatePreLogPlanData>>(
+    ENDPOINTS.preLog.createPlan(meetingId),
+    body,
   );
   return data.data;
 }

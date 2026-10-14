@@ -1,5 +1,16 @@
-import PreLogAddView from "@/features/pre-log/components/PreLogAddView";
+import { notFound } from "next/navigation";
 
-export default function PreLogAddPage() {
-  return <PreLogAddView />;
+import PreLogAddContainer from "@/features/pre-log/components/PreLogAddContainer";
+
+export default async function PreLogAddPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ meetingId?: string }>;
+}) {
+  const { meetingId: rawMeetingId } = await searchParams;
+  const meetingId = Number(rawMeetingId);
+
+  if (!Number.isInteger(meetingId) || meetingId <= 0) notFound();
+
+  return <PreLogAddContainer meetingId={meetingId} />;
 }

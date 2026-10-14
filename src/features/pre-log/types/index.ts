@@ -37,6 +37,32 @@ export type PreLogPlansRequest = {
   size?: number;
 };
 
+// LOCATION은 지원하는 지도 URL만, MEMO는 content만 입력
+export type CreatePreLogPlanRequest =
+  | {
+      type: "LOCATION";
+      category: PreLogCategory;
+      title: string;
+      url: string;
+    }
+  | {
+      type: "MEMO";
+      category: PreLogCategory;
+      title: string;
+      content: string;
+    };
+
+export type CreatePreLogPlanData = {
+  planId: number;
+  meetingId: number;
+  creatorGroupMemberId: number;
+  type: PreLogPlanType;
+  category: PreLogCategory;
+  title: string;
+  url: string | null;
+  content: string | null;
+};
+
 // 고정 계획 우선, 계획 ID 역순
 export type PreLogPlansData = {
   items: PreLogPlan[];

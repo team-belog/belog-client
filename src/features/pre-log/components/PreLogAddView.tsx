@@ -8,23 +8,26 @@ import Button from "@/components/ui/Button";
 import InputField from "@/components/ui/InputField";
 import TabBar from "@/components/ui/TabBar";
 import PreLogTagSelector from "@/features/pre-log/components/PreLogTagSelector";
-import type { PreLogCategory } from "@/features/pre-log/types";
-
-export type PreLogAddPayload = {
-  category: PreLogCategory;
-  title: string;
-  url?: string;
-  content?: string;
-};
+import type {
+  CreatePreLogPlanRequest,
+  PreLogCategory,
+} from "@/features/pre-log/types";
 
 interface PreLogAddViewProps {
+  isSubmitting?: boolean;
+  errorMessage?: string;
   onCancel?: () => void;
-  onSubmit?: (payload: PreLogAddPayload) => void;
+  onSubmit?: (body: CreatePreLogPlanRequest) => void;
 }
 
 const MODE_TABS = ["링크", "메모"];
 
-export default function PreLogAddView({ onCancel, onSubmit }: PreLogAddViewProps) {
+export default function PreLogAddView({
+  isSubmitting = false,
+  errorMessage,
+  onCancel,
+  onSubmit,
+}: PreLogAddViewProps) {
   const router = useRouter();
   const [modeIndex, setModeIndex] = useState(0);
   const [category, setCategory] = useState<PreLogCategory>("RESTAURANT");
@@ -44,12 +47,14 @@ export default function PreLogAddView({ onCancel, onSubmit }: PreLogAddViewProps
   };
 
   const handleSubmit = () => {
-    const payload: PreLogAddPayload = isLinkMode
-      ? { category, title: title.trim(), url: url.trim() }
-      : { category, title: title.trim(), content: content.trim() };
+    if (isSubmitting) return;
+
+    const body: CreatePreLogPlanRequest = isLinkMode
+      ? { type: "LOCATION", category, title: title.trim(), url: url.trim() }
+      : { type: "MEMO", category, title: title.trim(), content: content.trim() };
 
     if (onSubmit) {
-      onSubmit(payload);
+      onSubmit(body);
     } else {
       router.back();
     }
@@ -77,6 +82,10 @@ export default function PreLogAddView({ onCancel, onSubmit }: PreLogAddViewProps
             onChange={setContent}
           />
         )}
+
+        {errorMessage && (
+          <p className="pretendard-m-12 px-4 text-red-500">{errorMessage}</p>
+        )}
       </div>
 
       <div className="fixed bottom-0 left-0 flex w-full items-center gap-3 bg-white px-4 py-[28px]">
@@ -89,7 +98,7 @@ export default function PreLogAddView({ onCancel, onSubmit }: PreLogAddViewProps
         >
           취소
         </Button>
-        <Button variant="primary" disabled={!isValid} bare onClick={handleSubmit} className="flex-1">
+        <Button variant="primary" disabled={!isValid || isSubmitting} bare onClick={handleSubmit} className="flex-1">
           추가
         </Button>
       </div>
