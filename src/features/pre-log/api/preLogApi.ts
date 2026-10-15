@@ -50,3 +50,7 @@ export async function updatePreLogPlan(
   );
   return data.data;
 }
+
+export async function deletePreLogPlan(planId: number) {
+  await api.delete(ENDPOINTS.preLog.deletePlan(planId));
+}

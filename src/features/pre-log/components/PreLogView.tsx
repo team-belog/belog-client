@@ -34,7 +34,10 @@ interface PreLogViewProps {
   ) => void;
   onAddPlace?: () => void;
   onSelectPlan?: (plan: PreLogPlan) => void;
-  onDeletePlan?: (plan: PreLogPlan) => void;
+  isDeletingPlan: boolean;
+  deletePlanErrorMessage?: string;
+  onDeletePlan: (planId: number, options?: { onSuccess?: () => void }) => void;
+  onCancelDeletePlan: () => void;
 }
 
 const MAIN_TABS = ["목록", "지도"];
@@ -55,7 +58,10 @@ export default function PreLogView({
   onUpdate,
   onAddPlace,
   onSelectPlan,
+  isDeletingPlan,
+  deletePlanErrorMessage,
   onDeletePlan,
+  onCancelDeletePlan,
 }: PreLogViewProps) {
   const router = useRouter();
   const [mainTabIndex, setMainTabIndex] = useState(0);
@@ -136,9 +142,13 @@ export default function PreLogView({
   };
 
   const handleConfirmDelete = () => {
-    if (!deleteTarget) return;
-    onDeletePlan?.(deleteTarget);
+    if (!deleteTarget || isDeletingPlan) return;
+    onDeletePlan(deleteTarget.planId, { onSuccess: () => setDeleteTarget(null) });
+  };
+
+  const handleCancelDelete = () => {
     setDeleteTarget(null);
+    onCancelDeletePlan();
   };
 
   return (
@@ -216,7 +226,9 @@ export default function PreLogView({
       {deleteTarget && (
         <PreLogDeleteModal
           placeName={deleteTarget.title}
-          onCancel={() => setDeleteTarget(null)}
+          isDeleting={isDeletingPlan}
+          errorMessage={deletePlanErrorMessage}
+          onCancel={handleCancelDelete}
           onConfirm={handleConfirmDelete}
         />
       )}
