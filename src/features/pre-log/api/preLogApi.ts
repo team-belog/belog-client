@@ -54,3 +54,12 @@ export async function updatePreLogPlan(
 export async function deletePreLogPlan(planId: number) {
   await api.delete(ENDPOINTS.preLog.deletePlan(planId));
 }
+
+// 이미 고정된 계획에 요청해도 성공
+export async function pinPreLogPlan(planId: number) {
+  await api.put(ENDPOINTS.preLog.pinPlan(planId));
+}
+
+export async function unpinPreLogPlan(planId: number) {
+  await api.delete(ENDPOINTS.preLog.pinPlan(planId));
+}

@@ -41,6 +41,8 @@ export const ENDPOINTS = {
     createPlan: (meetingId: number) => `/meetings/${meetingId}/pre-log/plans`,
     updatePlan: (planId: number) => `/plans/${planId}`,
     deletePlan: (planId: number) => `/plans/${planId}`,
+    // PUT 고정, DELETE 해제
+    pinPlan: (planId: number) => `/plans/${planId}/pin`,
   },
   postLog: {
     getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,
