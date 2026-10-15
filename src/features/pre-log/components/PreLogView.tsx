@@ -38,6 +38,8 @@ interface PreLogViewProps {
   deletePlanErrorMessage?: string;
   onDeletePlan: (planId: number, options?: { onSuccess?: () => void }) => void;
   onCancelDeletePlan: () => void;
+  // pinned: 변경 후 상태
+  onTogglePlanPin: (input: { planId: number; pinned: boolean }) => void;
 }
 
 const MAIN_TABS = ["목록", "지도"];
@@ -62,6 +64,7 @@ export default function PreLogView({
   deletePlanErrorMessage,
   onDeletePlan,
   onCancelDeletePlan,
+  onTogglePlanPin,
 }: PreLogViewProps) {
   const router = useRouter();
   const [mainTabIndex, setMainTabIndex] = useState(0);
@@ -141,6 +144,10 @@ export default function PreLogView({
     router.push(`/pre-log/edit?meetingId=${meeting.meetingId}&planId=${plan.planId}`);
   };
 
+  const handleTogglePin = (plan: PreLogPlan) => {
+    onTogglePlanPin({ planId: plan.planId, pinned: !plan.pinned });
+  };
+
   const handleConfirmDelete = () => {
     if (!deleteTarget || isDeletingPlan) return;
     onDeletePlan(deleteTarget.planId, { onSuccess: () => setDeleteTarget(null) });
@@ -195,6 +202,7 @@ export default function PreLogView({
             filter={categoryFilter}
             onSelectPlan={handleSelectPlan}
             onDeletePlan={setDeleteTarget}
+            onTogglePlanPin={handleTogglePin}
           />
         </>
       ) : (
@@ -202,6 +210,7 @@ export default function PreLogView({
           meetingId={meeting.meetingId}
           onSelectPlan={handleSelectPlan}
           onDeletePlan={setDeleteTarget}
+          onTogglePlanPin={handleTogglePin}
         />
       )}
 

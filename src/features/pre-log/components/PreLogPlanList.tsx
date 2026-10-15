@@ -12,6 +12,7 @@ interface PreLogPlanListProps {
   filter: PreLogFilter;
   onSelectPlan?: (plan: PreLogPlan) => void;
   onDeletePlan?: (plan: PreLogPlan) => void;
+  onTogglePlanPin?: (plan: PreLogPlan) => void;
   emptyMessage?: string;
   emptyClassName?: string;
   className?: string;
@@ -22,6 +23,7 @@ export default function PreLogPlanList({
   filter,
   onSelectPlan,
   onDeletePlan,
+  onTogglePlanPin,
   emptyMessage,
   emptyClassName,
   className = "flex flex-col",
@@ -83,6 +85,7 @@ export default function PreLogPlanList({
           plan={plan}
           onClick={onSelectPlan}
           onDelete={onDeletePlan}
+          onTogglePin={onTogglePlanPin}
         />
       ))}
       <div ref={sentinelRef} className="h-px shrink-0" />

@@ -9,10 +9,16 @@ interface PreLogPlaceItemProps {
   plan: PreLogPlan;
   onClick?: (plan: PreLogPlan) => void;
   onDelete?: (plan: PreLogPlan) => void;
+  onTogglePin?: (plan: PreLogPlan) => void;
 }
 
-export default function PreLogPlaceItem({ plan, onClick, onDelete }: PreLogPlaceItemProps) {
-  const { title, content, category, likeCount, thumbnailUrl, canDelete } = plan;
+export default function PreLogPlaceItem({
+  plan,
+  onClick,
+  onDelete,
+  onTogglePin,
+}: PreLogPlaceItemProps) {
+  const { title, content, category, likeCount, thumbnailUrl, canDelete, pinned } = plan;
 
   return (
     <div className="flex w-full items-center justify-between px-4 py-3">
@@ -29,9 +35,25 @@ export default function PreLogPlaceItem({ plan, onClick, onDelete }: PreLogPlace
         </div>
 
         <div className="flex min-w-0 flex-col items-start gap-[5px]">
-          <span className="rounded-[5px] bg-main-mint px-2 py-1 text-[10px] font-medium text-main-white">
-            {PRE_LOG_CATEGORY_LABEL[category]}
-          </span>
+          <div className="flex items-center gap-[10px]">
+            <span className="rounded-[5px] bg-main-mint px-2 py-1 text-[10px] font-medium text-main-white">
+              {PRE_LOG_CATEGORY_LABEL[category]}
+            </span>
+            <button
+              type="button"
+              onClick={() => onTogglePin?.(plan)}
+              aria-label={pinned ? "고정 해제" : "고정"}
+              aria-pressed={pinned}
+              className="flex size-[18px] items-center justify-center"
+            >
+              <Image
+                src={pinned ? "/icons/group/pin-mint.svg" : "/icons/group/pin.svg"}
+                alt=""
+                width={10}
+                height={15}
+              />
+            </button>
+          </div>
           <p className="pretendard-m-15 text-main-black">{title}</p>
           {content && <p className="line-clamp-1 text-[12px] text-sub-gray-2">{content}</p>}
         </div>
