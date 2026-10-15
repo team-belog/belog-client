@@ -10,6 +10,7 @@ import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useWithdrawAccount } from "@/features/auth/hooks/useWithdrawAccount";
 import { useNotificationSettings } from "@/features/notification/hooks/useNotificationSettings";
 import { useUpdateNotificationSettings } from "@/features/notification/hooks/useUpdateNotificationSettings";
+import { isPushSupported, registerPushDevice } from "@/features/notification/utils/pushDevice";
 
 function SwitchToggle({ checked = false, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -54,6 +55,19 @@ export default function SettingPage() {
   const notificationEnabled = notificationSettings?.pushNotificationEnabled ?? false;
   const [modal, setModal] = useState<"logout" | "withdraw" | null>(null);
 
+  const handleNotificationToggle = async (enabled: boolean) => {
+    updateNotificationSettings({ pushNotificationEnabled: enabled });
+    if (!enabled || !isPushSupported()) return;
+
+    // iOS는 사용자 클릭 중에만 권한을 요청할 수 있음
+    const permission =
+      Notification.permission === "default"
+        ? await Notification.requestPermission()
+        : Notification.permission;
+
+    if (permission === "granted") registerPushDevice().catch(() => {});
+  };
+
   return (
     <main className="flex flex-col">
       <BackHeader title="설정" />
@@ -61,7 +75,7 @@ export default function SettingPage() {
       <SettingRow label="알림 설정">
         <SwitchToggle
           checked={notificationEnabled}
-          onChange={(enabled) => updateNotificationSettings({ pushNotificationEnabled: enabled })}
+          onChange={handleNotificationToggle}
         />
       </SettingRow>
       <SettingRow label="계좌 관리" account={true} />
