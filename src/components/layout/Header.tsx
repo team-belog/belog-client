@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import BelogIcon from "@/components/ui/BelogIcon";
+import { useHasUnreadNotification } from "@/features/notification/hooks/useHasUnreadNotification";
 
 interface HeaderProps {
   title?: string;
@@ -13,6 +14,7 @@ interface HeaderProps {
 
 export default function Header({ title, onSettingClick, onAlarmClick }: HeaderProps) {
   const router = useRouter();
+  const hasUnreadNotification = useHasUnreadNotification();
 
   const handleSetting = () => {
     if (onSettingClick) {
@@ -73,13 +75,15 @@ export default function Header({ title, onSettingClick, onAlarmClick }: HeaderPr
             height={25}
             className="absolute left-[5px] top-[3px]"
           />
-          <Image
-            src="/icons/home/bell-dot.svg"
-            alt=""
-            width={7}
-            height={7}
-            className="absolute right-[3px] top-[6px]"
-          />
+          {hasUnreadNotification && (
+            <Image
+              src="/icons/home/bell-dot.svg"
+              alt=""
+              width={7}
+              height={7}
+              className="absolute right-[3px] top-[6px]"
+            />
+          )}
         </button>
       </div>
     </header>
