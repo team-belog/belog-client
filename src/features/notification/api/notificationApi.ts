@@ -41,3 +41,8 @@ export async function registerDevice(
 ) {
   await api.put(ENDPOINTS.notification.device(deviceId), body);
 }
+
+// 이미 해제된 기기도 204로 성공
+export async function unregisterDevice(deviceId: string) {
+  await api.delete(ENDPOINTS.notification.device(deviceId));
+}
