@@ -7,6 +7,8 @@ import type {
   PreLogMainData,
   PreLogPlansData,
   PreLogPlansRequest,
+  UpdatePreLogPlanData,
+  UpdatePreLogPlanRequest,
 } from "@/features/pre-log/types";
 
 export async function getPreLogMain(meetingId: number) {
@@ -33,6 +35,17 @@ export async function createPreLogPlan(
 ) {
   const { data } = await api.post<ApiResponse<CreatePreLogPlanData>>(
     ENDPOINTS.preLog.createPlan(meetingId),
+    body,
+  );
+  return data.data;
+}
+
+export async function updatePreLogPlan(
+  planId: number,
+  body: UpdatePreLogPlanRequest,
+) {
+  const { data } = await api.put<ApiResponse<UpdatePreLogPlanData>>(
+    ENDPOINTS.preLog.updatePlan(planId),
     body,
   );
   return data.data;

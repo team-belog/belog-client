@@ -11,10 +11,15 @@ import PreLogTagSelector from "@/features/pre-log/components/PreLogTagSelector";
 import type {
   CreatePreLogPlanRequest,
   PreLogCategory,
+  PreLogPlan,
 } from "@/features/pre-log/types";
 import { isSupportedMapUrl } from "@/features/pre-log/utils/mapUrl";
 
 interface PreLogAddViewProps {
+  // 값이 있으면 수정 모드로 동작
+  initialPlan?: PreLogPlan;
+  // 작성자가 아니면 내용만 보여줌
+  readOnly?: boolean;
   isSubmitting?: boolean;
   errorMessage?: string;
   onCancel?: () => void;
@@ -24,17 +29,24 @@ interface PreLogAddViewProps {
 const MODE_TABS = ["위치", "메모"];
 
 export default function PreLogAddView({
+  initialPlan,
+  readOnly = false,
   isSubmitting = false,
   errorMessage,
   onCancel,
   onSubmit,
 }: PreLogAddViewProps) {
   const router = useRouter();
-  const [modeIndex, setModeIndex] = useState(0);
-  const [category, setCategory] = useState<PreLogCategory>("RESTAURANT");
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-  const [content, setContent] = useState("");
+  const isEditMode = initialPlan !== undefined;
+  const [modeIndex, setModeIndex] = useState(initialPlan?.type === "MEMO" ? 1 : 0);
+  const [category, setCategory] = useState<PreLogCategory>(
+    initialPlan?.category ?? "RESTAURANT",
+  );
+  const [title, setTitle] = useState(initialPlan?.title ?? "");
+  const [url, setUrl] = useState(initialPlan?.url ?? "");
+  const [content, setContent] = useState(
+    initialPlan?.type === "MEMO" ? (initialPlan.content ?? "") : "",
+  );
 
   const isLinkMode = modeIndex === 0;
   // 입력 중에는 에러를 띄우지 않도록 값이 있을 때만 형식 검사
@@ -42,6 +54,14 @@ export default function PreLogAddView({
   const isValid =
     title.trim() !== "" &&
     (isLinkMode ? url.trim() !== "" && !isUrlInvalid : content.trim() !== "");
+  const isChanged =
+    !initialPlan ||
+    (isLinkMode ? "LOCATION" : "MEMO") !== initialPlan.type ||
+    category !== initialPlan.category ||
+    title.trim() !== initialPlan.title ||
+    (isLinkMode
+      ? url.trim() !== (initialPlan.url ?? "")
+      : content.trim() !== (initialPlan.content ?? ""));
 
   const handleCancel = () => {
     if (onCancel) {
@@ -67,15 +87,25 @@ export default function PreLogAddView({
 
   return (
     <main className="pb-[130px]">
-      <BackHeader title="계획 추가" onBack={handleCancel} />
+      <BackHeader title={isEditMode ? "계획 수정" : "계획 추가"} onBack={handleCancel} />
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
 
-      <TabBar tabs={MODE_TABS} activeIndex={modeIndex} onChange={setModeIndex} />
+      <TabBar
+        tabs={MODE_TABS}
+        activeIndex={modeIndex}
+        onChange={readOnly ? () => {} : setModeIndex}
+      />
 
       <div className="mt-5 flex flex-col gap-[30px]">
-        <PreLogTagSelector value={category} onChange={setCategory} />
+        <PreLogTagSelector value={category} onChange={readOnly ? () => {} : setCategory} />
 
-        <InputField label="제목" placeholder="예) 식당 링크" value={title} onChange={setTitle} />
+        <InputField
+          label="제목"
+          placeholder="예) 식당 링크"
+          value={title}
+          onChange={setTitle}
+          readOnly={readOnly}
+        />
 
         {isLinkMode ? (
           <InputField
@@ -84,6 +114,7 @@ export default function PreLogAddView({
             placeholder="https://..."
             value={url}
             onChange={setUrl}
+            readOnly={readOnly}
             errorMessage={isUrlInvalid ? "카카오맵 또는 구글지도 링크만 등록할 수 있어요." : undefined}
           />
         ) : (
@@ -92,6 +123,7 @@ export default function PreLogAddView({
             placeholder="메모를 입력해주세요"
             value={content}
             onChange={setContent}
+            readOnly={readOnly}
           />
         )}
 
@@ -100,20 +132,28 @@ export default function PreLogAddView({
         )}
       </div>
 
-      <div className="fixed bottom-0 left-0 flex w-full items-center gap-3 bg-white px-4 py-[28px]">
-        <Button
-          variant="tertiary"
-          disabled={false}
-          bare
-          onClick={handleCancel}
-          className="w-[114px] shrink-0"
-        >
-          취소
-        </Button>
-        <Button variant="primary" disabled={!isValid || isSubmitting} bare onClick={handleSubmit} className="flex-1">
-          추가
-        </Button>
-      </div>
+      {!readOnly && (
+        <div className="fixed bottom-0 left-0 flex w-full items-center gap-3 bg-white px-4 py-[28px]">
+          <Button
+            variant="tertiary"
+            disabled={false}
+            bare
+            onClick={handleCancel}
+            className="w-[114px] shrink-0"
+          >
+            취소
+          </Button>
+          <Button
+            variant="primary"
+            disabled={!isValid || !isChanged || isSubmitting}
+            bare
+            onClick={handleSubmit}
+            className="flex-1"
+          >
+            {isEditMode ? "수정" : "추가"}
+          </Button>
+        </div>
+      )}
     </main>
   );
 }

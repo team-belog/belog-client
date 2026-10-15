@@ -39,6 +39,7 @@ export const ENDPOINTS = {
     main: (meetingId: number) => `/meetings/${meetingId}/pre-log`,
     plans: (meetingId: number) => `/meetings/${meetingId}/pre-log/plans`,
     createPlan: (meetingId: number) => `/meetings/${meetingId}/pre-log/plans`,
+    updatePlan: (planId: number) => `/plans/${planId}`,
   },
   postLog: {
     getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,

@@ -126,15 +126,13 @@ export default function PreLogView({
     setIsEditDatesOpen(false);
   };
 
-  // LOCATION은 장소 url로 이동, MEMO 상세 화면은 아직 없음
+  // 작성자는 수정, 나머지는 내용 확인 화면으로 이동
   const handleSelectPlan = (plan: PreLogPlan) => {
     if (onSelectPlan) {
       onSelectPlan(plan);
       return;
     }
-    if (plan.type === "LOCATION" && plan.url) {
-      window.open(plan.url, "_blank", "noopener,noreferrer");
-    }
+    router.push(`/pre-log/edit?meetingId=${meeting.meetingId}&planId=${plan.planId}`);
   };
 
   const handleConfirmDelete = () => {

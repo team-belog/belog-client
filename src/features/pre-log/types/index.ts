@@ -63,6 +63,11 @@ export type CreatePreLogPlanData = {
   content: string | null;
 };
 
+// 생성과 같은 형식으로 전체 내용을 덮어씀 (종료된 만남의 계획도 수정 가능)
+export type UpdatePreLogPlanRequest = CreatePreLogPlanRequest;
+
+export type UpdatePreLogPlanData = CreatePreLogPlanData;
+
 // 고정 계획 우선, 계획 ID 역순
 export type PreLogPlansData = {
   items: PreLogPlan[];
