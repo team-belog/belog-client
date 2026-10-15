@@ -5,6 +5,7 @@ import type {
   NotificationListData,
   NotificationListParams,
   NotificationSettingsData,
+  RegisterDeviceRequest,
 } from "@/features/notification/types";
 
 export async function getNotifications(params: NotificationListParams = {}) {
@@ -31,4 +32,12 @@ export async function updateNotificationSettings(
   body: NotificationSettingsData,
 ) {
   await api.put(ENDPOINTS.notification.settings, body);
+}
+
+// 이미 등록된 기기면 토큰만 갱신
+export async function registerDevice(
+  deviceId: string,
+  body: RegisterDeviceRequest,
+) {
+  await api.put(ENDPOINTS.notification.device(deviceId), body);
 }

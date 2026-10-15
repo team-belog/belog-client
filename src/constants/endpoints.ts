@@ -86,5 +86,6 @@ export const ENDPOINTS = {
     list: "/notifications",
     read: (notificationId: number) => `/notifications/${notificationId}/read`,
     settings: "/notifications/settings",
+    device: (deviceId: string) => `/notifications/devices/${deviceId}`,
   },
 } as const;

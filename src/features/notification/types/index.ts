@@ -32,6 +32,10 @@ export type NotificationSettingsData = {
   pushNotificationEnabled: boolean;
 };
 
+export type RegisterDeviceRequest = {
+  fcmToken: string;
+};
+
 export type NotificationListData = {
   items: NotificationItem[];
   nextCursor: number | null;
