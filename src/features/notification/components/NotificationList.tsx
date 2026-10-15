@@ -57,10 +57,11 @@ export default function NotificationList() {
     );
   }
 
-  if (data.length === 0) {
+  // 읽은 알림을 숨기므로 뒤 페이지에 안 읽은 알림이 남아 있을 수 있음 → 다 불러온 뒤에만 빈 화면
+  if (data.length === 0 && !hasNextPage) {
     return (
       <p className="pretendard-m-15 pt-[25px] text-center text-sub-gray-2">
-        아직 받은 알림이 없어요
+        새로운 알림이 없어요
       </p>
     );
   }
@@ -82,6 +83,11 @@ export default function NotificationList() {
           onClick={handleClick}
         />
       ))}
+      {data.length === 0 && (
+        <p className="pretendard-m-15 pt-[25px] text-center text-sub-gray-2">
+          불러오는 중...
+        </p>
+      )}
       <div ref={sentinelRef} className="h-px" />
     </div>
   );
