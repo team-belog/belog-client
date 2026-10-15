@@ -18,7 +18,8 @@ export default function PreLogPlaceItem({
   onDelete,
   onTogglePin,
 }: PreLogPlaceItemProps) {
-  const { title, content, category, likeCount, thumbnailUrl, canDelete, pinned } = plan;
+  const { title, content, category, likeCount, likedByMe, thumbnailUrl, canDelete, pinned } =
+    plan;
 
   return (
     <div className="flex w-full items-center justify-between px-4 py-3">
@@ -28,8 +29,17 @@ export default function PreLogPlaceItem({
           {thumbnailUrl && (
             <Image src={thumbnailUrl} alt="" fill unoptimized className="object-cover" />
           )}
-          <div className="absolute left-1 top-1 flex items-center gap-px text-[10px] font-semibold text-main-mint">
-            <Image src="/icons/like-filled.svg" alt="" width={14} height={14} />
+          <div
+            className={`absolute left-1 top-1 flex items-center gap-px text-[10px] font-semibold ${
+              likedByMe ? "text-main-mint" : "text-sub-white"
+            }`}
+          >
+            <Image
+              src={likedByMe ? "/icons/like-filled.svg" : "/icons/post-log/like-empty.svg"}
+              alt=""
+              width={14}
+              height={14}
+            />
             {likeCount}
           </div>
         </div>
