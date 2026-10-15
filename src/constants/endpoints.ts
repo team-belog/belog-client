@@ -85,5 +85,6 @@ export const ENDPOINTS = {
   notification: {
     list: "/notifications",
     read: (notificationId: number) => `/notifications/${notificationId}/read`,
+    settings: "/notifications/settings",
   },
 } as const;

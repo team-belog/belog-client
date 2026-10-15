@@ -28,6 +28,10 @@ export type NotificationListParams = {
   size?: number;
 };
 
+export type NotificationSettingsData = {
+  pushNotificationEnabled: boolean;
+};
+
 export type NotificationListData = {
   items: NotificationItem[];
   nextCursor: number | null;
