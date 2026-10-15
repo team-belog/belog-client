@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import NotificationRow from "@/features/notification/components/NotificationRow";
 import { useNotifications } from "@/features/notification/hooks/useNotifications";
+import { useReadNotification } from "@/features/notification/hooks/useReadNotification";
 import type { NotificationItem } from "@/features/notification/types";
 import { getNotificationPath } from "@/features/notification/utils/getNotificationPath";
 
@@ -20,6 +21,7 @@ export default function NotificationList() {
     isFetchingNextPage,
     refetch,
   } = useNotifications();
+  const readNotification = useReadNotification();
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -63,8 +65,11 @@ export default function NotificationList() {
     );
   }
 
-  // TODO: 읽음 처리 API 연동
+  // 읽음 처리 응답을 기다리지 않고 바로 이동
   const handleClick = (notification: NotificationItem) => {
+    if (!notification.read) {
+      readNotification.mutate(notification.notificationId);
+    }
     router.push(getNotificationPath(notification.target));
   };
 

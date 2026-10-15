@@ -13,3 +13,8 @@ export async function getNotifications(params: NotificationListParams = {}) {
   );
   return data.data;
 }
+
+// 이미 읽은 알림도 204로 성공
+export async function readNotification(notificationId: number) {
+  await api.put(ENDPOINTS.notification.read(notificationId));
+}
