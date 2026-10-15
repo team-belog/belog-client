@@ -59,7 +59,7 @@ export default function PreLogView({
 }: PreLogViewProps) {
   const router = useRouter();
   const [mainTabIndex, setMainTabIndex] = useState(0);
-  const [categoryFilter, setCategoryFilter] = useState<PreLogFilter>("ACCOMMODATION");
+  const [categoryFilter, setCategoryFilter] = useState<PreLogFilter>("all");
   const [isEditingSummary, setIsEditingSummary] = useState(false);
   const [isEditDatesOpen, setIsEditDatesOpen] = useState(false);
   const [draft, setDraft] = useState(() => toDraft(meeting));
