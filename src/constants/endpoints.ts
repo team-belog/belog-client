@@ -82,4 +82,7 @@ export const ENDPOINTS = {
   groupMembership: {
     join: "/group-memberships",
   },
+  notification: {
+    list: "/notifications",
+  },
 } as const;
