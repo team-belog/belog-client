@@ -26,3 +26,9 @@ export async function getNotificationSettings() {
   );
   return data.data;
 }
+
+export async function updateNotificationSettings(
+  body: NotificationSettingsData,
+) {
+  await api.put(ENDPOINTS.notification.settings, body);
+}

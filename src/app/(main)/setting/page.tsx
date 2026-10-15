@@ -9,6 +9,7 @@ import ChevronIcon from "@/components/ui/ChevronIcon";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useWithdrawAccount } from "@/features/auth/hooks/useWithdrawAccount";
 import { useNotificationSettings } from "@/features/notification/hooks/useNotificationSettings";
+import { useUpdateNotificationSettings } from "@/features/notification/hooks/useUpdateNotificationSettings";
 
 function SwitchToggle({ checked = false, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -49,10 +50,8 @@ export default function SettingPage() {
   const { mutate: logout } = useLogout();
   const { mutate: withdraw, isPending: isWithdrawing } = useWithdrawAccount();
   const { data: notificationSettings } = useNotificationSettings();
-  // TODO: 수신 설정 변경 API 연동 전까지는 화면에서만 토글
-  const [notificationOverride, setNotificationOverride] = useState<boolean | null>(null);
-  const notificationEnabled =
-    notificationOverride ?? notificationSettings?.pushNotificationEnabled ?? false;
+  const { mutate: updateNotificationSettings } = useUpdateNotificationSettings();
+  const notificationEnabled = notificationSettings?.pushNotificationEnabled ?? false;
   const [modal, setModal] = useState<"logout" | "withdraw" | null>(null);
 
   return (
@@ -60,7 +59,10 @@ export default function SettingPage() {
       <BackHeader title="설정" />
       <Divider />
       <SettingRow label="알림 설정">
-        <SwitchToggle checked={notificationEnabled} onChange={setNotificationOverride} />
+        <SwitchToggle
+          checked={notificationEnabled}
+          onChange={(enabled) => updateNotificationSettings({ pushNotificationEnabled: enabled })}
+        />
       </SettingRow>
       <SettingRow label="계좌 관리" account={true} />
       <SettingRow label="로그아웃" onClick={() => setModal("logout")} />
