@@ -1,11 +1,15 @@
 interface PreLogDeleteModalProps {
   placeName: string;
+  isDeleting?: boolean;
+  errorMessage?: string;
   onCancel: () => void;
   onConfirm: () => void;
 }
 
 export default function PreLogDeleteModal({
   placeName,
+  isDeleting = false,
+  errorMessage,
   onCancel,
   onConfirm,
 }: PreLogDeleteModalProps) {
@@ -19,6 +23,12 @@ export default function PreLogDeleteModal({
           </p>
         </div>
 
+        {errorMessage && (
+          <p className="pretendard-m-12 absolute left-5 right-5 top-[106px] text-center text-red-500">
+            {errorMessage}
+          </p>
+        )}
+
         <div className="absolute left-[20px] top-[136px] flex gap-[10px]">
           <button
             type="button"
@@ -30,9 +40,10 @@ export default function PreLogDeleteModal({
           <button
             type="button"
             onClick={onConfirm}
+            disabled={isDeleting}
             className="pretendard-m-15 flex w-[130px] items-center justify-center rounded-[8px] border border-main-mint bg-main-mint py-[10px] text-main-white"
           >
-            삭제
+            {isDeleting ? "삭제 중..." : "삭제"}
           </button>
         </div>
       </div>

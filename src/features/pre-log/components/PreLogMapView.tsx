@@ -4,15 +4,16 @@ import { useRef, useState, useEffect } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import Script from "next/script";
 
-import PreLogEmptyState from "@/features/pre-log/components/PreLogEmptyState";
-import PreLogPlaceItem from "@/features/pre-log/components/PreLogPlaceItem";
+import PreLogPlanList from "@/features/pre-log/components/PreLogPlanList";
 import { useGetMapPlans } from "@/features/pre-log/hooks/useGetMapPlans";
-import type { PreLogPlace } from "@/features/pre-log/types";
+import type { PreLogPlan } from "@/features/pre-log/types";
 
 interface PreLogMapViewProps {
   meetingId: number;
-  onSelectPlace?: (place: PreLogPlace) => void;
-  onDeletePlace?: (place: PreLogPlace) => void;
+  onSelectPlan?: (plan: PreLogPlan) => void;
+  onDeletePlan?: (plan: PreLogPlan) => void;
+  onTogglePlanPin?: (plan: PreLogPlan) => void;
+  onLikePlan?: (plan: PreLogPlan) => void;
 }
 
 const SHEET_MIN_HEIGHT = 120;
@@ -21,8 +22,10 @@ const SHEET_TOP_INSET = 80;
 
 export default function PreLogMapView({
   meetingId,
-  onSelectPlace,
-  onDeletePlace,
+  onSelectPlan,
+  onDeletePlan,
+  onTogglePlanPin,
+  onLikePlan,
 }: PreLogMapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
@@ -31,6 +34,7 @@ export default function PreLogMapView({
   const [sheetHeight, setSheetHeight] = useState(SHEET_DEFAULT_HEIGHT);
   const [mapReady, setMapReady] = useState(false);
 
+  // 지도 마커는 좌표가 있는 지도 계획 목록으로, 하단 시트는 좋아요·고정·삭제가 가능한 계획 목록으로 표시
   const { data } = useGetMapPlans(meetingId);
   const mapPlans = data?.pages.flatMap((page) => page.items) ?? [];
 
@@ -114,27 +118,17 @@ export default function PreLogMapView({
           <div className="h-[5px] w-[70px] rounded-[8px] bg-sub-gray-3" />
         </div>
 
-        {mapPlans.length > 0 ? (
-          <div className="scrollbar-none flex flex-1 flex-col overflow-y-auto overscroll-contain">
-            {mapPlans.map((plan) => (
-              <PreLogPlaceItem
-                key={plan.planId}
-                place={{
-                  id: plan.planId,
-                  category: plan.category.toLowerCase() as PreLogPlace["category"],
-                  title: plan.title,
-                  address: plan.address,
-                  likeCount: 0,
-                  isPinned: plan.pinned,
-                }}
-                onClick={onSelectPlace}
-                onDelete={onDeletePlace}
-              />
-            ))}
-          </div>
-        ) : (
-          <PreLogEmptyState message="아직 등록된 목록이 없어요" className="py-[40px]" />
-        )}
+        <PreLogPlanList
+          meetingId={meetingId}
+          filter="all"
+          onSelectPlan={onSelectPlan}
+          onDeletePlan={onDeletePlan}
+          onTogglePlanPin={onTogglePlanPin}
+          onLikePlan={onLikePlan}
+          emptyMessage="아직 등록된 목록이 없어요"
+          emptyClassName="py-[40px]"
+          className="scrollbar-none flex flex-1 flex-col overflow-y-auto overscroll-contain"
+        />
       </div>
     </div>
   );

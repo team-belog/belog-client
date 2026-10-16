@@ -2,50 +2,107 @@ import Image from "next/image";
 
 import TrashIcon from "@/components/ui/TrashIcon";
 import { PRE_LOG_CATEGORY_LABEL } from "@/features/pre-log/constants/category";
-import type { PreLogPlace } from "@/features/pre-log/types";
+import type { PreLogPlan } from "@/features/pre-log/types";
 import ChevronIcon from "@/components/ui/ChevronIcon";
 
-interface PreLogPlaceItemProps {
-  place: PreLogPlace;
-  onClick?: (place: PreLogPlace) => void;
-  onDelete?: (place: PreLogPlace) => void;
+const MEMO_PREVIEW_LENGTH = 18;
+
+// 메모는 18자까지만 보여주고 나머지는 말줄임표로 처리 (이모지가 깨지지 않도록 문자 단위로 자름)
+function toMemoPreview(content: string) {
+  const chars = Array.from(content.replace(/\s+/g, " ").trim());
+  return chars.length > MEMO_PREVIEW_LENGTH
+    ? `${chars.slice(0, MEMO_PREVIEW_LENGTH).join("")}…`
+    : chars.join("");
 }
 
-export default function PreLogPlaceItem({ place, onClick, onDelete }: PreLogPlaceItemProps) {
-  const { title, address, category, likeCount, thumbnailUrl } = place;
+interface PreLogPlaceItemProps {
+  plan: PreLogPlan;
+  onClick?: (plan: PreLogPlan) => void;
+  onDelete?: (plan: PreLogPlan) => void;
+  onTogglePin?: (plan: PreLogPlan) => void;
+  onLike?: (plan: PreLogPlan) => void;
+}
+
+export default function PreLogPlaceItem({
+  plan,
+  onClick,
+  onDelete,
+  onTogglePin,
+  onLike,
+}: PreLogPlaceItemProps) {
+  const { type, title, content, category, likeCount, likedByMe, thumbnailUrl, canDelete, pinned } =
+    plan;
+  // 위치는 주소, 메모는 본문 미리보기
+  const description = content && (type === "MEMO" ? toMemoPreview(content) : content);
 
   return (
     <div className="flex w-full items-center justify-between px-4 py-3">
       <div className="flex items-center gap-[10px]">
         <div className="relative size-[80px] shrink-0 overflow-hidden rounded-[10px] bg-sub-gray-3">
-          {thumbnailUrl && <Image src={thumbnailUrl} alt="" fill className="object-cover" />}
-          <div className="absolute left-1 top-1 flex items-center gap-px text-[10px] font-semibold text-main-mint">
-            <Image src="/icons/like-filled.svg" alt="" width={14} height={14} />
+          {/* 썸네일은 외부 장소 이미지일 수 있어 도메인 제한 없이 표시 */}
+          {thumbnailUrl && (
+            <Image src={thumbnailUrl} alt="" fill unoptimized className="object-cover" />
+          )}
+          <button
+            type="button"
+            onClick={() => onLike?.(plan)}
+            aria-label={likedByMe ? "좋아요 취소" : "좋아요"}
+            aria-pressed={likedByMe}
+            className={`absolute left-1 top-1 flex items-center gap-px text-[10px] font-semibold ${
+              likedByMe ? "text-main-mint" : "text-sub-white"
+            }`}
+          >
+            <Image
+              src={likedByMe ? "/icons/like-filled.svg" : "/icons/post-log/like-empty.svg"}
+              alt=""
+              width={14}
+              height={14}
+            />
             {likeCount}
-          </div>
+          </button>
         </div>
 
-        <div className="flex flex-col items-start gap-[5px]">
-          <span className="rounded-[5px] bg-main-mint px-2 py-1 text-[10px] font-medium text-main-white">
-            {PRE_LOG_CATEGORY_LABEL[category]}
-          </span>
+        <div className="flex min-w-0 flex-col items-start gap-[5px]">
+          <div className="flex items-center gap-[10px]">
+            <span className="rounded-[5px] bg-main-mint px-2 py-1 text-[10px] font-medium text-main-white">
+              {PRE_LOG_CATEGORY_LABEL[category]}
+            </span>
+            <button
+              type="button"
+              onClick={() => onTogglePin?.(plan)}
+              aria-label={pinned ? "고정 해제" : "고정"}
+              aria-pressed={pinned}
+              className="flex size-[18px] items-center justify-center"
+            >
+              <Image
+                src={pinned ? "/icons/group/pin-mint.svg" : "/icons/group/pin.svg"}
+                alt=""
+                width={10}
+                height={15}
+              />
+            </button>
+          </div>
           <p className="pretendard-m-15 text-main-black">{title}</p>
-          <p className="text-[12px] text-sub-gray-2">{address}</p>
+          {description && (
+            <p className="line-clamp-1 text-[12px] text-sub-gray-2">{description}</p>
+          )}
         </div>
       </div>
 
       <div className="flex shrink-0 items-center gap-5">
-        <button type="button" onClick={() => onClick?.(place)} aria-label="장소 상세 보기">
+        <button type="button" onClick={() => onClick?.(plan)} aria-label="계획 상세 보기">
           <ChevronIcon width={18} height={18} scale={0.72} strokeWidth={2.3} className="text-sub-gray-2" />
         </button>
-        <button
-          type="button"
-          onClick={() => onDelete?.(place)}
-          aria-label="삭제"
-          className="text-sub-gray-2"
-        >
-          <TrashIcon variant="header" width={18} height={18} />
-        </button>
+        {canDelete && (
+          <button
+            type="button"
+            onClick={() => onDelete?.(plan)}
+            aria-label="삭제"
+            className="text-sub-gray-2"
+          >
+            <TrashIcon variant="header" width={18} height={18} />
+          </button>
+        )}
       </div>
     </div>
   );

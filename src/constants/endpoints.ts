@@ -35,6 +35,20 @@ export const ENDPOINTS = {
   bank: {
     list: "/banks",
   },
+  preLog: {
+    main: (meetingId: number) => `/meetings/${meetingId}/pre-log`,
+    plans: (meetingId: number) => `/meetings/${meetingId}/pre-log/plans`,
+    createPlan: (meetingId: number) => `/meetings/${meetingId}/pre-log/plans`,
+    // 메모 계획만 조회 가능 (위치 계획은 지원하지 않음)
+    memoDetail: (planId: number) => `/plans/${planId}`,
+    updatePlan: (planId: number) => `/plans/${planId}`,
+    deletePlan: (planId: number) => `/plans/${planId}`,
+    // PUT 고정, DELETE 해제
+    pinPlan: (planId: number) => `/plans/${planId}/pin`,
+    // PUT 좋아요, DELETE 취소
+    likePlan: (planId: number) => `/plans/${planId}/likes/me`,
+    getMapPlans: (meetingId: number) => `/meetings/${meetingId}/pre-log/map-plans`,
+  },
   postLog: {
     getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,
     getPhotoList: (meetingId: number) => `/meetings/${meetingId}/post-log-photos`,
@@ -75,8 +89,5 @@ export const ENDPOINTS = {
   },
   groupMembership: {
     join: "/group-memberships",
-  },
-  preLog: {
-    getMapPlans: (meetingId: number) => `/meetings/${meetingId}/pre-log/map-plans`,
   },
 } as const;

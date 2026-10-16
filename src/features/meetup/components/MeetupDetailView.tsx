@@ -169,7 +169,7 @@ export default function MeetupDetailView({
           title="Pre-log"
           status={PRE_LOG_STATUS_LABEL[logStatuses.preLog]}
           description="만남 일정과 장소를 정해요"
-          onClick={() => router.push("/pre-log")}
+          onClick={() => router.push(`/pre-log?meetingId=${meeting.meetingId}`)}
         />
         <MeetupLogRow
           iconSrc="/icons/meetup/bill-log.png"

@@ -8,32 +8,47 @@ import Button from "@/components/ui/Button";
 import InputField from "@/components/ui/InputField";
 import TabBar from "@/components/ui/TabBar";
 import PreLogTagSelector from "@/features/pre-log/components/PreLogTagSelector";
-import type { PreLogCategory } from "@/features/pre-log/types";
-
-export type PreLogAddPayload = {
-  category: PreLogCategory;
-  title: string;
-  url?: string;
-  content?: string;
-};
+import type {
+  CreatePreLogPlanRequest,
+  PreLogCategory,
+} from "@/features/pre-log/types";
+import { isSupportedMapUrl } from "@/features/pre-log/utils/mapUrl";
 
 interface PreLogAddViewProps {
+  isSubmitting?: boolean;
+  errorMessage?: string;
   onCancel?: () => void;
-  onSubmit?: (payload: PreLogAddPayload) => void;
+  onSubmit?: (body: CreatePreLogPlanRequest) => void;
 }
 
-const MODE_TABS = ["링크", "메모"];
+const MODE_TABS = ["위치", "메모"];
 
-export default function PreLogAddView({ onCancel, onSubmit }: PreLogAddViewProps) {
+export default function PreLogAddView({
+  isSubmitting = false,
+  errorMessage,
+  onCancel,
+  onSubmit,
+}: PreLogAddViewProps) {
   const router = useRouter();
   const [modeIndex, setModeIndex] = useState(0);
-  const [category, setCategory] = useState<PreLogCategory>("restaurant");
-  const [title, setTitle] = useState("");
+  // 위치와 메모는 서로 다른 계획이므로 태그·제목도 탭마다 따로 입력받음
+  const [locationCategory, setLocationCategory] = useState<PreLogCategory>("RESTAURANT");
+  const [locationTitle, setLocationTitle] = useState("");
   const [url, setUrl] = useState("");
+  const [memoCategory, setMemoCategory] = useState<PreLogCategory>("RESTAURANT");
+  const [memoTitle, setMemoTitle] = useState("");
   const [content, setContent] = useState("");
 
   const isLinkMode = modeIndex === 0;
-  const isValid = title.trim() !== "" && (isLinkMode ? url.trim() !== "" : content.trim() !== "");
+  const category = isLinkMode ? locationCategory : memoCategory;
+  const setCategory = isLinkMode ? setLocationCategory : setMemoCategory;
+  const title = isLinkMode ? locationTitle : memoTitle;
+  const setTitle = isLinkMode ? setLocationTitle : setMemoTitle;
+  // 입력 중에는 에러를 띄우지 않도록 값이 있을 때만 형식 검사
+  const isUrlInvalid = url.trim() !== "" && !isSupportedMapUrl(url);
+  const isValid =
+    title.trim() !== "" &&
+    (isLinkMode ? url.trim() !== "" && !isUrlInvalid : content.trim() !== "");
 
   const handleCancel = () => {
     if (onCancel) {
@@ -44,12 +59,14 @@ export default function PreLogAddView({ onCancel, onSubmit }: PreLogAddViewProps
   };
 
   const handleSubmit = () => {
-    const payload: PreLogAddPayload = isLinkMode
-      ? { category, title: title.trim(), url: url.trim() }
-      : { category, title: title.trim(), content: content.trim() };
+    if (isSubmitting) return;
+
+    const body: CreatePreLogPlanRequest = isLinkMode
+      ? { type: "LOCATION", category, title: title.trim(), url: url.trim() }
+      : { type: "MEMO", category, title: title.trim(), content: content.trim() };
 
     if (onSubmit) {
-      onSubmit(payload);
+      onSubmit(body);
     } else {
       router.back();
     }
@@ -68,7 +85,14 @@ export default function PreLogAddView({ onCancel, onSubmit }: PreLogAddViewProps
         <InputField label="제목" placeholder="예) 식당 링크" value={title} onChange={setTitle} />
 
         {isLinkMode ? (
-          <InputField label="URL" placeholder="https://..." value={url} onChange={setUrl} />
+          <InputField
+            label="URL"
+            description="지도 내 위치 표시는 카카오맵과 구글지도 링크만 지원해요."
+            placeholder="https://..."
+            value={url}
+            onChange={setUrl}
+            errorMessage={isUrlInvalid ? "카카오맵 또는 구글지도 링크만 등록할 수 있어요." : undefined}
+          />
         ) : (
           <InputField
             label="내용"
@@ -76,6 +100,10 @@ export default function PreLogAddView({ onCancel, onSubmit }: PreLogAddViewProps
             value={content}
             onChange={setContent}
           />
+        )}
+
+        {errorMessage && (
+          <p className="pretendard-m-12 px-4 text-red-500">{errorMessage}</p>
         )}
       </div>
 
@@ -89,7 +117,7 @@ export default function PreLogAddView({ onCancel, onSubmit }: PreLogAddViewProps
         >
           취소
         </Button>
-        <Button variant="primary" disabled={!isValid} bare onClick={handleSubmit} className="flex-1">
+        <Button variant="primary" disabled={!isValid || isSubmitting} bare onClick={handleSubmit} className="flex-1">
           추가
         </Button>
       </div>
