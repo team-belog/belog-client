@@ -1,7 +1,7 @@
 "use client";
 
-import BelogIcon from "@/components/ui/BelogIcon";
 import Button from "@/components/ui/Button";
+import PwaAppLogo from "@/features/pwa/components/PwaAppLogo";
 
 interface PwaInstallSheetProps {
   isOpen: boolean;
@@ -20,8 +20,8 @@ export default function PwaInstallSheet({ isOpen, onStart, onLater }: PwaInstall
       >
         <div className="h-[5px] w-[46px] rounded-[30px] bg-sub-gray-3" />
 
-        <div className="mt-[37px] flex size-20 items-center justify-center rounded-[16px] border border-[#E3E7EF] bg-main-cool-gray">
-          <BelogIcon width={50} height={48} />
+        <div className="mt-[37px]">
+          <PwaAppLogo size={80} bordered />
         </div>
 
         <p className="pretendard-sb-20 mt-[22px] text-center leading-[30px] text-main-black">
