@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
@@ -8,7 +8,7 @@ import TabBar from "@/components/ui/TabBar";
 import MeetingPhotoTab from "@/features/post-log/components/tab/MeetingPhotoTab";
 import MeetingInfoTab from "@/features/post-log/components/tab/MeetingInfoTab";
 
-export default function PostLogPage() {
+function PostLogContent() {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
@@ -19,5 +19,12 @@ export default function PostLogPage() {
       {activeTab === 0 && <MeetingPhotoTab />}
       {activeTab === 1 && <MeetingInfoTab />}
     </main>
+  );
+}
+export default function PostLogPage() {
+  return (
+    <Suspense>
+      <PostLogContent />
+    </Suspense>
   );
 }

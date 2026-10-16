@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -16,7 +16,7 @@ import PaymentHistoryTab from "@/features/bill-log/components/tab/PaymentHistory
 
 import { useGetBillLogSummary } from "@/features/bill-log/hooks/useGetBillLogSummary";
 
-export default function BillLogPage() {
+function BillLogContent() {
   const [activeTab, setActiveTab] = useState<number>(0);
   const router = useRouter();
 
@@ -63,5 +63,13 @@ export default function BillLogPage() {
         </Button>
       </div>
     </main>
+  );
+}
+
+export default function BillLogPage() {
+  return (
+    <Suspense>
+      <BillLogContent />
+    </Suspense>
   );
 }
