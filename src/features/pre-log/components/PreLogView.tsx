@@ -138,10 +138,14 @@ export default function PreLogView({
     setIsEditDatesOpen(false);
   };
 
-  // 작성자는 수정, 나머지는 내용 확인 화면으로 이동
+  // 위치는 등록한 지도 링크를 새 탭으로 열고, 메모는 상세 화면으로 이동
   const handleSelectPlan = (plan: PreLogPlan) => {
     if (onSelectPlan) {
       onSelectPlan(plan);
+      return;
+    }
+    if (plan.type === "LOCATION") {
+      if (plan.url) window.open(plan.url, "_blank", "noopener,noreferrer");
       return;
     }
     router.push(`/pre-log/edit?meetingId=${meeting.meetingId}&planId=${plan.planId}`);
