@@ -122,7 +122,7 @@ export default function PreLogView({
         </>
       ) : (
         <PreLogMapView
-          places={placeList}
+          meetingId={meetup.id}
           onSelectPlace={onSelectPlace}
           onDeletePlace={setDeleteTarget}
         />
