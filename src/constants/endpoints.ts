@@ -47,6 +47,7 @@ export const ENDPOINTS = {
     pinPlan: (planId: number) => `/plans/${planId}/pin`,
     // PUT 좋아요, DELETE 취소
     likePlan: (planId: number) => `/plans/${planId}/likes/me`,
+    getMapPlans: (meetingId: number) => `/meetings/${meetingId}/pre-log/map-plans`,
   },
   postLog: {
     getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,

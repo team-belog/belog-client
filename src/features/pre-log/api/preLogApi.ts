@@ -3,6 +3,8 @@ import { ApiResponse } from "@/lib/apiError";
 import { ENDPOINTS } from "@/constants/endpoints";
 import type {
   CreatePreLogPlanData,
+  MapPlanListRequest,
+  MapPlanListResponse,
   PreLogPlanLikeData,
   CreatePreLogPlanRequest,
   PreLogMainData,
@@ -85,6 +87,14 @@ export async function unlikePreLogPlan(planId: number) {
 export async function getPreLogMemoDetail(planId: number) {
   const { data } = await api.get<ApiResponse<PreLogMemoDetailData>>(
     ENDPOINTS.preLog.memoDetail(planId),
+  );
+  return data.data;
+}
+
+export async function getMapPlans(params: MapPlanListRequest): Promise<MapPlanListResponse> {
+  const { data } = await api.get<ApiResponse<MapPlanListResponse>>(
+    ENDPOINTS.preLog.getMapPlans(params.meetingId),
+    { params: { category: params.category, cursor: params.cursor, size: params.size } },
   );
   return data.data;
 }

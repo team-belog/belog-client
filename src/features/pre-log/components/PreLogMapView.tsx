@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import Image from "next/image";
+import Script from "next/script";
 
 import PreLogPlanList from "@/features/pre-log/components/PreLogPlanList";
+import { useGetMapPlans } from "@/features/pre-log/hooks/useGetMapPlans";
 import type { PreLogPlan } from "@/features/pre-log/types";
 
 interface PreLogMapViewProps {
@@ -27,8 +28,48 @@ export default function PreLogMapView({
   onLikePlan,
 }: PreLogMapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
   const dragRef = useRef<{ startY: number; startHeight: number } | null>(null);
   const [sheetHeight, setSheetHeight] = useState(SHEET_DEFAULT_HEIGHT);
+  const [mapReady, setMapReady] = useState(false);
+
+  // 지도 마커는 좌표가 있는 지도 계획 목록으로, 하단 시트는 좋아요·고정·삭제가 가능한 계획 목록으로 표시
+  const { data } = useGetMapPlans(meetingId);
+  const mapPlans = data?.pages.flatMap((page) => page.items) ?? [];
+
+  const initMap = () => {
+    if (!mapRef.current) return;
+    const kakao = (window as any).kakao;
+    if (!kakao?.maps) return;
+    kakao.maps.load(() => {
+      mapInstanceRef.current = new kakao.maps.Map(mapRef.current, {
+        center: new kakao.maps.LatLng(37.5665, 126.9780),
+        level: 5,
+      });
+      setMapReady(true);
+    });
+  };
+
+  useEffect(() => {
+    if (!mapReady || !mapInstanceRef.current || mapPlans.length === 0) return;
+    const kakao = (window as any).kakao;
+    const markerImage = new kakao.maps.MarkerImage(
+      "/icons/pre-log/pinMarker.svg",
+      new kakao.maps.Size(36, 36)
+    );
+
+    mapPlans.forEach((plan) => {
+      new kakao.maps.Marker({
+        map: mapInstanceRef.current,
+        position: new kakao.maps.LatLng(plan.latitude, plan.longitude),
+        title: plan.title,
+        image: markerImage,
+      });
+    });
+    const first = mapPlans[0];
+    mapInstanceRef.current.setCenter(new kakao.maps.LatLng(first.latitude, first.longitude));
+  }, [mapReady, mapPlans.length]);
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -53,15 +94,12 @@ export default function PreLogMapView({
       ref={containerRef}
       className="relative min-h-0 w-full flex-1 overflow-hidden"
     >
-      <div className="absolute inset-0">
-        <Image
-          src="/icons/pre-log/map-placeholder.png"
-          alt=""
-          fill
-          unoptimized
-          className="object-cover"
-        />
-      </div>
+      <Script
+        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false`}
+        strategy="afterInteractive"
+        onLoad={initMap}
+      />
+      <div ref={mapRef} className="absolute inset-0" />
 
       <div
         className="absolute inset-x-0 bottom-0 z-10 flex flex-col overflow-hidden rounded-t-[38px] bg-main-white shadow-[0_-4px_20px_0_rgba(0,0,0,0.05)]"
