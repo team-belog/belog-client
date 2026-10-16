@@ -10,6 +10,8 @@ interface MeetupSummaryProps {
   onTitleChange?: (value: string) => void;
   onLocationChange?: (value: string) => void;
   onDateClick?: () => void;
+  // 위에 다른 요소가 붙는 화면에서 상단 여백을 줄일 때 사용
+  topSpacingClassName?: string;
 }
 
 export default function MeetupSummary({
@@ -20,12 +22,13 @@ export default function MeetupSummary({
   onTitleChange,
   onLocationChange,
   onDateClick,
+  topSpacingClassName = "pt-[37px]",
 }: MeetupSummaryProps) {
   const { title, groupName, dDay, startDate, endDate, location } = meetup;
   const dateText = endDate ? `${startDate} - ${endDate}` : startDate;
 
   return (
-    <div className="px-4 pb-[30px] pt-[37px]">
+    <div className={`px-4 pb-[30px] ${topSpacingClassName}`}>
       <div className="flex items-start justify-between">
         <div className="flex flex-col gap-[10px]">
           {isEditing ? (

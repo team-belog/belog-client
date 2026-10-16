@@ -12,6 +12,7 @@ import type { UpdateMeetingRequest } from "@/features/meetup/types";
 import PreLogCategoryTabs from "@/features/pre-log/components/PreLogCategoryTabs";
 import PreLogDateRangeSheet from "@/features/pre-log/components/PreLogDateRangeSheet";
 import PreLogDeleteModal from "@/features/pre-log/components/PreLogDeleteModal";
+import PreLogEndedNotice from "@/features/pre-log/components/PreLogEndedNotice";
 import PreLogMapView from "@/features/pre-log/components/PreLogMapView";
 import PreLogPlanList from "@/features/pre-log/components/PreLogPlanList";
 import { PRE_LOG_FILTER_TABS } from "@/features/pre-log/constants/category";
@@ -176,8 +177,11 @@ export default function PreLogView({
 
       {mainTabIndex === 0 && (
         <>
+          {meeting.isEnded && <PreLogEndedNotice />}
+
           <MeetupSummary
             meetup={summary}
+            topSpacingClassName={meeting.isEnded ? "pt-[28px]" : undefined}
             canEdit={meeting.canEditMeeting}
             isEditing={isEditingSummary}
             onEdit={handleEditSummary}
@@ -229,7 +233,8 @@ export default function PreLogView({
 
       <Button
         variant="primary"
-        disabled={false}
+        // 종료된 만남에는 계획을 추가할 수 없음
+        disabled={meeting.isEnded}
         onClick={handleAddPlace}
         className="fixed bottom-0 left-0 right-0"
       >
