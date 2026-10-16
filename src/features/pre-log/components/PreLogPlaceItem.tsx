@@ -10,6 +10,7 @@ interface PreLogPlaceItemProps {
   onClick?: (plan: PreLogPlan) => void;
   onDelete?: (plan: PreLogPlan) => void;
   onTogglePin?: (plan: PreLogPlan) => void;
+  onLike?: (plan: PreLogPlan) => void;
 }
 
 export default function PreLogPlaceItem({
@@ -17,6 +18,7 @@ export default function PreLogPlaceItem({
   onClick,
   onDelete,
   onTogglePin,
+  onLike,
 }: PreLogPlaceItemProps) {
   const { title, content, category, likeCount, likedByMe, thumbnailUrl, canDelete, pinned } =
     plan;
@@ -29,7 +31,11 @@ export default function PreLogPlaceItem({
           {thumbnailUrl && (
             <Image src={thumbnailUrl} alt="" fill unoptimized className="object-cover" />
           )}
-          <div
+          <button
+            type="button"
+            onClick={() => onLike?.(plan)}
+            aria-label="좋아요"
+            aria-pressed={likedByMe}
             className={`absolute left-1 top-1 flex items-center gap-px text-[10px] font-semibold ${
               likedByMe ? "text-main-mint" : "text-sub-white"
             }`}
@@ -41,7 +47,7 @@ export default function PreLogPlaceItem({
               height={14}
             />
             {likeCount}
-          </div>
+          </button>
         </div>
 
         <div className="flex min-w-0 flex-col items-start gap-[5px]">

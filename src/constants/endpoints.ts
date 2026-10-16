@@ -43,6 +43,7 @@ export const ENDPOINTS = {
     deletePlan: (planId: number) => `/plans/${planId}`,
     // PUT 고정, DELETE 해제
     pinPlan: (planId: number) => `/plans/${planId}/pin`,
+    likePlan: (planId: number) => `/plans/${planId}/likes/me`,
   },
   postLog: {
     getTicket: (ticketId: number) => `/post-log-tickets/${ticketId}`,

@@ -12,6 +12,7 @@ interface PreLogMapViewProps {
   onSelectPlan?: (plan: PreLogPlan) => void;
   onDeletePlan?: (plan: PreLogPlan) => void;
   onTogglePlanPin?: (plan: PreLogPlan) => void;
+  onLikePlan?: (plan: PreLogPlan) => void;
 }
 
 const SHEET_MIN_HEIGHT = 120;
@@ -23,6 +24,7 @@ export default function PreLogMapView({
   onSelectPlan,
   onDeletePlan,
   onTogglePlanPin,
+  onLikePlan,
 }: PreLogMapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ startY: number; startHeight: number } | null>(null);
@@ -84,6 +86,7 @@ export default function PreLogMapView({
           onSelectPlan={onSelectPlan}
           onDeletePlan={onDeletePlan}
           onTogglePlanPin={onTogglePlanPin}
+          onLikePlan={onLikePlan}
           emptyMessage="아직 등록된 목록이 없어요"
           emptyClassName="py-[40px]"
           className="scrollbar-none flex flex-1 flex-col overflow-y-auto overscroll-contain"

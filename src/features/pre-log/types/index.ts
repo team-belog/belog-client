@@ -68,6 +68,12 @@ export type UpdatePreLogPlanRequest = CreatePreLogPlanRequest;
 
 export type UpdatePreLogPlanData = CreatePreLogPlanData;
 
+export type LikePreLogPlanData = {
+  planId: number;
+  likedByMe: boolean;
+  likeCount: number;
+};
+
 // 고정 계획 우선, 계획 ID 역순
 export type PreLogPlansData = {
   items: PreLogPlan[];
