@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 
+import OnboardingCloseButton from "@/features/onboarding/components/OnboardingCloseButton";
+
 interface OnboardingFabStepProps {
   onNext: () => void;
   onClose: () => void;
@@ -10,14 +12,7 @@ interface OnboardingFabStepProps {
 export default function OnboardingFabStep({ onNext, onClose }: OnboardingFabStepProps) {
   return (
     <div className="fixed inset-0 z-[100] bg-black/75">
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label="튜토리얼 닫기"
-        className="absolute right-4 top-[15px] flex size-[30px] items-center justify-center"
-      >
-        <Image src="/icons/onboarding/close.svg" alt="" width={20} height={20} />
-      </button>
+      <OnboardingCloseButton onClose={onClose} />
 
       <p className="pretendard-sb-20 absolute left-1/2 top-[calc(50%-64px)] -translate-x-1/2 whitespace-nowrap text-center leading-[28px] text-main-white">
         하단 플로팅 버튼을 눌러
