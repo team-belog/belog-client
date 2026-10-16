@@ -8,4 +8,5 @@ export const preLogKeys = {
     [...preLogKeys.all, "plans", meetingId] as const,
   plans: (meetingId: number, filter: PreLogFilter) =>
     [...preLogKeys.allPlans(meetingId), filter] as const,
+  memoDetail: (planId: number) => [...preLogKeys.all, "memo", planId] as const,
 };

@@ -9,13 +9,12 @@ import InputField from "@/components/ui/InputField";
 import PreLogTagSelector from "@/features/pre-log/components/PreLogTagSelector";
 import type {
   PreLogCategory,
-  PreLogPlan,
+  PreLogMemoDetailData,
   UpdatePreLogPlanRequest,
 } from "@/features/pre-log/types";
 
 interface PreLogMemoDetailViewProps {
-  plan: PreLogPlan;
-  canEdit: boolean;
+  memo: PreLogMemoDetailData;
   isSubmitting: boolean;
   errorMessage?: string;
   onSubmit: (
@@ -26,8 +25,7 @@ interface PreLogMemoDetailViewProps {
 }
 
 export default function PreLogMemoDetailView({
-  plan,
-  canEdit,
+  memo,
   isSubmitting,
   errorMessage,
   onSubmit,
@@ -35,11 +33,11 @@ export default function PreLogMemoDetailView({
 }: PreLogMemoDetailViewProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
-  // 상세 조회 API가 없으므로 수정 성공 후에는 보낸 값을 그대로 보여줌
+  // 수정 성공 후 재조회를 기다리지 않고 보낸 값을 바로 보여줌
   const [saved, setSaved] = useState({
-    category: plan.category,
-    title: plan.title,
-    content: plan.content ?? "",
+    category: memo.category,
+    title: memo.title,
+    content: memo.content,
   });
   const [category, setCategory] = useState<PreLogCategory>(saved.category);
   const [title, setTitle] = useState(saved.title);
@@ -130,7 +128,7 @@ export default function PreLogMemoDetailView({
           완료
         </Button>
       ) : (
-        canEdit && (
+        memo.canEdit && (
           <Button
             variant="primary"
             disabled={false}

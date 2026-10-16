@@ -39,6 +39,8 @@ export const ENDPOINTS = {
     main: (meetingId: number) => `/meetings/${meetingId}/pre-log`,
     plans: (meetingId: number) => `/meetings/${meetingId}/pre-log/plans`,
     createPlan: (meetingId: number) => `/meetings/${meetingId}/pre-log/plans`,
+    // 메모 계획만 조회 가능 (위치 계획은 지원하지 않음)
+    memoDetail: (planId: number) => `/plans/${planId}`,
     updatePlan: (planId: number) => `/plans/${planId}`,
     deletePlan: (planId: number) => `/plans/${planId}`,
     // PUT 고정, DELETE 해제

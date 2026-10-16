@@ -68,6 +68,15 @@ export type UpdatePreLogPlanRequest = CreatePreLogPlanRequest;
 
 export type UpdatePreLogPlanData = CreatePreLogPlanData;
 
+export type PreLogMemoDetailData = {
+  planId: number;
+  category: PreLogCategory;
+  title: string;
+  content: string;
+  // 메모 작성자인 경우에만 true (만남 종료 여부와 무관)
+  canEdit: boolean;
+};
+
 // 좋아요 등록·취소 응답 공통
 export type PreLogPlanLikeData = {
   planId: number;

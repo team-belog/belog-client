@@ -6,6 +6,7 @@ import type {
   PreLogPlanLikeData,
   CreatePreLogPlanRequest,
   PreLogMainData,
+  PreLogMemoDetailData,
   PreLogPlansData,
   PreLogPlansRequest,
   UpdatePreLogPlanData,
@@ -77,6 +78,13 @@ export async function likePreLogPlan(planId: number) {
 export async function unlikePreLogPlan(planId: number) {
   const { data } = await api.delete<ApiResponse<PreLogPlanLikeData>>(
     ENDPOINTS.preLog.likePlan(planId),
+  );
+  return data.data;
+}
+
+export async function getPreLogMemoDetail(planId: number) {
+  const { data } = await api.get<ApiResponse<PreLogMemoDetailData>>(
+    ENDPOINTS.preLog.memoDetail(planId),
   );
   return data.data;
 }
