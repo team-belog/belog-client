@@ -1,4 +1,10 @@
-import { format, isSameDay, parseISO } from "date-fns";
+import {
+  differenceInMinutes,
+  format,
+  formatDistanceToNowStrict,
+  isSameDay,
+  parseISO,
+} from "date-fns";
 import { ko } from "date-fns/locale";
 
 type DateRange = {
@@ -31,4 +37,13 @@ export function formatKoreanDateRange({
   }
 
   return `${format(start, pattern, { locale: ko })} - ${format(end, pattern, { locale: ko })}`;
+}
+
+// 예: "방금 전" / "5분 전" / "1일 전"
+export function formatRelativeTime(dateTime: string): string {
+  const date = parseISO(dateTime);
+
+  if (differenceInMinutes(new Date(), date) < 1) return "방금 전";
+
+  return formatDistanceToNowStrict(date, { addSuffix: true, locale: ko });
 }

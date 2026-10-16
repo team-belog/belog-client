@@ -90,4 +90,10 @@ export const ENDPOINTS = {
   groupMembership: {
     join: "/group-memberships",
   },
+  notification: {
+    list: "/notifications",
+    read: (notificationId: number) => `/notifications/${notificationId}/read`,
+    settings: "/notifications/settings",
+    device: (deviceId: string) => `/notifications/devices/${deviceId}`,
+  },
 } as const;
