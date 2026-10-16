@@ -17,6 +17,7 @@ import Button from "@/components/ui/Button";
 import { useCompleteOnboarding } from "@/features/auth/hooks/useCompleteOnboarding";
 import { useGetProfileImageUploadUrl } from "@/features/auth/hooks/useGetProfileImageUploadUrl";
 import type { BankCode } from "@/features/auth/types";
+import { markTutorialPending } from "@/features/onboarding/utils/tutorialStorage";
 
 export default function RegisterProfilePage() {
   const router = useRouter();
@@ -43,7 +44,12 @@ export default function RegisterProfilePage() {
         accountHolderName: accountHolder,
         profileImageObjectKey,
       },
-      { onSuccess: () => router.replace("/") }
+      {
+        onSuccess: () => {
+          markTutorialPending();
+          router.replace("/");
+        },
+      }
     );
   };
 
