@@ -38,7 +38,7 @@ export function usePwaInstallSheet() {
   const handleStart = async () => {
     close();
 
-    if (isIosDevice || !installPrompt) {
+    if (!installPrompt) {
       router.push("/pwa-guide");
       return;
     }
