@@ -148,7 +148,7 @@ export default function PreLogView({
       if (plan.url) window.open(plan.url, "_blank", "noopener,noreferrer");
       return;
     }
-    router.push(`/pre-log/edit?meetingId=${meeting.meetingId}&planId=${plan.planId}`);
+    router.push(`/pre-log/memo?meetingId=${meeting.meetingId}&planId=${plan.planId}`);
   };
 
   const handleTogglePin = (plan: PreLogPlan) => {
