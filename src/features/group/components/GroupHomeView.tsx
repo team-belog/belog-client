@@ -84,6 +84,7 @@ export default function GroupHomeView({
 
       <GroupCoverSection
         name={group.name}
+        inviteCode={group.inviteCode}
         coverImageUrl={group.coverImageUrl ?? undefined}
         canEditCoverImage={group.canEditCoverImage}
         isUpdatingCoverImage={isUpdatingCoverImage}
@@ -105,7 +106,6 @@ export default function GroupHomeView({
                 <GroupMeetupCard
                   key={meeting.meetingId}
                   meeting={meeting}
-                  inviteCode={group.inviteCode}
                   actionLabel={
                     meeting.isMeetingOwner ? "일정 확정하기" : "일정 현황 보기"
                   }
@@ -135,7 +135,6 @@ export default function GroupHomeView({
               <GroupMeetupCard
                 key={meeting.meetingId}
                 meeting={meeting}
-                inviteCode={group.inviteCode}
                 actionLabel="만남 상세"
                 onAction={() =>
                   router.push(

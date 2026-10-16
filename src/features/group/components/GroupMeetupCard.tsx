@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import type { GroupMeetingDto } from "@/features/group/types";
 
 // 만남 정원은 응답에 없어 고정값 사용
@@ -9,29 +7,16 @@ const MEETUP_MEMBER_LIMIT = 15;
 
 interface GroupMeetupCardProps {
   meeting: GroupMeetingDto;
-  inviteCode: string;
   actionLabel: string;
   onAction?: () => void;
 }
 
 export default function GroupMeetupCard({
   meeting,
-  inviteCode,
   actionLabel,
   onAction,
 }: GroupMeetupCardProps) {
-  const [copied, setCopied] = useState(false);
   const { name, participants, participantCount } = meeting;
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(inviteCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      // 클립보드 접근 권한이 없는 환경에서는 무시
-    }
-  };
 
   return (
     <div className="mx-4 flex flex-col gap-[10px]">
@@ -52,17 +37,6 @@ export default function GroupMeetupCard({
           <p className="pretendard-m-12 whitespace-nowrap text-sub-gray-2">
             {participantCount}/{MEETUP_MEMBER_LIMIT}명
           </p>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <p className="pretendard-m-12 text-sub-gray-2">초대코드 · {inviteCode}</p>
-          <button
-            type="button"
-            onClick={handleCopy}
-            className="pretendard-m-12 rounded-[100px] border border-sub-gray-3 bg-sub-white px-[15px] py-[6px] text-sub-gray-2"
-          >
-            {copied ? "복사됨" : "복사"}
-          </button>
         </div>
       </div>
 
