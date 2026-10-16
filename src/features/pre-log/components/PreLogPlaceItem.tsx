@@ -5,6 +5,16 @@ import { PRE_LOG_CATEGORY_LABEL } from "@/features/pre-log/constants/category";
 import type { PreLogPlan } from "@/features/pre-log/types";
 import ChevronIcon from "@/components/ui/ChevronIcon";
 
+const MEMO_PREVIEW_LENGTH = 18;
+
+// 메모는 18자까지만 보여주고 나머지는 말줄임표로 처리 (이모지가 깨지지 않도록 문자 단위로 자름)
+function toMemoPreview(content: string) {
+  const chars = Array.from(content.replace(/\s+/g, " ").trim());
+  return chars.length > MEMO_PREVIEW_LENGTH
+    ? `${chars.slice(0, MEMO_PREVIEW_LENGTH).join("")}…`
+    : chars.join("");
+}
+
 interface PreLogPlaceItemProps {
   plan: PreLogPlan;
   onClick?: (plan: PreLogPlan) => void;
@@ -20,8 +30,10 @@ export default function PreLogPlaceItem({
   onTogglePin,
   onLike,
 }: PreLogPlaceItemProps) {
-  const { title, content, category, likeCount, likedByMe, thumbnailUrl, canDelete, pinned } =
+  const { type, title, content, category, likeCount, likedByMe, thumbnailUrl, canDelete, pinned } =
     plan;
+  // 위치는 주소, 메모는 본문 미리보기
+  const description = content && (type === "MEMO" ? toMemoPreview(content) : content);
 
   return (
     <div className="flex w-full items-center justify-between px-4 py-3">
@@ -71,7 +83,9 @@ export default function PreLogPlaceItem({
             </button>
           </div>
           <p className="pretendard-m-15 text-main-black">{title}</p>
-          {content && <p className="line-clamp-1 text-[12px] text-sub-gray-2">{content}</p>}
+          {description && (
+            <p className="line-clamp-1 text-[12px] text-sub-gray-2">{description}</p>
+          )}
         </div>
       </div>
 
