@@ -34,7 +34,7 @@ export default function PreLogPlaceItem({
           <button
             type="button"
             onClick={() => onLike?.(plan)}
-            aria-label="좋아요"
+            aria-label={likedByMe ? "좋아요 취소" : "좋아요"}
             aria-pressed={likedByMe}
             className={`absolute left-1 top-1 flex items-center gap-px text-[10px] font-semibold ${
               likedByMe ? "text-main-mint" : "text-sub-white"

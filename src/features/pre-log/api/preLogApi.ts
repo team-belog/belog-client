@@ -3,7 +3,7 @@ import { ApiResponse } from "@/lib/apiError";
 import { ENDPOINTS } from "@/constants/endpoints";
 import type {
   CreatePreLogPlanData,
-  LikePreLogPlanData,
+  PreLogPlanLikeData,
   CreatePreLogPlanRequest,
   PreLogMainData,
   PreLogPlansData,
@@ -67,7 +67,15 @@ export async function unpinPreLogPlan(planId: number) {
 
 // 이미 좋아요한 계획에 요청해도 성공
 export async function likePreLogPlan(planId: number) {
-  const { data } = await api.put<ApiResponse<LikePreLogPlanData>>(
+  const { data } = await api.put<ApiResponse<PreLogPlanLikeData>>(
+    ENDPOINTS.preLog.likePlan(planId),
+  );
+  return data.data;
+}
+
+// 좋아요하지 않은 계획에 요청해도 성공
+export async function unlikePreLogPlan(planId: number) {
+  const { data } = await api.delete<ApiResponse<PreLogPlanLikeData>>(
     ENDPOINTS.preLog.likePlan(planId),
   );
   return data.data;

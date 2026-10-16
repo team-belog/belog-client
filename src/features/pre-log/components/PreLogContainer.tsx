@@ -2,8 +2,8 @@
 
 import PreLogView from "@/features/pre-log/components/PreLogView";
 import { useDeletePreLogPlan } from "@/features/pre-log/hooks/useDeletePreLogPlan";
-import { useLikePreLogPlan } from "@/features/pre-log/hooks/useLikePreLogPlan";
 import { usePreLogMain } from "@/features/pre-log/hooks/usePreLogMain";
+import { useTogglePreLogPlanLike } from "@/features/pre-log/hooks/useTogglePreLogPlanLike";
 import { useTogglePreLogPlanPin } from "@/features/pre-log/hooks/useTogglePreLogPlanPin";
 import { useUpdateMeeting } from "@/features/meetup/hooks/useUpdateMeeting";
 
@@ -12,7 +12,7 @@ export default function PreLogContainer({ meetingId }: { meetingId: number }) {
   const updateMeeting = useUpdateMeeting(meetingId);
   const deletePlan = useDeletePreLogPlan(meetingId);
   const togglePlanPin = useTogglePreLogPlanPin(meetingId);
-  const likePlan = useLikePreLogPlan(meetingId);
+  const togglePlanLike = useTogglePreLogPlanLike(meetingId);
 
   if (isPending) {
     return (
@@ -48,7 +48,7 @@ export default function PreLogContainer({ meetingId }: { meetingId: number }) {
       onDeletePlan={deletePlan.mutate}
       onCancelDeletePlan={deletePlan.reset}
       onTogglePlanPin={togglePlanPin.mutate}
-      onLikePlan={likePlan.mutate}
+      onTogglePlanLike={togglePlanLike.mutate}
     />
   );
 }

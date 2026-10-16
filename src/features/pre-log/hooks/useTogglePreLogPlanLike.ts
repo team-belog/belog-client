@@ -3,18 +3,24 @@ import {
   useQueryClient,
   type InfiniteData,
 } from "@tanstack/react-query";
-import { likePreLogPlan } from "@/features/pre-log/api/preLogApi";
+import {
+  likePreLogPlan,
+  unlikePreLogPlan,
+} from "@/features/pre-log/api/preLogApi";
 import { preLogKeys } from "@/features/pre-log/hooks/preLogKeys";
 import type { ApiError } from "@/lib/apiError";
 import type {
-  LikePreLogPlanData,
   PreLogPlan,
+  PreLogPlanLikeData,
   PreLogPlansData,
 } from "@/features/pre-log/types";
 
 type PreLogPlansCache = InfiniteData<PreLogPlansData, string | undefined>;
 
-export function useLikePreLogPlan(meetingId: number) {
+// liked: 변경 후 상태 (true면 좋아요, false면 취소)
+type TogglePreLogPlanLikeInput = { planId: number; liked: boolean };
+
+export function useTogglePreLogPlanLike(meetingId: number) {
   const queryClient = useQueryClient();
   const plansKey = preLogKeys.allPlans(meetingId);
 
@@ -31,9 +37,7 @@ export function useLikePreLogPlan(meetingId: number) {
           pages: old.pages.map((page) => ({
             ...page,
             items: page.items.map((item) =>
-              item.planId === planId
-                ? { ...item, ...patch(item) }
-                : item,
+              item.planId === planId ? { ...item, ...patch(item) } : item,
             ),
           })),
         },
@@ -41,26 +45,29 @@ export function useLikePreLogPlan(meetingId: number) {
   };
 
   return useMutation<
-    LikePreLogPlanData,
+    PreLogPlanLikeData,
     ApiError,
-    number,
+    TogglePreLogPlanLikeInput,
     { previous: [readonly unknown[], PreLogPlansCache | undefined][] }
   >({
-    mutationFn: (planId) => likePreLogPlan(planId),
-    // 응답을 기다리지 않고 하트를 바로 채우고, 실패하면 되돌린다
-    onMutate: async (planId) => {
+    mutationFn: ({ planId, liked }) =>
+      liked ? likePreLogPlan(planId) : unlikePreLogPlan(planId),
+    // 응답을 기다리지 않고 하트와 개수를 바로 바꾸고, 실패하면 되돌린다
+    onMutate: async ({ planId, liked }) => {
       await queryClient.cancelQueries({ queryKey: plansKey });
       const previous = queryClient.getQueriesData<PreLogPlansCache>({
         queryKey: plansKey,
       });
 
       updatePlan(planId, (plan) =>
-        plan.likedByMe ? {} : { likedByMe: true, likeCount: plan.likeCount + 1 },
+        plan.likedByMe === liked
+          ? {}
+          : { likedByMe: liked, likeCount: plan.likeCount + (liked ? 1 : -1) },
       );
 
       return { previous };
     },
-    onError: (_error, _planId, context) => {
+    onError: (_error, _input, context) => {
       context?.previous.forEach(([key, data]) => {
         queryClient.setQueryData(key, data);
       });

@@ -40,7 +40,8 @@ interface PreLogViewProps {
   onCancelDeletePlan: () => void;
   // pinned: 변경 후 상태
   onTogglePlanPin: (input: { planId: number; pinned: boolean }) => void;
-  onLikePlan: (planId: number) => void;
+  // liked: 변경 후 상태
+  onTogglePlanLike: (input: { planId: number; liked: boolean }) => void;
 }
 
 const MAIN_TABS = ["목록", "지도"];
@@ -66,7 +67,7 @@ export default function PreLogView({
   onDeletePlan,
   onCancelDeletePlan,
   onTogglePlanPin,
-  onLikePlan,
+  onTogglePlanLike,
 }: PreLogViewProps) {
   const router = useRouter();
   const [mainTabIndex, setMainTabIndex] = useState(0);
@@ -150,10 +151,8 @@ export default function PreLogView({
     onTogglePlanPin({ planId: plan.planId, pinned: !plan.pinned });
   };
 
-  // 좋아요 취소 API가 아직 없어 이미 좋아요한 계획은 요청하지 않음
-  const handleLike = (plan: PreLogPlan) => {
-    if (plan.likedByMe) return;
-    onLikePlan(plan.planId);
+  const handleToggleLike = (plan: PreLogPlan) => {
+    onTogglePlanLike({ planId: plan.planId, liked: !plan.likedByMe });
   };
 
   const handleConfirmDelete = () => {
@@ -211,7 +210,7 @@ export default function PreLogView({
             onSelectPlan={handleSelectPlan}
             onDeletePlan={setDeleteTarget}
             onTogglePlanPin={handleTogglePin}
-            onLikePlan={handleLike}
+            onLikePlan={handleToggleLike}
           />
         </>
       ) : (
@@ -220,7 +219,7 @@ export default function PreLogView({
           onSelectPlan={handleSelectPlan}
           onDeletePlan={setDeleteTarget}
           onTogglePlanPin={handleTogglePin}
-          onLikePlan={handleLike}
+          onLikePlan={handleToggleLike}
         />
       )}
 

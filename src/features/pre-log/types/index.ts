@@ -68,7 +68,8 @@ export type UpdatePreLogPlanRequest = CreatePreLogPlanRequest;
 
 export type UpdatePreLogPlanData = CreatePreLogPlanData;
 
-export type LikePreLogPlanData = {
+// 좋아요 등록·취소 응답 공통
+export type PreLogPlanLikeData = {
   planId: number;
   likedByMe: boolean;
   likeCount: number;
