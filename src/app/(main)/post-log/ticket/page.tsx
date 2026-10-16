@@ -5,10 +5,10 @@ import { useSearchParams } from "next/navigation";
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
-import MeetupTicketCard from "@/features/home/components/MeetupTicketCard";
+import PostLogTicketCard from "@/features/post-log/components/PostLogTicketCard";
 
 import { useGetPostLogTicket } from "@/features/post-log/hooks/useGetPostLogTicket";
-import html2canvas from "html2canvas";
+import domtoimage from "dom-to-image-more";
 
 export default function TicketPage() {
   const searchParams = useSearchParams();
@@ -29,37 +29,27 @@ export default function TicketPage() {
   const handleSave = async () => {
     const el = document.getElementById("ticket");
     if (!el) return;
-    const canvas = await html2canvas(el);
+    const dataUrl = await domtoimage.toPng(el, { scale: 2 });
     const link = document.createElement("a");
     link.download = "ticket.png";
-    link.href = canvas.toDataURL();
+    link.href = dataUrl;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   };
 
   if (isLoading) return <div className="flex items-center justify-center h-dvh">로딩 중...</div>;
-
-  const schedule = ticket
-    ? {
-        id: ticket.ticketId,
-        title: ticket.meetingName,
-        startDate: ticket.startDate,
-        endDate: ticket.endDate,
-        description: ticket.memory,
-        leaderName: ticket.members[0]?.nickname ?? "",
-        memberCount: ticket.members.length,
-        status: "done" as const,
-        photoUrl: ticket.coverPhotoUrl ?? undefined,
-        destinationCity: ticket.location,
-        memberHandles: ticket.members.map((m) => m.nickname),
-      }
-    : null;
 
   return (
     <main className="flex h-dvh flex-col">
       <BackHeader title="티켓" onShare={handleShare} />
       <Divider />
-      <div className="flex flex-1 items-center justify-center px-8">
-        {schedule && <div id="ticket"><MeetupTicketCard schedule={schedule} /></div>}
+      <div className="flex flex-1 items-center justify-center px-8 pb-[56px]">
+        {ticket && (
+          <div id="ticket" className="w-[309px]">
+            <PostLogTicketCard ticket={ticket} />
+          </div>
+        )}
       </div>
       <Button variant="primary" disabled={false} onClick={handleSave} className="fixed bottom-0">
         갤러리에 저장
