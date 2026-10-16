@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -10,7 +11,7 @@ import PostLogTicketCard from "@/features/post-log/components/PostLogTicketCard"
 import { useGetPostLogTicket } from "@/features/post-log/hooks/useGetPostLogTicket";
 import domtoimage from "dom-to-image-more";
 
-export default function TicketPage() {
+function TicketContent() {
   const searchParams = useSearchParams();
   const ticketId = searchParams.get("ticketId") ? Number(searchParams.get("ticketId")) : null;
 
@@ -55,5 +56,13 @@ export default function TicketPage() {
         갤러리에 저장
       </Button>
     </main>
+  );
+}
+
+export default function TicketPage() {
+  return (
+    <Suspense>
+      <TicketContent />
+    </Suspense>
   );
 }

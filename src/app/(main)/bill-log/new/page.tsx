@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -13,7 +13,7 @@ import Step4 from "@/features/bill-log/components/steps/Step4";
 
 const TOTAL_STEPS = 4;
 
-export default function BillNewPage() {
+function BillNewContent() {
   const [step, setStep] = useState(1);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -48,5 +48,13 @@ export default function BillNewPage() {
       {step === 3 && <Step3 onNext={handleNext} />}
       {step === 4 && <Step4 onSubmit={handleSubmit} />}
     </main>
+  );
+}
+
+export default function BillNewPage() {
+  return (
+    <Suspense>
+      <BillNewContent />
+    </Suspense>
   );
 }
