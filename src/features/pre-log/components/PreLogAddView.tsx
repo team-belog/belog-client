@@ -39,16 +39,29 @@ export default function PreLogAddView({
   const router = useRouter();
   const isEditMode = initialPlan !== undefined;
   const [modeIndex, setModeIndex] = useState(initialPlan?.type === "MEMO" ? 1 : 0);
-  const [category, setCategory] = useState<PreLogCategory>(
-    initialPlan?.category ?? "RESTAURANT",
+  // 위치와 메모는 서로 다른 계획이므로 태그·제목도 탭마다 따로 입력받음
+  const [locationCategory, setLocationCategory] = useState<PreLogCategory>(
+    initialPlan?.type === "LOCATION" ? initialPlan.category : "RESTAURANT",
   );
-  const [title, setTitle] = useState(initialPlan?.title ?? "");
+  const [locationTitle, setLocationTitle] = useState(
+    initialPlan?.type === "LOCATION" ? initialPlan.title : "",
+  );
   const [url, setUrl] = useState(initialPlan?.url ?? "");
+  const [memoCategory, setMemoCategory] = useState<PreLogCategory>(
+    initialPlan?.type === "MEMO" ? initialPlan.category : "RESTAURANT",
+  );
+  const [memoTitle, setMemoTitle] = useState(
+    initialPlan?.type === "MEMO" ? initialPlan.title : "",
+  );
   const [content, setContent] = useState(
     initialPlan?.type === "MEMO" ? (initialPlan.content ?? "") : "",
   );
 
   const isLinkMode = modeIndex === 0;
+  const category = isLinkMode ? locationCategory : memoCategory;
+  const setCategory = isLinkMode ? setLocationCategory : setMemoCategory;
+  const title = isLinkMode ? locationTitle : memoTitle;
+  const setTitle = isLinkMode ? setLocationTitle : setMemoTitle;
   // 입력 중에는 에러를 띄우지 않도록 값이 있을 때만 형식 검사
   const isUrlInvalid = url.trim() !== "" && !isSupportedMapUrl(url);
   const isValid =
