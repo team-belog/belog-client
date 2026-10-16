@@ -10,6 +10,7 @@ interface InputFieldProps {
   description?: string;
   errorMessage?: string;
   readOnly?: boolean;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
 }
 
 export default function InputField({
@@ -22,6 +23,7 @@ export default function InputField({
   description,
   errorMessage,
   readOnly = false,
+  inputMode,
 }: InputFieldProps) {
   return (
     <div className="mx-4 flex flex-col gap-[10px]">
@@ -35,6 +37,7 @@ export default function InputField({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         readOnly={readOnly}
+        inputMode={inputMode}
         aria-invalid={errorMessage ? true : undefined}
         className={`pretendard-m-15 h-[50px] w-full rounded-[12px] bg-[#F7F8F9] px-[15px] text-main-black placeholder:text-sub-gray-2 outline-none ${readOnly ? "" : "hover:border hover:border-main-mint"}`}
       />

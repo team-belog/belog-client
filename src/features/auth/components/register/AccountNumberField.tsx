@@ -16,8 +16,9 @@ export default function AccountNumberField({
       label="계좌번호"
       labelClassName="pretendard-sb-16"
       value={value}
-      onChange={onChange}
+      onChange={(value) => onChange(value.replace(/\D/g, ""))}
       placeholder="숫자만 입력"
+      inputMode="numeric"
     />
   );
 }
