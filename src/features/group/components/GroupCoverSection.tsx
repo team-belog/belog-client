@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 
 import ImageUploadIcon from "@/components/ui/ImageUploadIcon";
 
 interface GroupCoverSectionProps {
   name: string;
+  inviteCode: string;
   coverImageUrl?: string;
   canEditCoverImage: boolean;
   isUpdatingCoverImage?: boolean;
@@ -15,12 +16,24 @@ interface GroupCoverSectionProps {
 
 export default function GroupCoverSection({
   name,
+  inviteCode,
   coverImageUrl,
   canEditCoverImage,
   isUpdatingCoverImage = false,
   onChangeCoverImage,
 }: GroupCoverSectionProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(inviteCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // 클립보드 접근 권한이 없는 환경에서는 무시
+    }
+  };
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -44,7 +57,7 @@ export default function GroupCoverSection({
             type="button"
             onClick={() => inputRef.current?.click()}
             disabled={isUpdatingCoverImage}
-            className="absolute bottom-[14px] right-4 flex items-center gap-[5px]"
+            className="absolute right-4 top-[17px] flex items-center gap-[5px]"
           >
             <span className="pretendard-m-12 text-sub-gray-3">
               {isUpdatingCoverImage ? "변경 중..." : "이미지 변경"}
@@ -60,6 +73,17 @@ export default function GroupCoverSection({
           />
         </>
       )}
+
+      <div className="absolute bottom-[15px] right-4 flex items-center gap-5">
+        <p className="pretendard-m-12 text-sub-gray-3">초대코드 · {inviteCode}</p>
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="pretendard-m-12 flex h-[29px] items-center justify-center rounded-[100px] border border-sub-gray-3 bg-sub-white px-[15px] text-sub-gray-2"
+        >
+          {copied ? "복사됨" : "복사"}
+        </button>
+      </div>
     </div>
   );
 }
