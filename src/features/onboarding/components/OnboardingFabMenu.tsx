@@ -17,13 +17,13 @@ export default function OnboardingFabMenu({ highlighted, children }: OnboardingF
     <div className="absolute bottom-20 right-4 size-[60px]">
       {children}
 
-      <div className="absolute bottom-[68px] right-0 flex h-[115px] w-[161px] flex-col rounded-[12px] bg-main-white p-2">
+      <div className="absolute bottom-[68px] right-0 flex h-[115px] w-[161px] flex-col gap-[3.414px] rounded-[12px] bg-main-white p-2">
         {MENU_ITEMS.map(({ key, label }) => (
           <div
             key={key}
-            className={`pretendard-m-15 flex items-center justify-center rounded-[12px] text-main-black ${
+            className={`pretendard-m-15 flex h-[47.586px] items-center justify-center rounded-[12px] text-main-black ${
               key === highlighted ? "bg-main-mint/20" : ""
-            } ${key === "create" ? "h-[47.586px]" : "flex-1"}`}
+            }`}
           >
             {label}
           </div>

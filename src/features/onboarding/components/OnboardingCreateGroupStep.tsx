@@ -22,7 +22,7 @@ export default function OnboardingCreateGroupStep({ onNext, onClose }: Onboardin
           만남을 생성할 수 있어요
         </p>
         <Image
-          src="/icons/onboarding/arrow-to-create.svg"
+          src="/icons/onboarding/dashed-arrow.svg"
           alt=""
           width={42.1115}
           height={65.3427}
