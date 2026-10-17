@@ -29,7 +29,7 @@ export default function PreLogMapView({
 }: PreLogMapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
+  const mapInstanceRef = useRef<kakao.maps.Map | null>(null);
   const dragRef = useRef<{ startY: number; startHeight: number } | null>(null);
   const [sheetHeight, setSheetHeight] = useState(SHEET_DEFAULT_HEIGHT);
   const [mapReady, setMapReady] = useState(false);
@@ -39,11 +39,12 @@ export default function PreLogMapView({
   const mapPlans = data?.pages.flatMap((page) => page.items) ?? [];
 
   const initMap = () => {
-    if (!mapRef.current) return;
-    const kakao = (window as any).kakao;
+    const container = mapRef.current;
+    if (!container) return;
+    const kakao = window.kakao;
     if (!kakao?.maps) return;
     kakao.maps.load(() => {
-      mapInstanceRef.current = new kakao.maps.Map(mapRef.current, {
+      mapInstanceRef.current = new kakao.maps.Map(container, {
         center: new kakao.maps.LatLng(37.5665, 126.9780),
         level: 5,
       });
@@ -52,8 +53,9 @@ export default function PreLogMapView({
   };
 
   useEffect(() => {
-    if (!mapReady || !mapInstanceRef.current || mapPlans.length === 0) return;
-    const kakao = (window as any).kakao;
+    const map = mapInstanceRef.current;
+    const kakao = window.kakao;
+    if (!mapReady || !map || !kakao || mapPlans.length === 0) return;
     const markerImage = new kakao.maps.MarkerImage(
       "/icons/pre-log/pinMarker.svg",
       new kakao.maps.Size(36, 36)
@@ -61,14 +63,14 @@ export default function PreLogMapView({
 
     mapPlans.forEach((plan) => {
       new kakao.maps.Marker({
-        map: mapInstanceRef.current,
+        map,
         position: new kakao.maps.LatLng(plan.latitude, plan.longitude),
         title: plan.title,
         image: markerImage,
       });
     });
     const first = mapPlans[0];
-    mapInstanceRef.current.setCenter(new kakao.maps.LatLng(first.latitude, first.longitude));
+    map.setCenter(new kakao.maps.LatLng(first.latitude, first.longitude));
   }, [mapReady, mapPlans.length]);
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
