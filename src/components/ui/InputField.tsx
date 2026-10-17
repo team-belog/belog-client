@@ -19,7 +19,7 @@ export default function InputField({
   value,
   onChange,
   type = "text",
-  labelClassName = "pretendard-sb-18",
+  labelClassName = "pretendard-sb-16",
   description,
   errorMessage,
   readOnly = false,
