@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 
 import BottomNav, { BOTTOM_NAV_PATHS } from "@/components/layout/BottomNav";
+import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard";
 import { usePushNotification } from "@/features/notification/hooks/usePushNotification";
 import { useCaptureInstallPrompt } from "@/features/pwa/hooks/useCaptureInstallPrompt";
 
@@ -11,6 +12,14 @@ export default function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const isAuthenticated = useAuthGuard();
+
+  if (!isAuthenticated) return null;
+
+  return <AuthenticatedLayout>{children}</AuthenticatedLayout>;
+}
+
+function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   usePushNotification();
   useCaptureInstallPrompt();
