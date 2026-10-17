@@ -10,13 +10,13 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Belog",
-  description: "Belog",
+  title: "BELOG",
+  description: "BELOG",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Belog",
+    title: "BELOG",
   },
 };
 
