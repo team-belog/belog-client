@@ -91,6 +91,12 @@ export default function PreLogMapView({
     dragRef.current = null;
   };
 
+  useEffect(() => {
+    if (window.kakao?.maps) {
+      initMap();
+    }
+  },[])
+
   return (
     <div
       ref={containerRef}
