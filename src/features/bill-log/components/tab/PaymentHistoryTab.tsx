@@ -30,7 +30,7 @@ export default function PaymentHistoryTab() {
     if (isLoading) return <div className="flex justify-center py-10">로딩 중...</div>;
   
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-y-auto pb-[58px]">
       {allDays?.map((group) => (
         <DailyPaymentGroup
           key={group.dayNumber}
