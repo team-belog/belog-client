@@ -1,0 +1,69 @@
+"use client";
+
+import Button from "@/components/ui/Button";
+import MeetupCharField from "@/features/meetup/components/MeetupCharField";
+import MeetupDurationPicker from "@/features/meetup/components/MeetupDurationPicker";
+
+const TITLE_MAX = 15;
+const LOCATION_MAX = 20;
+
+interface MeetupStep1Props {
+  title: string;
+  onChangeTitle: (title: string) => void;
+  location: string;
+  onChangeLocation: (location: string) => void;
+  nights: number | null;
+  onChangeNights: (nights: number | null) => void;
+  onNext: () => void;
+}
+
+export default function MeetupStep1({
+  title,
+  onChangeTitle,
+  location,
+  onChangeLocation,
+  nights,
+  onChangeNights,
+  onNext,
+}: MeetupStep1Props) {
+  return (
+    <div className="flex flex-col gap-6 px-4 pb-[114px] pt-3">
+      <h1 className="pretendard-sb-18 text-main-black">
+        어떤 만남을 만들까요?
+      </h1>
+
+      <div className="flex flex-col gap-10">
+        <MeetupCharField
+          label="만남명"
+          required
+          placeholder="ex. 1박 2일 광주 여행"
+          value={title}
+          onChange={onChangeTitle}
+          maxLength={TITLE_MAX}
+        />
+        <MeetupCharField
+          label="만남 장소"
+          placeholder="ex. 서울고속버스터미널"
+          value={location}
+          onChange={onChangeLocation}
+          maxLength={LOCATION_MAX}
+        />
+        <MeetupDurationPicker
+          label="만남 일정"
+          required
+          nights={nights}
+          onChange={onChangeNights}
+        />
+      </div>
+
+      <Button
+        variant="primary"
+        disabled={title.trim().length === 0}
+        onClick={onNext}
+        className="fixed bottom-0 left-0 right-0"
+      >
+        다음
+      </Button>
+    </div>
+  );
+}

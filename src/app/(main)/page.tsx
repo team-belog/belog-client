@@ -1,7 +1,18 @@
+import Header from "@/components/layout/Header";
+import HomeCalendar from "@/features/home/components/HomeCalendar";
+import HomeFab from "@/features/home/components/HomeFab";
+import MeetupSection from "@/features/home/components/MeetupSection";
+import HomeGuideLayer from "@/features/home/components/HomeGuideLayer";
+
 export default function HomePage() {
   return (
-    <main className="p-4">
-      <h1 className="text-xl font-bold">홈</h1>
+    <main>
+      <Header />
+      <HomeCalendar />
+      <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
+      <MeetupSection />
+      <HomeFab />
+      <HomeGuideLayer />
     </main>
   );
 }

@@ -1,14 +1,25 @@
-import BottomNav from "@/components/layout/BottomNav";
+"use client";
+
+import { usePathname } from "next/navigation";
+
+import BottomNav, { BOTTOM_NAV_PATHS } from "@/components/layout/BottomNav";
+import { usePushNotification } from "@/features/notification/hooks/usePushNotification";
+import { useCaptureInstallPrompt } from "@/features/pwa/hooks/useCaptureInstallPrompt";
 
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  usePushNotification();
+  useCaptureInstallPrompt();
+  const showBottomNav = (BOTTOM_NAV_PATHS as readonly string[]).includes(pathname);
+
   return (
-    <div className="relative min-h-screen pb-16">
+    <div className={`relative min-h-screen ${showBottomNav ? "pb-24" : ""}`}>
       {children}
-      <BottomNav />
+      {showBottomNav && <BottomNav />}
     </div>
   );
 }

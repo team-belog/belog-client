@@ -1,7 +1,13 @@
-export default function unotificationPage() {
+import BackHeader from "@/components/layout/BackHeader";
+import Divider from "@/components/layout/Divider";
+import NotificationList from "@/features/notification/components/NotificationList";
+
+export default function NotificationPage() {
   return (
-    <main className="p-4">
-      <h1 className="text-xl font-bold">notification</h1>
+    <main className="flex flex-col">
+      <BackHeader title="알림" />
+      <Divider />
+      <NotificationList />
     </main>
   );
 }

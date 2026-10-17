@@ -2,12 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #dfe1e5 transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-color: #dfe1e5;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer components {
   .pretendard-sb-10 {
     @apply font-pretendard text-[10px] font-semibold leading-normal;
   }
   .pretendard-sb-16 {
     @apply font-pretendard text-[16px] font-semibold leading-normal;
+  }
+  .pretendard-sb-14 {
+    @apply font-pretendard text-[14px] font-semibold leading-normal;
+  }
+  .pretendard-sb-15 {
+    @apply font-pretendard text-[15px] font-semibold leading-[22px];
   }
   .pretendard-m-12 {
     @apply font-pretendard text-[12px] font-medium leading-normal;
@@ -38,13 +68,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  color-scheme: light;
 }
 
 body {

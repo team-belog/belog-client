@@ -1,7 +1,16 @@
-export default function upreulogPage() {
-  return (
-    <main className="p-4">
-      <h1 className="text-xl font-bold">pre-log</h1>
-    </main>
-  );
+import { notFound } from "next/navigation";
+
+import PreLogContainer from "@/features/pre-log/components/PreLogContainer";
+
+export default async function PreLogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ meetingId?: string }>;
+}) {
+  const { meetingId: rawMeetingId } = await searchParams;
+  const meetingId = Number(rawMeetingId);
+
+  if (!Number.isInteger(meetingId) || meetingId <= 0) notFound();
+
+  return <PreLogContainer meetingId={meetingId} />;
 }
