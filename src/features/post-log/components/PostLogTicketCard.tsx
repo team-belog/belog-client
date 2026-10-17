@@ -62,7 +62,7 @@ export default function PostLogTicketCard({ ticket }: PostLogTicketCardProps) {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[565px] drop-shadow-[0_0_10px_rgba(0,0,0,0.15)]"
+      className="relative w-full h-[565px] drop-shadow-[0_0_5px_rgba(0,0,0,0.15)]"
     >
       {size.width > 0 && size.height > 0 && (
         <svg
@@ -75,52 +75,54 @@ export default function PostLogTicketCard({ ticket }: PostLogTicketCardProps) {
           <path d={buildPath(size.width, size.height)} fill="white" />
         </svg>
       )}
-      <div className="relative flex flex-col h-full py-5 gap-3">
-        <div className="flex items-center justify-center gap-[3px] px-4">
+      <div className="relative flex flex-col h-full py-5">
+        <div className="flex min-h-[36px] items-center justify-center gap-[3px] px-4">
           <BelogIcon width={14} height={12} />
           <Image src="/icons/belog-wordmark.svg" alt="BELOG" width={58} height={12} />
         </div>
 
-        <div className="relative w-full h-[220px] overflow-hidden rounded-xl bg-main-cool-gray shrink-0">
+        <div className="mt-[5px] relative w-full h-[169px] overflow-hidden bg-main-cool-gray shrink-0">
           {ticket.coverPhotoUrl && (
             <Image src={ticket.coverPhotoUrl} alt="" fill className="object-cover" />
           )}
         </div>
 
-        <div className="flex flex-col gap-1 px-4">
+        <div className="mt-5 flex flex-col px-4">
           <p className="text-[18px] font-semibold text-main-black">{ticket.meetingName}</p>
           {ticket.memory && (
-            <p className="text-[12px] leading-[1.5] text-main-black line-clamp-2 whitespace-pre-line">
+            <p className="mt-4 pt-sans-narrow-regular text-[12px] leading-[20px] text-main-black line-clamp-2 whitespace-pre-line">
               {ticket.memory}
             </p>
           )}
         </div>
 
-        <div className="flex items-start gap-5 px-4">
-          <div className="flex flex-col gap-1">
-            <span className="text-[11px] text-sub-gray-2">Date</span>
-            <span className="text-[12px] text-main-black">
-              {ticket.startDate} - {ticket.endDate}
+        <div className="mt-[30px] flex items-start px-4">
+          <div className="flex w-1/2 flex-col gap-[10px]">
+            <span className="text-[12px] font-medium text-main-black">Date</span>
+            <span className="pt-sans-narrow-regular text-[15px] leading-[22px] text-main-black">
+              {ticket.startDate === ticket.endDate
+                ? ticket.startDate
+                : `${ticket.startDate} - ${ticket.endDate}`}
             </span>
           </div>
           {ticket.location && (
-            <div className="flex flex-col gap-1">
-              <span className="text-[11px] text-sub-gray-2">To</span>
-              <span className="text-[12px] text-main-black">{ticket.location}</span>
+            <div className="flex w-1/2 flex-col gap-[10px]">
+              <span className="text-[12px] font-medium text-main-black">Location</span>
+              <span className="pt-sans-narrow-regular text-[15px] leading-[22px] text-main-black">{ticket.location}</span>
             </div>
           )}
         </div>
 
         {ticket.members.length > 0 && (
-          <div className="flex flex-col gap-1 px-4">
-            <span className="text-[11px] text-sub-gray-2">Member</span>
+          <div className="mt-[30px] flex flex-col gap-[10px] px-4">
+            <span className="text-[12px] font-medium text-main-black">Member</span>
             <div className="flex flex-wrap gap-[5px]">
               {ticket.members.map((m) => (
                 <span
                   key={m.groupMemberId}
-                  className="whitespace-nowrap rounded-sm bg-[rgba(233,233,233,0.7)] px-2 py-1 text-[11px] text-main-black"
+                  className="pt-sans-narrow-regular whitespace-nowrap rounded-[5px] bg-[#F7F8F9] px-2 py-[5px] text-[12px] text-sub-gray-2"
                 >
-                  {m.nickname}
+                  @{m.nickname}
                 </span>
               ))}
             </div>
