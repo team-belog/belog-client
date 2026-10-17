@@ -62,7 +62,7 @@ export default function Step2({ onNext }: Step2Props) {
               right={{ 
                 placeholder: "4,000원", 
                 value: it.price,
-                onChange: (value) => setItems((prev) => prev.map((item,i) => i === index ? {...item, price: value} : item))
+                onChange: (value) => setItems((prev) => prev.map((item,i) => i === index ? {...item, price: value.replace(/\D/g, "")} : item))
               }}
             />
           ))}

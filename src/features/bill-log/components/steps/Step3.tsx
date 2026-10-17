@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import SelectableToggle from "../SelectableToggle";
 import TextLayout from "@/components/ui/TextLayout";
@@ -31,6 +31,12 @@ export default function Step3({ onNext }: Step3Props) {
   const [customAmounts, setCustomAmounts] = useState<Record<number, string>>({});
 
   const members = meetingMembersData?.items ?? [];
+
+  useEffect(() => {
+    if (members.length > 0) {
+      setSelectedMemberIds(members.map((m) => m.groupMemberId));
+    }
+  }, [members.length]);
 
   const toggleMember = (id: number) => {
     setSelectedMemberIds((prev) =>
@@ -141,7 +147,7 @@ export default function Step3({ onNext }: Step3Props) {
           />
         ))}
       </div>
-      <TextLayout left={`개별 정산 금액 (${selectedMemberIds.length}명)`} />
+      <TextLayout left={`개별 정산 금액 (${selectedMemberIds.length}/${members.length}명)`} />
       <div className="flex flex-col gap-3 overflow-y-auto h-[568px]">
         {members.map((member) => {
           const isSelected = selectedMemberIds.includes(member.groupMemberId);
