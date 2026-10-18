@@ -87,11 +87,11 @@ export default function Step2({ onNext }: Step2Props) {
           {items.map((it, index) => (
             <SplitInputField
               key={index}
-              offsetX={offsetXMap[index] ?? 0}
-              onPointerDown={handlePointerDown}
-              onPointerMove={(e) => handlePointerMove(e, index)}
-              onPointerUp={() => handlePointerUp(index)}
-              onDelete={() => handleDelete(index)}
+              offsetX={index > 0 ? (offsetXMap[index] ?? 0) : 0}
+              onPointerDown={index > 0 ? handlePointerDown : undefined}
+              onPointerMove={index > 0 ? (e) => handlePointerMove(e, index) : undefined}
+              onPointerUp={index > 0 ? () => handlePointerUp(index) : undefined}
+              onDelete={index > 0 ? () => handleDelete(index) : undefined}
               left={{ 
                 placeholder: "ex) 아메리카노", 
                 value: it.item ,
