@@ -49,7 +49,7 @@ export default function SettlementStatusItem({
   return (
     <div className="flex w-full items-center justify-between rounded-[12px] bg-main-cool-gray px-6 py-[30px]">
       <div className="flex items-start gap-3">
-        <Profile width={24} height={24} />
+        <Profile src={sender.profileImageUrl ?? undefined} width={24} height={24} />
         <div className="flex flex-col gap-1">
           <p className="pretendard-m-16 text-sub-gray-1">
             {sender.nickname} → {receiver.nickname}{receiver.isMe ? "(나)" : ""}
