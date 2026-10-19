@@ -30,10 +30,10 @@ function BillLogContent() {
   if (isLoading) return <div className="flex min-h-screen items-center justify-center">로딩 중...</div>;
 
   return (
-    <main>
+    <main className="pt-[60px]">
       <BackHeader title="Bill-log" />
       <Divider />
-      <div className="flex flex-col items-center justify-center">
+      <div className="pt-[50px] flex flex-col items-center justify-center">
         <div className="w-full flex flex-col gap-4">
           {!data ? (
             <div className="flex min-h-[calc(100vh-180px)] flex-col items-center justify-center gap-[15px]">
