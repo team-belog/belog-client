@@ -18,6 +18,22 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "BELOG",
   },
+  openGraph: {
+    title: "BELOG",
+    description: "BELOG",
+    url: "https://belog.co.kr",
+    siteName: "BELOG",
+    images: [
+      {
+        url: "https://belog.co.kr/public/icons/OG-tag.png",
+        width: 1200,
+        height: 630,
+        alt: "BELOG",
+      },
+    ],
+    locale: "ko_KR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
