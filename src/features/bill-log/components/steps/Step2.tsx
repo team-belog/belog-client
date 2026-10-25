@@ -18,6 +18,8 @@ export default function Step2({ onNext }: Step2Props) {
 
   const [title, setTitle] = useState("");
   const [items, setItems] = useState<{ item: string; price: string }[]>([{ item: "", price: "" }]);
+  const [currency, setCurrency] = useState("KRW");
+  const [currencySelected, setCurrencySelected] = useState(false);
   
   const isDisabled = !title.trim() || items.some((i) => !i.item.trim() || !i.price.trim());
 
@@ -92,13 +94,16 @@ export default function Step2({ onNext }: Step2Props) {
               onPointerMove={index > 0 ? (e) => handlePointerMove(e, index) : undefined}
               onPointerUp={index > 0 ? () => handlePointerUp(index) : undefined}
               onDelete={index > 0 ? () => handleDelete(index) : undefined}
-              left={{ 
-                placeholder: "ex) 아메리카노", 
+              currency={currency}
+              currencySelected={currencySelected}
+              onCurrencyChange={(c) => { setCurrency(c); setCurrencySelected(true); }}
+              left={{
+                placeholder: "ex) 아메리카노",
                 value: it.item ,
                 onChange: (value) => setItems((prev) => prev.map((item,i) => i === index ? {...item, item: value} : item))
               }}
-              right={{ 
-                placeholder: "4,000원", 
+              right={{
+                placeholder: "4,000",
                 value: it.price,
                 onChange: (value) => setItems((prev) => prev.map((item,i) => i === index ? {...item, price: value.replace(/\D/g, "")} : item))
               }}

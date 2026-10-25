@@ -1,5 +1,9 @@
 "use client";
 
+import { useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import CurrencyDropdown from "./CurrencyDropdown";
+
 interface InputItem {
   placeholder?: string;
   value?: string;
@@ -10,6 +14,9 @@ interface InputItem {
 interface SplitInputFieldProps {
   left: InputItem;
   right: InputItem;
+  currency?: string;
+  currencySelected?: boolean;
+  onCurrencyChange?: (currency: string) => void;
   offsetX?: number;
   onPointerDown?: (e: React.PointerEvent) => void;
   onPointerMove?: (e: React.PointerEvent) => void;
@@ -17,10 +24,38 @@ interface SplitInputFieldProps {
   onDelete?: () => void;
 }
 
-export default function SplitInputField({ left, right, offsetX = 0, onPointerDown, onPointerMove, onPointerUp, onDelete }: SplitInputFieldProps) {
+export default function SplitInputField({
+  left,
+  right,
+  currency = "",
+  currencySelected = false,
+  onCurrencyChange,
+  offsetX = 0,
+  onPointerDown,
+  onPointerMove,
+  onPointerUp,
+  onDelete,
+}: SplitInputFieldProps) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
+  const currencyBtnRef = useRef<HTMLButtonElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const openDropdown = () => {
+    if (currencyBtnRef.current && containerRef.current) {
+      const btnRect = currencyBtnRef.current.getBoundingClientRect();
+      const containerRect = containerRef.current.getBoundingClientRect();
+      setDropdownPos({
+        top: btnRect.bottom + window.scrollY + 20,
+        right: window.innerWidth - containerRect.right,
+      });
+    }
+    setDropdownOpen(true);
+  };
+
   return (
-    <div className="relative mx-4 overflow-hidden rounded-[12px]">
-      <div className="absolute right-0 top-0 flex w-[80px] h-[46px] items-center justify-center bg-red-100  hover:bg-[#FFDADA] rounded-[8000px]">
+    <div ref={containerRef} className="relative mx-4 rounded-[12px]">
+      <div className="absolute right-0 top-0 flex w-[80px] h-[46px] items-center justify-center bg-red-100 hover:bg-[#FFDADA] rounded-[8000px]">
         <button onClick={onDelete} className="text-[14px] font-semibold text-red-500">삭제</button>
       </div>
       <div
@@ -48,9 +83,36 @@ export default function SplitInputField({ left, right, offsetX = 0, onPointerDow
             placeholder={right.placeholder}
             className="pretendard-sb-15 min-w-0 bg-transparent text-right text-main-black placeholder:text-sub-gray-2 outline-none"
           />
-          {right.value && <span className="pretendard-sb-15 text-main-black">원</span>}
+          <button
+            ref={currencyBtnRef}
+            type="button"
+            onClick={openDropdown}
+            onPointerDown={(e) => e.stopPropagation()}
+            className={`pretendard-sb-15 ml-1 shrink-0 ${currencySelected ? "text-main-black" : "text-sub-gray-2"}`}
+          >
+            {currency}
+          </button>
         </div>
       </div>
+
+      {dropdownOpen && createPortal(
+        <>
+          <div className="fixed inset-0 z-[9998]" onClick={() => setDropdownOpen(false)} />
+          <div
+            style={{ top: dropdownPos.top, right: dropdownPos.right, position: "absolute" }}
+            className="z-[9999]"
+          >
+            <CurrencyDropdown
+              selected={currency}
+              onSelect={(c) => {
+                onCurrencyChange?.(c);
+                setDropdownOpen(false);
+              }}
+            />
+          </div>
+        </>,
+        document.body
+      )}
     </div>
   );
 }
