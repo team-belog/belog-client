@@ -26,7 +26,8 @@ export default function RegisterProfilePage() {
   const { mutate: getUploadUrl, isPending: isUploadPending } =
     useGetProfileImageUploadUrl();
 
-  const [name, setName] = useState("");
+  const [familyName, setFamilyName] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [nickname, setNickname] = useState("");
   const [nicknameStatus, setNicknameStatus] = useState<NicknameStatus>("idle");
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -38,7 +39,7 @@ export default function RegisterProfilePage() {
     completeOnboarding(
       {
         nickname,
-        name,
+        name: `${familyName}${firstName}`,
         bankCode: bank as BankCode,
         accountNumber,
         profileImageObjectKey,
@@ -83,10 +84,10 @@ export default function RegisterProfilePage() {
         <ProfileImagePicker onChange={setProfileImage} />
       </div>
       <div className="mt-4">
-        <FamilyNameField value={name} onChange={setName} />
+        <FamilyNameField value={familyName} onChange={setFamilyName} />
       </div>
       <div className="mt-[14px]">
-        <FirstNameField value={name} onChange={setName} />
+        <FirstNameField value={firstName} onChange={setFirstName} />
       </div>
       <div className="mt-[50px]">
         <NicknameField
@@ -113,7 +114,8 @@ export default function RegisterProfilePage() {
         onClick={handleSubmit}
         variant="primary"
         disabled={
-          !name ||
+          !familyName ||
+          !firstName ||
           !nickname ||
           nicknameStatus !== "available" ||
           !bank ||
