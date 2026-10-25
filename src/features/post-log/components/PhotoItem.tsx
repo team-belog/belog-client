@@ -5,12 +5,13 @@ import Image from "next/image";
 interface PhotoItemProps {
   src?: string;
   likeCount?: number;
+  likedByMe?: boolean;
   onLike?: () => void;
   onClick?: () => void;
 }
 
-export default function PhotoItem({ src, likeCount = 0, onLike, onClick }: PhotoItemProps) {
-  const isLiked = likeCount > 0;
+export default function PhotoItem({ src, likeCount = 0, likedByMe = false, onLike, onClick }: PhotoItemProps) {
+  const isLiked = likedByMe;
 
   return (
     <div className="relative size-[80px] shrink-0" onClick={onClick}>

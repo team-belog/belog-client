@@ -34,7 +34,11 @@ export default function MeetingInfoTab() {
 
   if (isLoading) return <div className="flex items-center justify-center h-dvh">로딩 중...</div>;
 
-  const dateRange = meetingInfo ? `${meetingInfo.startDate} - ${meetingInfo.endDate}` : "";
+  const dateRange = meetingInfo
+    ? meetingInfo.startDate === meetingInfo.endDate
+      ? meetingInfo.startDate
+      : `${meetingInfo.startDate} - ${meetingInfo.endDate}`
+    : "";
   const totalAmount = meetingInfo ? `${meetingInfo.settlement.totalAmount.toLocaleString()}원` : "";
 
   return (
@@ -94,7 +98,7 @@ export default function MeetingInfoTab() {
                 { meetingId, memory: memo },
                 { onSuccess: () => queryClient.invalidateQueries({ queryKey: ["postLogMeetingInfo", meetingId] }) }
               )}
-              className="w-[114px] shrink-0 border border-[#CDD3DE] bg-sub-white text-main-black">
+              className="w-[114px] shrink-0 border border-[#CDD3DE] bg-sub-white text-main-black disabled:bg-sub-gray-3 disabled:text-main-white">
               저장
             </Button>
             <Button bare variant="primary"

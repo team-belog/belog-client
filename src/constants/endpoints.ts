@@ -59,6 +59,7 @@ export const ENDPOINTS = {
     registerPhotoMetadata: (meetingId: number) => `/meetings/${meetingId}/post-log-photos`,
     likePhoto: (photoId: number) => `/post-log-photos/${photoId}/likes/me`,
     unlikePhoto: (photoId: number) => `/post-log-photos/${photoId}/likes/me`,
+    deletePhoto: (photoId: number) => `/post-log-photos/${photoId}`,
   },
   group: {
     list: "/groups",

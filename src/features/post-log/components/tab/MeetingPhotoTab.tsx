@@ -13,6 +13,12 @@ import { PostLogPhoto } from "@/features/post-log/types/index"
 import { useLikePhoto } from "@/features/post-log/hooks/useLikePhoto"
 import { useUnlikePhoto } from "../../hooks/useUnLikePhoto";
 
+function formatDayLabel(dayNumber: number, date: string) {
+  const num = dayNumber >= 0 ? String(dayNumber).padStart(2, "0") : String(dayNumber);
+  const [year, month, day] = date.split("-");
+  return `Day${num} (${year.slice(2)}.${month}.${day})`;
+}
+
 function groupByTime(photos: PostLogPhoto[]) {
   const map: Record<string, PostLogPhoto[]> = {};
   for (const photo of photos) {
@@ -39,8 +45,23 @@ export default function MeetingPhotoTab() {
   const { mutate: unlike } = useUnlikePhoto(meetingId);
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useGetPostLogPhotoList(meetingId);
-  const allPhotos = data?.pages.flatMap((page) => page.items ?? []) ?? [];
-  const photoGroups = groupByTime(allPhotos);
+
+  const mergedDays = (() => {
+    const map = new Map<number, { dayNumber: number; date: string; photos: PostLogPhoto[] }>();
+    data?.pages.forEach((page) => {
+      page.days.forEach((day) => {
+        const existing = map.get(day.dayNumber);
+        if (existing) {
+          existing.photos.push(...day.photos);
+        } else {
+          map.set(day.dayNumber, { ...day, photos: [...day.photos] });
+        }
+      });
+    });
+    return Array.from(map.values()).sort((a, b) => a.dayNumber - b.dayNumber);
+  })();
+
+  const allPhotos = mergedDays.flatMap((day) => day.photos);
 
   useEffect(() => {
     const el = bottomRef.current;
@@ -69,23 +90,31 @@ export default function MeetingPhotoTab() {
     <>
       <GuideField message="가장 좋아요가 많은 사진이 티켓의 대표 사진으로 설정돼요" />
       <div className="mt-4 flex flex-col gap-[24px] px-4 pb-[114px]">
-        {photoGroups.map((group) => (
-          <TimePhotoGroup
-            key={group.time}
-            time={group.time}
-            photos={group.photos.map((p) => ({
-              id: p.photoId,
-              src: p.photoUrl,
-              likeCount: p.likeCount,
-              likedByMe: p.likedByMe,
-            }))}
-            onLike={handleLike}
-            onClick={(id) => {
-              const photo = allPhotos.find((p) => p.photoId === id);
-              if (photo) router.push(`/post-log/${id}?photoUrl=${encodeURIComponent(photo.photoUrl)}`);
-            }}
-          />
-        ))}
+        {mergedDays.map((day) => {
+          const timeGroups = groupByTime(day.photos);
+          return (
+            <div key={day.dayNumber} className="flex flex-col gap-[16px]">
+              <p className="pretendard-sb-16 text-main-black">{formatDayLabel(day.dayNumber, day.date)}</p>
+              {timeGroups.map((group) => (
+                <TimePhotoGroup
+                  key={group.time}
+                  time={group.time}
+                  photos={group.photos.map((p) => ({
+                    id: p.photoId,
+                    src: p.photoUrl,
+                    likeCount: p.likeCount,
+                    likedByMe: p.likedByMe,
+                  }))}
+                  onLike={handleLike}
+                  onClick={(id) => {
+                    const photo = allPhotos.find((p) => p.photoId === id);
+                    if (photo) router.push(`/post-log/${id}?photoUrl=${encodeURIComponent(photo.photoUrl)}&meetingId=${meetingId}&likeCount=${photo.likeCount}&likedByMe=${photo.likedByMe}`);
+                  }}
+                />
+              ))}
+            </div>
+          );
+        })}
         <div ref={bottomRef} className="h-1" />
         {isFetchingNextPage && (
           <div className="flex justify-center py-4 text-sm text-sub-gray-2">불러오는 중...</div>
