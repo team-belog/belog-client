@@ -18,6 +18,7 @@ export function useUpdatePreLogPlan(planId: number) {
         queryKey: preLogKeys.allPlans(data.meetingId),
       });
       queryClient.invalidateQueries({ queryKey: preLogKeys.memoDetail(planId) });
+      queryClient.invalidateQueries({ queryKey: ["mapPlans", data.meetingId] });
     },
   });
 }
