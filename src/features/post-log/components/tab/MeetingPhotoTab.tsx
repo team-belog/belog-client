@@ -108,7 +108,7 @@ export default function MeetingPhotoTab() {
                   onLike={handleLike}
                   onClick={(id) => {
                     const photo = allPhotos.find((p) => p.photoId === id);
-                    if (photo) router.push(`/post-log/${id}?photoUrl=${encodeURIComponent(photo.photoUrl)}`);
+                    if (photo) router.push(`/post-log/${id}?photoUrl=${encodeURIComponent(photo.photoUrl)}&meetingId=${meetingId}`);
                   }}
                 />
               ))}
