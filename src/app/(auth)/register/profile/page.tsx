@@ -21,8 +21,10 @@ import { markTutorialPending } from "@/features/onboarding/utils/tutorialStorage
 
 export default function RegisterProfilePage() {
   const router = useRouter();
-  const { mutate: completeOnboarding, isPending: isOnboardingPending } = useCompleteOnboarding();
-  const { mutate: getUploadUrl, isPending: isUploadPending } = useGetProfileImageUploadUrl();
+  const { mutate: completeOnboarding, isPending: isOnboardingPending } =
+    useCompleteOnboarding();
+  const { mutate: getUploadUrl, isPending: isUploadPending } =
+    useGetProfileImageUploadUrl();
 
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
@@ -49,7 +51,7 @@ export default function RegisterProfilePage() {
           markTutorialPending();
           router.replace("/");
         },
-      }
+      },
     );
   };
 
@@ -69,7 +71,7 @@ export default function RegisterProfilePage() {
             });
             submitOnboarding(uploadData.objectKey);
           },
-        }
+        },
       );
     } else {
       submitOnboarding();
@@ -80,15 +82,9 @@ export default function RegisterProfilePage() {
     <main className="pb-[114px]">
       <BackHeader title="회원가입" />
       <Divider />
-      <div className="mx-4 mb-4 mt-[30px] flex flex-col items-start gap-[6px]">
-        <p className="pretendard-sb-18 text-main-black">
-          회원가입을 진행해 주세요
-        </p>
-        <p className="pretendard-m-15 text-sub-gray-2">
-          닉네임은 멤버들에게 보여질 닉네임이에요
-        </p>
+      <div className="mt-[30px]">
+        <ProfileImagePicker onChange={setProfileImage} />
       </div>
-      <ProfileImagePicker onChange={setProfileImage} />
       <div className="mt-4">
         <NameField value={name} onChange={setName} />
       </div>
