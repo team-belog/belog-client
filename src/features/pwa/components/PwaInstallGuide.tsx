@@ -90,7 +90,7 @@ export default function PwaInstallGuide() {
           </div>
           <div className="absolute left-[23.61px] top-[66.31px] h-[24.755px] w-[79.571px] rounded-[30px] border border-dashed border-main-mint" />
           <div className="absolute left-[26px] top-[13px]">
-            <PwaAppLogo size={34} />
+            <PwaAppLogo size={34} radius={7} />
           </div>
           <ClickLabel className="left-[122px] top-[62px]" />
         </div>
