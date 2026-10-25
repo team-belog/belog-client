@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient, InfiniteData } from "@tanstack/react-query";
 
+
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
@@ -25,11 +26,6 @@ export default function PostLogPhotoPage() {
   const photoUrl = searchParams.get("photoUrl");
   const meetingId = Number(searchParams.get("meetingId"));
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { mutate: deletePhoto, isPending: isDeleting } = useDeletePhoto(meetingId);
-  const { mutate: like } = useLikePhoto(meetingId);
-  const { mutate: unlike } = useUnlikePhoto(meetingId);
-
   const cachedData = queryClient.getQueryData<InfiniteData<PostLogPhotoListResponse>>(
     ["postLogPhotoList", meetingId]
   );
@@ -37,11 +33,28 @@ export default function PostLogPhotoPage() {
     .flatMap((page) => page.days.flatMap((day) => day.photos))
     .find((p) => p.photoId === photoId);
 
-  const likedByMe = cachedPhoto?.likedByMe ?? searchParams.get("likedByMe") === "true";
-  const likeCount = cachedPhoto?.likeCount ?? Number(searchParams.get("likeCount") ?? 0);
+  const [likedByMe, setLikedByMe] = useState(
+    cachedPhoto?.likedByMe ?? searchParams.get("likedByMe") === "true"
+  );
+  const [likeCount, setLikeCount] = useState(
+    cachedPhoto?.likeCount ?? Number(searchParams.get("likeCount") ?? 0)
+  );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { mutate: deletePhoto, isPending: isDeleting } = useDeletePhoto(meetingId);
+  const { mutate: like } = useLikePhoto(meetingId);
+  const { mutate: unlike } = useUnlikePhoto(meetingId);
 
   const handleLike = () => {
-    likedByMe ? unlike(photoId) : like(photoId);
+    if (likedByMe) {
+      unlike(photoId, {
+        onSuccess: () => { setLikedByMe(false); setLikeCount((c) => Math.max(0, c - 1)); },
+      });
+    } else {
+      like(photoId, {
+        onSuccess: () => { setLikedByMe(true); setLikeCount((c) => c + 1); },
+      });
+    }
   };
 
   const handleSave = async () => {
