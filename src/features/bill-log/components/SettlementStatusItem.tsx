@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useQueryClient } from "@tanstack/react-query";
 import Profile from "@/components/ui/Profile";
 import { useCompleteSettlement } from "@/features/bill-log/hooks/useCompleteSettlement";
 import { useSendReminder } from "@/features/bill-log/hooks/useSendReminder";
+import { toApiError } from "@/lib/apiError";
 import { type SettlementParticipant, type SettlementRequestAction } from "../types";
 
 interface SettlementStatusItemProps {
@@ -11,9 +13,12 @@ interface SettlementStatusItemProps {
   meetingId: number;
   sender: SettlementParticipant;
   receiver: SettlementParticipant;
+  currency: string;
   amount: number;
-  avatarUrl?: string;
   action: SettlementRequestAction;
+  onCopyAccount: () => void;
+  onSendReminder: () => void;
+  onSendReminderError: () => void;
 }
 
 const buttonStyleByAction: Record<SettlementRequestAction, { bg: string; label: string }> = {
@@ -27,8 +32,12 @@ export default function SettlementStatusItem({
   meetingId,
   sender,
   receiver,
+  currency,
   amount,
   action,
+  onCopyAccount,
+  onSendReminder,
+  onSendReminderError,
 }: SettlementStatusItemProps) {
   const queryClient = useQueryClient();
   const { mutate: complete, isPending: isCompleting } = useCompleteSettlement();
@@ -42,25 +51,39 @@ export default function SettlementStatusItem({
         },
       });
     } else if (action === "SEND_REMINDER") {
-      remind(settlementRequestId);
+      remind(settlementRequestId, {
+        onSuccess: onSendReminder,
+        onError: (err) => {
+          if (toApiError(err).status === 429) onSendReminderError();
+        },
+      });
     }
   };
 
   return (
-    <div className="flex w-full items-center justify-between rounded-[12px] bg-main-cool-gray px-6 py-[30px]">
-      <div className="flex items-start gap-3">
-        <Profile width={24} height={24} />
-        <div className="flex flex-col gap-1">
-          <p className="pretendard-m-16 text-sub-gray-1">
-            {sender.nickname} → {receiver.nickname}{receiver.isMe ? "(나)" : ""}
+    <div className="flex w-full items-center justify-between rounded-[12px] bg-main-cool-gray px-6 py-4">
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-center gap-1">
+          <div className="shrink-0">
+            <Profile src={sender.profileImageUrl ?? undefined} width={14} height={14} />
+          </div>
+          <p className="pretendard-m-14 text-sub-gray-1 truncate">
+            {sender.nickname}{sender.isMe ? "(나)" : ""} → {receiver.nickname}{receiver.isMe ? "(나)" : ""}
           </p>
-          <p className="pretendard-sb-18 text-sub-black">{amount.toLocaleString()}원</p>
         </div>
+        <p className="pretendard-sb-18 text-main-black">{amount.toLocaleString()} {currency}</p>
+          <button
+            className="flex w-fit items-center gap-1 rounded p-1 hover:bg-[#F2F2F2]"
+            onClick={() => { navigator.clipboard.writeText(receiver.bankAccount!.accountNumber); onCopyAccount(); }}
+          >
+            <Image src="/icons/bill-log/copy_icon.svg" alt="복사" width={16} height={16} />
+            <span className="pretendard-m-12 text-sub-gray-2">{receiver?.bankAccount?.bankName} {receiver?.bankAccount?.accountNumber}</span>
+          </button>
       </div>
       <button
         onClick={handleClick}
         disabled={action === "NONE" || isCompleting || isReminding}
-        className={`flex items-center rounded-[18px] px-[14px] py-[6px] ${buttonStyleByAction[action].bg}`}
+        className={`flex shrink-0 items-center rounded-[18px] px-[14px] py-[6px] ${buttonStyleByAction[action].bg}`}
       >
         <p className="pretendard-m-15 font-semibold text-main-white">{buttonStyleByAction[action].label}</p>
       </button>

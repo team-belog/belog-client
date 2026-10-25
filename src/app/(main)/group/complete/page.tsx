@@ -15,7 +15,7 @@ function GroupCompleteContent() {
   const groupName = searchParams.get("name") || "그룹";
 
   return (
-    <main className="flex min-h-screen flex-col pb-[114px]">
+    <main className="flex min-h-screen flex-col pb-[114px] pt-[60px]">
       <BackHeader title="그룹 만들기" />
       <Divider />
       <div className="mt-[30px]">

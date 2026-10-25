@@ -5,11 +5,13 @@ import SettlementStatusItem from "../SettlementStatusItem";
 import { useGetSettlement } from "@/features/bill-log/hooks/useGetSettlement";
 
 interface SettlementStatusTabProps {
-  pendingParticipantCount: number
-  totalSpentAmount: number
+  pendingParticipantCount: number;
+  onCopyAccount: () => void;
+  onSendReminder: () => void;
+  onSendReminderError: () => void;
 }
 
-export default function SettlementStatusTab({ pendingParticipantCount, totalSpentAmount}:SettlementStatusTabProps) {
+export default function SettlementStatusTab({ pendingParticipantCount, onCopyAccount, onSendReminder, onSendReminderError }: SettlementStatusTabProps) {
   const searchParams = useSearchParams();
   const meetingId = Number(searchParams.get("meetingId"))
   const { data, isLoading, fetchNextPage, hasNextPage } = useGetSettlement(meetingId)
@@ -33,7 +35,7 @@ export default function SettlementStatusTab({ pendingParticipantCount, totalSpen
   return (
     <div>
       <TextLayout left={`정산 진행중인 인원 ${pendingParticipantCount}명`} />
-      <div className="flex flex-col gap-4 px-4">
+      <div className="flex flex-col gap-4 px-4 overflow-y-auto pb-[114px]">
         {allItems?.map((item) => (
           <SettlementStatusItem
             key={item.settlementRequestId}
@@ -41,8 +43,12 @@ export default function SettlementStatusTab({ pendingParticipantCount, totalSpen
             meetingId={meetingId}
             sender={item.sender}
             receiver={item.receiver}
+            currency={item.currency}
             amount={item.amount}
             action={item.action}
+            onCopyAccount={onCopyAccount}
+            onSendReminder={onSendReminder}
+            onSendReminderError={onSendReminderError}
           />
         ))}
       </div>

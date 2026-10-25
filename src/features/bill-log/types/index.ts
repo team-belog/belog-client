@@ -1,6 +1,11 @@
 
+export type SpentAmount = {
+  currency: string
+  amount: number
+}
+
 export type BillLogResponse = {
-  totalSpentAmount: number
+  totalSpentAmounts: SpentAmount[]
   completedParticipantCount: number
   pendingParticipantCount: number
 }
@@ -22,6 +27,7 @@ export type SettlementRequestAction = "SEND_REMINDER" | "MARK_COMPLETE" | "NONE"
 
 export type Settlement = {
   settlementRequestId: number
+  currency: string
   amount: number
   sender: SettlementParticipant;
   receiver: SettlementParticipant;
@@ -29,11 +35,18 @@ export type Settlement = {
   action: SettlementRequestAction
 }
 
+export type BankAccount = {
+  bankCode: string
+  bankName: string
+  accountNumber: string
+}
+
 export type SettlementParticipant = {
   meetingParticipantId: number
   nickname: string
   profileImageUrl: string | null
   isMe: boolean
+  bankAccount?: BankAccount | null
 }
 
 export type BillsRequest = {

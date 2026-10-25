@@ -15,6 +15,8 @@ import SettlementStatusTab from "@/features/bill-log/components/tab/SettlementSt
 import PaymentHistoryTab from "@/features/bill-log/components/tab/PaymentHistoryTab";
 
 import { useGetBillLogSummary } from "@/features/bill-log/hooks/useGetBillLogSummary";
+import Toast from "@/components/ui/Toast";
+import { useToast } from "@/hooks/useToast";
 
 function BillLogContent() {
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -24,16 +26,17 @@ function BillLogContent() {
   const meetingId = Number(searchParams.get("meetingId"))
   const groupId = Number(searchParams.get("groupId"))
 
-  const { data, isLoading } = useGetBillLogSummary(meetingId)  
+  const { data, isLoading } = useGetBillLogSummary(meetingId);
+  const { toast, showToast, hideToast } = useToast();
   const totalParticipantCount = (data?.completedParticipantCount ?? 0) + (data?.pendingParticipantCount ?? 0)
 
   if (isLoading) return <div className="flex min-h-screen items-center justify-center">로딩 중...</div>;
 
   return (
-    <main>
+    <main className="pt-[60px]">
       <BackHeader title="Bill-log" />
       <Divider />
-      <div className="flex flex-col items-center justify-center">
+      <div className="=flex flex-col items-center justify-center">
         <div className="w-full flex flex-col gap-4">
           {!data ? (
             <div className="flex min-h-[calc(100vh-180px)] flex-col items-center justify-center gap-[15px]">
@@ -49,12 +52,12 @@ function BillLogContent() {
                 title="현재까지 완료된 정산"
                 fields={[
                   { label: "완료 인원", value: data.completedParticipantCount + "명" },
-                  { label: "총 정산 금액", value: data.totalSpentAmount + "원" },
+                  { label: "총 정산 금액", value: data.totalSpentAmounts?.map((a) => `${a.amount.toLocaleString()} ${a.currency}`).join(" / ") ?? "-" },
                 ]}
               />
               <ProgressBar current={data.completedParticipantCount} total={totalParticipantCount} />
               <TabBar tabs={["정산 현황", "결제 내역"]} activeIndex={activeTab} onChange={setActiveTab} />
-              {activeTab === 0 ? <SettlementStatusTab pendingParticipantCount={data.pendingParticipantCount} totalSpentAmount={data.totalSpentAmount} /> : <PaymentHistoryTab />}
+              {activeTab === 0 ? <SettlementStatusTab pendingParticipantCount={data.pendingParticipantCount} onCopyAccount={() => showToast("계좌 번호가 복사되었어요")} onSendReminder={() => showToast("돈을 보내달라고 요청했어요")} onSendReminderError={() => showToast("이미 요청했어요 1분 후에 다시 시도해주세요", "error")} /> : <PaymentHistoryTab />}
             </div>
           )}
         </div>
@@ -62,6 +65,7 @@ function BillLogContent() {
           결제 내역 등록
         </Button>
       </div>
+      <Toast message={toast.message} type={toast.type} visible={toast.visible} onHide={hideToast} />
     </main>
   );
 }

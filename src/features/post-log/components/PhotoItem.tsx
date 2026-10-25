@@ -18,6 +18,7 @@ export default function PhotoItem({ src, likeCount = 0, onLike, onClick }: Photo
         {src && (
           <Image src={src} alt="사진" fill className="object-cover rounded-[10px]" />
         )}
+        <div className="absolute inset-x-0 top-0 h-[40px] rounded-t-[10px] bg-gradient-to-b from-black/100 to-transparent" />
       </div>
       <button
         onClick={(e) => { e.stopPropagation(); onLike?.(); }}

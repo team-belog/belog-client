@@ -30,17 +30,17 @@ export default function PaymentHistoryTab() {
     if (isLoading) return <div className="flex justify-center py-10">로딩 중...</div>;
   
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-y-auto pb-[114px]">
       {allDays?.map((group) => (
         <DailyPaymentGroup
           key={group.dayNumber}
           date={`Day ${group.dayNumber} (${group.paymentDate})`}
-          totalAmount={`${group.dailyTotalAmount.toLocaleString()}원`}
+          totalAmount={`${(group.dailyTotalAmount ?? 0).toLocaleString()}원`}
           items={group.bills.map(bill => ({
             id: bill.billId,
             thumbnailUrl: "",
             name: bill.title,
-            amount: `${bill.totalAmount.toLocaleString()}원`,
+            amount: `${(bill.totalAmount ?? 0).toLocaleString()}원`,
             payer: bill.payerNickname,
           }))}
           onItemClick={(id) => router.push(`/bill-log/${id}`)}
