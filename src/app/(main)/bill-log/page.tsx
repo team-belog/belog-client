@@ -36,7 +36,7 @@ function BillLogContent() {
     <main className="pt-[60px]">
       <BackHeader title="Bill-log" />
       <Divider />
-      <div className="pt-[50px] flex flex-col items-center justify-center">
+      <div className="=flex flex-col items-center justify-center">
         <div className="w-full flex flex-col gap-4">
           {!data ? (
             <div className="flex min-h-[calc(100vh-180px)] flex-col items-center justify-center gap-[15px]">
@@ -57,7 +57,7 @@ function BillLogContent() {
               />
               <ProgressBar current={data.completedParticipantCount} total={totalParticipantCount} />
               <TabBar tabs={["정산 현황", "결제 내역"]} activeIndex={activeTab} onChange={setActiveTab} />
-              {activeTab === 0 ? <SettlementStatusTab pendingParticipantCount={data.pendingParticipantCount} onCopyAccount={() => showToast("계좌 번호가 복사되었어요")} /> : <PaymentHistoryTab />}
+              {activeTab === 0 ? <SettlementStatusTab pendingParticipantCount={data.pendingParticipantCount} onCopyAccount={() => showToast("계좌 번호가 복사되었어요")} onSendReminder={() => showToast("돈을 보내달라고 요청했어요")} onSendReminderError={() => showToast("이미 요청했어요 1분 후에 다시 시도해주세요", "error")} /> : <PaymentHistoryTab />}
             </div>
           )}
         </div>

@@ -7,9 +7,11 @@ import { useGetSettlement } from "@/features/bill-log/hooks/useGetSettlement";
 interface SettlementStatusTabProps {
   pendingParticipantCount: number;
   onCopyAccount: () => void;
+  onSendReminder: () => void;
+  onSendReminderError: () => void;
 }
 
-export default function SettlementStatusTab({ pendingParticipantCount, onCopyAccount }: SettlementStatusTabProps) {
+export default function SettlementStatusTab({ pendingParticipantCount, onCopyAccount, onSendReminder, onSendReminderError }: SettlementStatusTabProps) {
   const searchParams = useSearchParams();
   const meetingId = Number(searchParams.get("meetingId"))
   const { data, isLoading, fetchNextPage, hasNextPage } = useGetSettlement(meetingId)
@@ -45,6 +47,8 @@ export default function SettlementStatusTab({ pendingParticipantCount, onCopyAcc
             amount={item.amount}
             action={item.action}
             onCopyAccount={onCopyAccount}
+            onSendReminder={onSendReminder}
+            onSendReminderError={onSendReminderError}
           />
         ))}
       </div>

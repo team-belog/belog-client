@@ -61,8 +61,8 @@ export default function Toast({
 
   return (
     <div
-      className={`fixed bottom-[100px] left-1/2 z-50 flex -translate-x-1/2 items-center gap-[8px] rounded-full bg-[#2B2B2B]/70 px-[16px] py-[10px] shadow-lg transition-all duration-300 ${
-        show ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+      className={`fixed bottom-[100px] left-1/2 z-50 flex -translate-x-1/2 items-center gap-[8px] rounded-full bg-[#2B2B2B]/70 px-[16px] py-[10px] shadow-lg transition-transform duration-300 ${
+        show ? "translate-y-0" : "translate-y-2"
       }`}
     >
       {type === "success" ? <CheckIcon /> : <ErrorIcon />}

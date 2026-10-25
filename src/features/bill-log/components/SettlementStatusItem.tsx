@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Profile from "@/components/ui/Profile";
 import { useCompleteSettlement } from "@/features/bill-log/hooks/useCompleteSettlement";
 import { useSendReminder } from "@/features/bill-log/hooks/useSendReminder";
+import { toApiError } from "@/lib/apiError";
 import { type SettlementParticipant, type SettlementRequestAction } from "../types";
 
 interface SettlementStatusItemProps {
@@ -16,6 +17,8 @@ interface SettlementStatusItemProps {
   amount: number;
   action: SettlementRequestAction;
   onCopyAccount: () => void;
+  onSendReminder: () => void;
+  onSendReminderError: () => void;
 }
 
 const buttonStyleByAction: Record<SettlementRequestAction, { bg: string; label: string }> = {
@@ -33,6 +36,8 @@ export default function SettlementStatusItem({
   amount,
   action,
   onCopyAccount,
+  onSendReminder,
+  onSendReminderError,
 }: SettlementStatusItemProps) {
   const queryClient = useQueryClient();
   const { mutate: complete, isPending: isCompleting } = useCompleteSettlement();
@@ -46,18 +51,23 @@ export default function SettlementStatusItem({
         },
       });
     } else if (action === "SEND_REMINDER") {
-      remind(settlementRequestId);
+      remind(settlementRequestId, {
+        onSuccess: onSendReminder,
+        onError: (err) => {
+          if (toApiError(err).status === 429) onSendReminderError();
+        },
+      });
     }
   };
 
   return (
     <div className="flex w-full items-center justify-between rounded-[12px] bg-main-cool-gray px-6 py-4">
-      <div className="flex min-w-0 flex-1 flex-col gap-2">
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-center gap-1">
           <div className="shrink-0">
-            <Profile src={sender.profileImageUrl ?? undefined} width={20} height={20} />
+            <Profile src={sender.profileImageUrl ?? undefined} width={14} height={14} />
           </div>
-          <p className="pretendard-m-16 text-sub-gray-1 truncate">
+          <p className="pretendard-m-14 text-sub-gray-1 truncate">
             {sender.nickname}{sender.isMe ? "(나)" : ""} → {receiver.nickname}{receiver.isMe ? "(나)" : ""}
           </p>
         </div>
