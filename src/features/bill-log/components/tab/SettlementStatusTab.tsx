@@ -5,10 +5,11 @@ import SettlementStatusItem from "../SettlementStatusItem";
 import { useGetSettlement } from "@/features/bill-log/hooks/useGetSettlement";
 
 interface SettlementStatusTabProps {
-  pendingParticipantCount: number
+  pendingParticipantCount: number;
+  onCopyAccount: () => void;
 }
 
-export default function SettlementStatusTab({ pendingParticipantCount }: SettlementStatusTabProps) {
+export default function SettlementStatusTab({ pendingParticipantCount, onCopyAccount }: SettlementStatusTabProps) {
   const searchParams = useSearchParams();
   const meetingId = Number(searchParams.get("meetingId"))
   const { data, isLoading, fetchNextPage, hasNextPage } = useGetSettlement(meetingId)
@@ -43,6 +44,7 @@ export default function SettlementStatusTab({ pendingParticipantCount }: Settlem
             currency={item.currency}
             amount={item.amount}
             action={item.action}
+            onCopyAccount={onCopyAccount}
           />
         ))}
       </div>

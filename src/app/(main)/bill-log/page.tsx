@@ -15,6 +15,8 @@ import SettlementStatusTab from "@/features/bill-log/components/tab/SettlementSt
 import PaymentHistoryTab from "@/features/bill-log/components/tab/PaymentHistoryTab";
 
 import { useGetBillLogSummary } from "@/features/bill-log/hooks/useGetBillLogSummary";
+import Toast from "@/components/ui/Toast";
+import { useToast } from "@/hooks/useToast";
 
 function BillLogContent() {
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -24,7 +26,8 @@ function BillLogContent() {
   const meetingId = Number(searchParams.get("meetingId"))
   const groupId = Number(searchParams.get("groupId"))
 
-  const { data, isLoading } = useGetBillLogSummary(meetingId)  
+  const { data, isLoading } = useGetBillLogSummary(meetingId);
+  const { toast, showToast, hideToast } = useToast();
   const totalParticipantCount = (data?.completedParticipantCount ?? 0) + (data?.pendingParticipantCount ?? 0)
 
   if (isLoading) return <div className="flex min-h-screen items-center justify-center">로딩 중...</div>;
@@ -54,7 +57,7 @@ function BillLogContent() {
               />
               <ProgressBar current={data.completedParticipantCount} total={totalParticipantCount} />
               <TabBar tabs={["정산 현황", "결제 내역"]} activeIndex={activeTab} onChange={setActiveTab} />
-              {activeTab === 0 ? <SettlementStatusTab pendingParticipantCount={data.pendingParticipantCount} /> : <PaymentHistoryTab />}
+              {activeTab === 0 ? <SettlementStatusTab pendingParticipantCount={data.pendingParticipantCount} onCopyAccount={() => showToast("계좌 번호가 복사되었어요")} /> : <PaymentHistoryTab />}
             </div>
           )}
         </div>
@@ -62,6 +65,7 @@ function BillLogContent() {
           결제 내역 등록
         </Button>
       </div>
+      <Toast message={toast.message} type={toast.type} visible={toast.visible} onHide={hideToast} />
     </main>
   );
 }

@@ -15,6 +15,7 @@ interface SettlementStatusItemProps {
   currency: string;
   amount: number;
   action: SettlementRequestAction;
+  onCopyAccount: () => void;
 }
 
 const buttonStyleByAction: Record<SettlementRequestAction, { bg: string; label: string }> = {
@@ -31,6 +32,7 @@ export default function SettlementStatusItem({
   currency,
   amount,
   action,
+  onCopyAccount,
 }: SettlementStatusItemProps) {
   const queryClient = useQueryClient();
   const { mutate: complete, isPending: isCompleting } = useCompleteSettlement();
@@ -62,7 +64,7 @@ export default function SettlementStatusItem({
         <p className="pretendard-sb-18 text-main-black">{amount.toLocaleString()} {currency}</p>
           <button
             className="flex w-fit items-center gap-1 rounded p-1 hover:bg-[#F2F2F2]"
-            onClick={() => navigator.clipboard.writeText(receiver.bankAccount!.accountNumber)}
+            onClick={() => { navigator.clipboard.writeText(receiver.bankAccount!.accountNumber); onCopyAccount(); }}
           >
             <Image src="/icons/bill-log/copy_icon.svg" alt="복사" width={16} height={16} />
             <span className="pretendard-m-12 text-sub-gray-2">{receiver?.bankAccount?.bankName} {receiver?.bankAccount?.accountNumber}</span>
