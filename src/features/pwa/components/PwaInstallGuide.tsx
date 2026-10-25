@@ -83,7 +83,7 @@ export default function PwaInstallGuide() {
             <div className="absolute left-[-0.41%] top-[-7.19%] h-[107.3%] w-[100.83%]">
               <Image
                 src="/icons/pwa/add-to-home.png"
-                alt="바탕화면에 추가 메뉴"
+                alt="홈 화면에 추가 메뉴"
                 fill
                 sizes="208px"
                 unoptimized
