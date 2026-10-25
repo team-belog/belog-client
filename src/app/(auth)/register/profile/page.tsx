@@ -8,7 +8,8 @@ import Divider from "@/components/layout/Divider";
 import NicknameField, {
   type NicknameStatus,
 } from "@/features/auth/components/register/NicknameField";
-import NameField from "@/features/auth/components/register/NameField";
+import FamilyNameField from "@/features/auth/components/register/FamilyNameField";
+import FirstNameField from "@/features/auth/components/register/FirstNameField";
 import ProfileImagePicker from "@/features/auth/components/register/ProfileImagePicker";
 import BankSelectField from "@/features/auth/components/register/BankSelectField";
 import AccountNumberField from "@/features/auth/components/register/AccountNumberField";
@@ -86,9 +87,12 @@ export default function RegisterProfilePage() {
         <ProfileImagePicker onChange={setProfileImage} />
       </div>
       <div className="mt-4">
-        <NameField value={name} onChange={setName} />
+        <FamilyNameField value={name} onChange={setName} />
       </div>
       <div className="mt-[14px]">
+        <FirstNameField value={name} onChange={setName} />
+      </div>
+      <div className="mt-[50px]">
         <NicknameField
           value={nickname}
           onChange={setNickname}
