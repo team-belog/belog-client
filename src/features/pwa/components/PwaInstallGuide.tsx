@@ -68,13 +68,6 @@ export default function PwaInstallGuide() {
               </div>
             </div>
             <div className="absolute left-[13px] top-2 h-[30px] w-[72px] rounded-[30px] border border-dashed border-main-mint" />
-            <Image
-              src="/icons/pwa/share-menu-fade.png"
-              alt=""
-              width={196}
-              height={70}
-              className="absolute left-0 top-[26px]"
-            />
             <ClickLabel className="left-[105px] top-[5px]" />
           </div>
         </div>
