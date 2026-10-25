@@ -30,7 +30,7 @@ export default function HomeFab() {
         />
       )}
 
-      <div className="fixed bottom-20 right-4 z-[60] flex flex-col items-end gap-2">
+      <div className="fixed bottom-[99px] right-4 z-[60] flex flex-col items-end gap-2">
         {isOpen && (
           <div className="flex w-[161px] flex-col rounded-[12px] bg-main-white p-2 shadow-[0_0_5px_0_rgba(0,0,0,0.1)]">
             {MENU_ITEMS.map(({ label, href }) => (
