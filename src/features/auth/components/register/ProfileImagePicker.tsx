@@ -38,6 +38,13 @@ export default function ProfileImagePicker({ onChange }: ProfileImagePickerProps
     setOriginalUrl(null);
   };
 
+  const handleCropComplete = (file: File) => {
+    // 이전 previewUrl은 위 useEffect cleanup에서 정리됨
+    setPreviewUrl(URL.createObjectURL(file));
+    onChange?.(file);
+    closeCropModal();
+  };
+
   return (
     <div className="flex flex-col items-center gap-5">
       <button
@@ -66,7 +73,7 @@ export default function ProfileImagePicker({ onChange }: ProfileImagePickerProps
         <ImageCropModal
           imageSrc={originalUrl}
           onClose={closeCropModal}
-          onComplete={() => {}} // TODO: 4단계에서 previewUrl 갱신 + onChange 연결
+          onComplete={handleCropComplete}
         />
       )}
     </div>
