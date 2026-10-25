@@ -13,7 +13,6 @@ import FirstNameField from "@/features/auth/components/register/FirstNameField";
 import ProfileImagePicker from "@/features/auth/components/register/ProfileImagePicker";
 import BankSelectField from "@/features/auth/components/register/BankSelectField";
 import AccountNumberField from "@/features/auth/components/register/AccountNumberField";
-import AccountHolderField from "@/features/auth/components/register/AccountHolderField";
 import Button from "@/components/ui/Button";
 import { useCompleteOnboarding } from "@/features/auth/hooks/useCompleteOnboarding";
 import { useGetProfileImageUploadUrl } from "@/features/auth/hooks/useGetProfileImageUploadUrl";
@@ -33,8 +32,6 @@ export default function RegisterProfilePage() {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [bank, setBank] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
-  const [accountHolder, setAccountHolder] = useState("");
-
   const isPending = isOnboardingPending || isUploadPending;
 
   const submitOnboarding = (profileImageObjectKey?: string) => {
@@ -44,7 +41,6 @@ export default function RegisterProfilePage() {
         name,
         bankCode: bank as BankCode,
         accountNumber,
-        accountHolderName: accountHolder,
         profileImageObjectKey,
       },
       {
@@ -111,10 +107,6 @@ export default function RegisterProfilePage() {
             value={accountNumber}
             onChange={setAccountNumber}
           />
-          <AccountHolderField
-            value={accountHolder}
-            onChange={setAccountHolder}
-          />
         </div>
       </div>
       <Button
@@ -126,7 +118,6 @@ export default function RegisterProfilePage() {
           nicknameStatus !== "available" ||
           !bank ||
           !accountNumber ||
-          !accountHolder ||
           isPending
         }
         className="fixed bottom-0 left-0 right-0 z-20"
