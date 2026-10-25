@@ -10,7 +10,6 @@ import Button from "@/components/ui/Button";
 import NicknameField, { NicknameStatus } from "@/features/auth/components/register/NicknameField";
 import BankSelectField from "@/features/auth/components/register/BankSelectField";
 import AccountNumberField from "@/features/auth/components/register/AccountNumberField";
-import AccountHolderField from "@/features/auth/components/register/AccountHolderField";
 import { useGetMyProfile } from "@/features/my/hooks/useGetMyProfile";
 import { useUpdateMyProfile } from "@/features/my/hooks/useUpdateMyProfile";
 import { useGetProfileImageUploadUrl } from "@/features/auth/hooks/useGetProfileImageUploadUrl";
@@ -32,7 +31,6 @@ export default function ProfileEditPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [bank, setBank] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
-  const [accountHolder, setAccountHolder] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -46,7 +44,6 @@ export default function ProfileEditPage() {
     if (bankAccount) {
       setBank(bankAccount.bankCode);
       setAccountNumber(bankAccount.accountNumber);
-      setAccountHolder(bankAccount.accountHolderName);
     }
   }, [bankAccount]);
 
@@ -62,8 +59,7 @@ export default function ProfileEditPage() {
 
   const bankChanged =
     bank !== (bankAccount?.bankCode ?? "") ||
-    accountNumber !== (bankAccount?.accountNumber ?? "") ||
-    accountHolder !== (bankAccount?.accountHolderName ?? "");
+    accountNumber !== (bankAccount?.accountNumber ?? "");
 
   const submitUpdate = (profileImageObjectKey?: string) => {
     updateProfile(
@@ -76,7 +72,7 @@ export default function ProfileEditPage() {
       {
         onSuccess: () => {
           updateBankAccount(
-            { bankCode: bank as BankCode, accountNumber, accountHolderName: accountHolder },
+            { bankCode: bank as BankCode, accountNumber },
             { onSuccess: () => router.back() }
           );
         },
@@ -131,7 +127,6 @@ export default function ProfileEditPage() {
         <div className="flex flex-col gap-[30px]">
           <BankSelectField value={bank} onChange={setBank} />
           <AccountNumberField value={accountNumber} onChange={setAccountNumber} />
-          <AccountHolderField value={accountHolder} onChange={setAccountHolder} />
         </div>
       </div>
       <Button
