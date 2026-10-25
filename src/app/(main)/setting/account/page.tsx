@@ -17,7 +17,7 @@ export default function AccountManagePage() {
   const isValid = bank !== "" && accountNumber !== "" && accountHolder !== "";
 
   return (
-    <main>
+    <main className="pt-[60px]">
       <BackHeader title="계좌 관리" />
       <Divider />
       <div className="flex flex-col gap-[30px] pt-[22px]">

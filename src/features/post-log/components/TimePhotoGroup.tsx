@@ -4,6 +4,7 @@ interface Photo {
   id: number;
   src?: string;
   likeCount?: number;
+  likedByMe?: boolean;
 }
 
 interface TimePhotoGroupProps {
@@ -23,6 +24,7 @@ export default function TimePhotoGroup({ time, photos, onLike, onClick }: TimePh
             key={photo.id}
             src={photo.src}
             likeCount={photo.likeCount}
+            likedByMe={photo.likedByMe}
             onLike={() => onLike?.(photo.id)}
             onClick={() => onClick?.(photo.id)}
           />

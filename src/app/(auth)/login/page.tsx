@@ -7,7 +7,7 @@ import RegisterPrompt from "@/features/auth/components/login/RegisterPrompt";
 
 export default function LoginPage() {
   return (
-    <main className="flex flex-1 flex-col items-center pb-[35px]">
+    <main className="flex flex-1 flex-col items-center pb-[35px] pt-[60px]">
       <BackHeader title="로그인" />
       <Divider />
       <div className="flex flex-1 flex-col items-center justify-center gap-[30px]">

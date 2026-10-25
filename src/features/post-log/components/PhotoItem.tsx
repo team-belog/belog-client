@@ -5,12 +5,13 @@ import Image from "next/image";
 interface PhotoItemProps {
   src?: string;
   likeCount?: number;
+  likedByMe?: boolean;
   onLike?: () => void;
   onClick?: () => void;
 }
 
-export default function PhotoItem({ src, likeCount = 0, onLike, onClick }: PhotoItemProps) {
-  const isLiked = likeCount > 0;
+export default function PhotoItem({ src, likeCount = 0, likedByMe = false, onLike, onClick }: PhotoItemProps) {
+  const isLiked = likedByMe;
 
   return (
     <div className="relative size-[80px] shrink-0" onClick={onClick}>
@@ -18,6 +19,7 @@ export default function PhotoItem({ src, likeCount = 0, onLike, onClick }: Photo
         {src && (
           <Image src={src} alt="사진" fill className="object-cover rounded-[10px]" />
         )}
+        <div className="absolute inset-x-0 top-0 h-[40px] rounded-t-[10px] bg-gradient-to-b from-black/100 to-transparent" />
       </div>
       <button
         onClick={(e) => { e.stopPropagation(); onLike?.(); }}

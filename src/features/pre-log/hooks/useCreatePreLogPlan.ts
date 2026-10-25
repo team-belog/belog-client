@@ -15,6 +15,7 @@ export function useCreatePreLogPlan(meetingId: number) {
     onSuccess: () => {
       // 새 계획이 어느 필터 탭에 들어갈지 모르므로 해당 만남의 목록을 모두 갱신
       queryClient.invalidateQueries({ queryKey: preLogKeys.allPlans(meetingId) });
+      queryClient.invalidateQueries({ queryKey: ["mapPlans", meetingId] });
     },
   });
 }

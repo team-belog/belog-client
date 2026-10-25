@@ -17,7 +17,7 @@ export default function BillDetailPage() {
   if (!data) return null;
 
   return (
-    <main className="">
+    <main className="pt-[60px]">
       <BackHeader title="영수증" />
       <Divider />
       <div className="flex flex-col gap-6 p-4 pt-5 pb-[58px]">

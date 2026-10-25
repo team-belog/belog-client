@@ -64,6 +64,10 @@ export async function unlikePhoto(photoId: number): Promise<LikePhotoResponse> {
     return data.data;
 }
 
+export async function deletePhoto(photoId: number): Promise<void> {
+    await api.delete(ENDPOINTS.postLog.deletePhoto(photoId));
+}
+
 export async function createPostLogTicket(meetingId: number, memory: string): Promise<PostLogTicketDetail> {
     const { data } = await api.post<ApiResponse<PostLogTicketDetail>>(
         ENDPOINTS.postLog.createTicket(meetingId),

@@ -35,7 +35,7 @@ export default function GroupNewPage() {
   };
 
   return (
-    <main className="pb-[114px]">
+    <main className="pb-[114px] pt-[60px]">
       <BackHeader title="그룹 만들기" />
       <Divider />
       <div className="mt-[15px] flex flex-col gap-[12px]">

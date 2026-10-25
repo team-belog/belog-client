@@ -93,8 +93,14 @@ export type PostLogPhoto = {
     likedByMe: boolean;
 }
 
+export type PostLogPhotoDay = {
+    dayNumber: number;
+    date: string;
+    photos: PostLogPhoto[];
+}
+
 export type PostLogPhotoListResponse = {
-    items: PostLogPhoto[];
+    days: PostLogPhotoDay[];
     nextCursor: string | null;
     hasNext: boolean;
 }
