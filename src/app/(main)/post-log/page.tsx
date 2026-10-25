@@ -12,7 +12,7 @@ function PostLogContent() {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col pt-[60px]">
       <BackHeader title="Post-log" />
       <Divider />
       <TabBar tabs={["만남 타임라인", "만남 정리"]} activeIndex={activeTab} onChange={setActiveTab} />

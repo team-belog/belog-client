@@ -33,7 +33,7 @@ export default function GroupJoinPage() {
   };
 
   return (
-    <main className="pb-[114px]">
+    <main className="pb-[114px] pt-[60px]">
       <BackHeader title="초대 코드로 참여" />
       <Divider />
       <div className="mx-4 mt-[30px] flex flex-col gap-[6px]">

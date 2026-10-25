@@ -39,7 +39,7 @@ function BillNewContent() {
   };
 
   return (
-    <main>
+    <main className="pt-[60px]">
       <BackHeader title="결제 내역 등록" onBack={handleBack} />
       <Divider />
       <StepProgressBar current={step} total={TOTAL_STEPS} />

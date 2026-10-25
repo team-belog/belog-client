@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import InputField from "@/components/ui/InputField";
 import SplitInputField from "@/features/bill-log/components/SplitInputField";
@@ -37,6 +37,39 @@ export default function Step2({ onNext }: Step2Props) {
     setItems((prev) => [...prev, { item: "", price: "" }]);
   };
 
+  // 스와이프 삭제
+  const startX = useRef(0);
+  const isDragging = useRef(false);
+  const [offsetXMap, setOffsetXMap] = useState<Record<number, number>>({});
+  const THRESHOLD = 92;
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    startX.current = e.clientX;
+    isDragging.current = true;
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent, index: number) => {
+    if (!isDragging.current) return;
+    const delta = e.clientX - startX.current;
+    setOffsetXMap((prev) => ({ ...prev, [index]: Math.min(Math.max(delta, -THRESHOLD), 0) }));
+  };
+
+  const handlePointerUp = (index: number) => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    if ((offsetXMap[index] ?? 0) <= -THRESHOLD / 2) {
+      setOffsetXMap((prev) => ({ ...prev, [index]: -THRESHOLD }));
+    } else {
+      setOffsetXMap((prev) => ({ ...prev, [index]: 0 }));
+    }
+  };
+
+  const handleDelete = (index: number) => {
+    setItems((prev) => prev.filter((_, i) => i !== index));
+    setOffsetXMap((prev) => { const next = { ...prev }; delete next[index]; return next; });
+  };
+
   return (
     <div className="flex flex-col pb-[230px]">
       <h1 className="pretendard-sb-20 mb-6 ml-4 mt-[10px]">얼마를 썼는지 입력해주세요.</h1>
@@ -54,6 +87,11 @@ export default function Step2({ onNext }: Step2Props) {
           {items.map((it, index) => (
             <SplitInputField
               key={index}
+              offsetX={index > 0 ? (offsetXMap[index] ?? 0) : 0}
+              onPointerDown={index > 0 ? handlePointerDown : undefined}
+              onPointerMove={index > 0 ? (e) => handlePointerMove(e, index) : undefined}
+              onPointerUp={index > 0 ? () => handlePointerUp(index) : undefined}
+              onDelete={index > 0 ? () => handleDelete(index) : undefined}
               left={{ 
                 placeholder: "ex) 아메리카노", 
                 value: it.item ,
@@ -62,7 +100,7 @@ export default function Step2({ onNext }: Step2Props) {
               right={{ 
                 placeholder: "4,000원", 
                 value: it.price,
-                onChange: (value) => setItems((prev) => prev.map((item,i) => i === index ? {...item, price: value} : item))
+                onChange: (value) => setItems((prev) => prev.map((item,i) => i === index ? {...item, price: value.replace(/\D/g, "")} : item))
               }}
             />
           ))}

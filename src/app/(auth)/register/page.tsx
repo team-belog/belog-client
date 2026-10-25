@@ -7,7 +7,7 @@ import LoginPrompt from "@/features/auth/components/shared/LoginPrompt";
 
 export default function RegisterPage() {
   return (
-    <main className="flex flex-1 flex-col items-center pb-[35px]">
+    <main className="flex flex-1 flex-col items-center pb-[35px] pt-[60px]">
       <BackHeader title="회원가입" />
       <Divider />
       <div className="flex flex-1 flex-col items-center justify-center gap-[30px]">

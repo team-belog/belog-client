@@ -28,7 +28,7 @@ export default function PostLogPhotoPage() {
   };
 
   return (
-    <main className="flex h-dvh flex-col">
+    <main className="flex h-dvh flex-col pt-[60px]">
       <BackHeader title="Post-log" />
       <Divider />
       <div className="flex flex-1 items-center justify-center">

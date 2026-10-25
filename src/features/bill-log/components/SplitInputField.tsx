@@ -10,12 +10,29 @@ interface InputItem {
 interface SplitInputFieldProps {
   left: InputItem;
   right: InputItem;
+  offsetX?: number;
+  onPointerDown?: (e: React.PointerEvent) => void;
+  onPointerMove?: (e: React.PointerEvent) => void;
+  onPointerUp?: () => void;
+  onDelete?: () => void;
 }
 
-export default function SplitInputField({ left, right }: SplitInputFieldProps) {
+export default function SplitInputField({ left, right, offsetX = 0, onPointerDown, onPointerMove, onPointerUp, onDelete }: SplitInputFieldProps) {
   return (
-    <div className="mx-4">
-      <div className="flex h-[50px] w-full items-center rounded-[12px] bg-[#F7F8F9] px-[15px] hover:border hover:border-main-mint">
+    <div className="relative mx-4 overflow-hidden rounded-[12px]">
+      <div className="absolute right-0 top-0 flex w-[80px] h-[46px] items-center justify-center bg-red-100  hover:bg-[#FFDADA] rounded-[8000px]">
+        <button onClick={onDelete} className="text-[14px] font-semibold text-red-500">삭제</button>
+      </div>
+      <div
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        style={{
+          transform: `translateX(${offsetX}px)`,
+          transition: offsetX === 0 ? "transform 0.2s" : "none",
+        }}
+        className="flex h-[50px] w-full items-center rounded-[12px] bg-[#F7F8F9] px-[15px] hover:border hover:border-main-mint touch-none"
+      >
         <input
           type={left.type ?? "text"}
           value={left.value}

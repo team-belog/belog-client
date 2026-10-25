@@ -32,7 +32,7 @@ export default function SettlementStatusTab({ pendingParticipantCount }: Settlem
   return (
     <div>
       <TextLayout left={`정산 진행중인 인원 ${pendingParticipantCount}명`} />
-      <div className="flex flex-col gap-4 px-4">
+      <div className="flex flex-col gap-4 px-4 overflow-y-auto pb-[114px]">
         {allItems?.map((item) => (
           <SettlementStatusItem
             key={item.settlementRequestId}

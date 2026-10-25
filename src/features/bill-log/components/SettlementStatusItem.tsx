@@ -51,7 +51,7 @@ export default function SettlementStatusItem({
   return (
     <div className="flex w-full items-center justify-between rounded-[12px] bg-main-cool-gray px-6 py-[30px]">
       <div className="flex items-start gap-3">
-        <Profile src={sender.profileImageUrl ?? undefined} width={26} height={26} />
+        <Profile src={sender.profileImageUrl ?? undefined} width={24} height={24} />
         <div className="flex flex-col gap-1">
           <p className="pretendard-sb-18 text-main-black">{amount.toLocaleString()} {currency}</p>
           <p className="pretendard-m-16 text-sub-black-1">
