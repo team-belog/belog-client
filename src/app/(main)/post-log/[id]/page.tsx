@@ -59,18 +59,32 @@ export default function PostLogPhotoPage() {
 
   const handleSave = async () => {
     if (!photoUrl) return;
-    const response = await fetch(photoUrl);
-    if (!response.ok) return;
-    const blob = await response.blob();
-    const ext = blob.type.includes("png") ? "png" : blob.type.includes("webp") ? "webp" : "jpg";
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `photo.${ext}`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    try {
+      const response = await fetch(photoUrl);
+      if (!response.ok) return;
+      const blob = await response.blob();
+      const ext = blob.type.includes("png") ? "png" : blob.type.includes("webp") ? "webp" : "jpg";
+      const fileName = `photo.${ext}`;
+      const file = new File([blob], fileName, { type: blob.type });
+
+      // iOS: Web Share API로 공유 시트 열기 → "사진 저장"으로 갤러리에 저장
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file] });
+        return;
+      }
+
+      // 데스크톱 fallback
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(objectUrl);
+    } catch {
+      // 사용자가 공유 취소하거나 오류 발생 시 무시
+    }
   };
 
   const handleConfirmDelete = () => {
