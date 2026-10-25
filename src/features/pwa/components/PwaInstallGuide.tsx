@@ -45,6 +45,7 @@ export default function PwaInstallGuide() {
               fill
               sizes="243px"
               className="object-cover"
+              unoptimized
             />
           </div>
           <Image
@@ -85,6 +86,7 @@ export default function PwaInstallGuide() {
                 alt="바탕화면에 추가 메뉴"
                 fill
                 sizes="208px"
+                unoptimized
               />
             </div>
           </div>
