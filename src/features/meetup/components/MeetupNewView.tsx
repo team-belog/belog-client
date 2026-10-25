@@ -113,7 +113,7 @@ export default function MeetupNewView({ groupId }: { groupId: number }) {
   }
 
   return (
-    <main>
+    <main className="pt-[60px]">
       <BackHeader title={headerTitle} onBack={handleBack} />
       <Divider />
       <StepProgressBar current={step} total={TOTAL_STEPS} />

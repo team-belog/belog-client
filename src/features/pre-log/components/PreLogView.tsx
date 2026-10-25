@@ -171,7 +171,7 @@ export default function PreLogView({
   };
 
   return (
-    <main className="flex min-h-dvh flex-col pb-[114px]">
+    <main className="flex min-h-dvh flex-col pb-[114px] pt-[60px]">
       <BackHeader title="Pre-log" />
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
 

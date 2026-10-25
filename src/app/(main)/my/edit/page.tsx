@@ -108,7 +108,7 @@ export default function ProfileEditPage() {
   };
 
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col pt-[60px]">
       <BackHeader title="프로필 수정" />
       <Divider />
       <div className="flex flex-col items-center gap-5 py-[30px]">

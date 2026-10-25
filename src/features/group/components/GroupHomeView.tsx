@@ -66,7 +66,7 @@ export default function GroupHomeView({
   };
 
   return (
-    <main className="pb-[114px]">
+    <main className="pb-[114px] pt-[60px]">
       <BackHeader
         title="그룹 홈"
         right={

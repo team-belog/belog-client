@@ -87,7 +87,7 @@ export default function SettingPage() {
   };
 
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col pt-[60px]">
       <BackHeader title="설정" />
       <Divider />
       <SettingRow label="알림 설정">

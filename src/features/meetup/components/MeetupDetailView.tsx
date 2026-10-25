@@ -125,7 +125,7 @@ export default function MeetupDetailView({
   };
 
   return (
-    <main>
+    <main className="pt-[60px]">
       <BackHeader
         title="만남 상세"
         right={

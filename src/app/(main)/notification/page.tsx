@@ -4,7 +4,7 @@ import NotificationList from "@/features/notification/components/NotificationLis
 
 export default function NotificationPage() {
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col pt-[60px]">
       <BackHeader title="알림" />
       <Divider />
       <NotificationList />
