@@ -49,7 +49,7 @@ export default function PwaInstallSheet({
           onClick={onLater}
           className="pretendard-m-15 mt-5 text-sub-gray-2"
         >
-          나중에 시작할게요
+          7일 뒤 다시보기
         </button>
       </div>
     </div>
