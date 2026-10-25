@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useQueryClient } from "@tanstack/react-query";
 import Profile from "@/components/ui/Profile";
 import { useCompleteSettlement } from "@/features/bill-log/hooks/useCompleteSettlement";
@@ -11,8 +12,8 @@ interface SettlementStatusItemProps {
   meetingId: number;
   sender: SettlementParticipant;
   receiver: SettlementParticipant;
+  currency: string;
   amount: number;
-  avatarUrl?: string;
   action: SettlementRequestAction;
 }
 
@@ -27,6 +28,7 @@ export default function SettlementStatusItem({
   meetingId,
   sender,
   receiver,
+  currency,
   amount,
   action,
 }: SettlementStatusItemProps) {
@@ -49,12 +51,21 @@ export default function SettlementStatusItem({
   return (
     <div className="flex w-full items-center justify-between rounded-[12px] bg-main-cool-gray px-6 py-[30px]">
       <div className="flex items-start gap-3">
-        <Profile width={24} height={24} />
+        <Profile src={sender.profileImageUrl ?? undefined} width={26} height={26} />
         <div className="flex flex-col gap-1">
-          <p className="pretendard-m-16 text-sub-gray-1">
-            {sender.nickname} → {receiver.nickname}{receiver.isMe ? "(나)" : ""}
+          <p className="pretendard-sb-18 text-main-black">{amount.toLocaleString()} {currency}</p>
+          <p className="pretendard-m-16 text-sub-black-1">
+            {sender.nickname}{sender.isMe ? "(나)" : ""} → {receiver.nickname}{receiver.isMe ? "(나)" : ""}
           </p>
-          <p className="pretendard-sb-18 text-sub-black">{amount.toLocaleString()}원</p>
+          {receiver.bankAccount && (
+            <button
+              className="flex items-center gap-1 rounded p-1 hover:bg-[#F2F2F2]"
+              onClick={() => navigator.clipboard.writeText(receiver.bankAccount!.accountNumber)}
+            >
+              <span className="pretendard-m-14 text-sub-gray-1">{receiver.bankAccount.bankName} {receiver.bankAccount.accountNumber}</span>
+              <Image src="/icons/bill-log/copy_icon.svg" alt="복사" width={16} height={16} />
+            </button>
+          )}
         </div>
       </div>
       <button

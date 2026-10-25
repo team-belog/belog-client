@@ -40,6 +40,7 @@ export default function SettlementStatusTab({ pendingParticipantCount }: Settlem
             meetingId={meetingId}
             sender={item.sender}
             receiver={item.receiver}
+            currency={item.currency}
             amount={item.amount}
             action={item.action}
           />
