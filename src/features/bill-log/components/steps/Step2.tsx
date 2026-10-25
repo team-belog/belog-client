@@ -21,7 +21,7 @@ export default function Step2({ onNext }: Step2Props) {
   const [currency, setCurrency] = useState("KRW");
   const [currencySelected, setCurrencySelected] = useState(false);
   
-  const isDisabled = !title.trim() || items.some((i) => !i.item.trim() || !i.price.trim());
+  const isDisabled = !title.trim() || items.some((i) => !i.item.trim() || !i.price.trim()) || !currencySelected;
 
   useEffect(() => {
     if (analyzedData) {
@@ -116,7 +116,7 @@ export default function Step2({ onNext }: Step2Props) {
       </div>
 
       <div className="fixed bottom-0 left-0 w-full bg-white">
-        <BillTotal amount={`${totalAmount.toLocaleString()}원`} />
+        <BillTotal amount={currencySelected ? `${totalAmount.toLocaleString()} ${currency}` : `${totalAmount.toLocaleString()}`} />
         <Button 
           variant="primary" 
           disabled={isDisabled} 
