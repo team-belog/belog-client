@@ -49,29 +49,29 @@ export default function SettlementStatusItem({
   };
 
   return (
-    <div className="flex w-full items-center justify-between rounded-[12px] bg-main-cool-gray px-6 py-[30px]">
-      <div className="flex items-start gap-3">
-        <Profile src={sender.profileImageUrl ?? undefined} width={24} height={24} />
-        <div className="flex flex-col gap-1">
-          <p className="pretendard-sb-18 text-main-black">{amount.toLocaleString()} {currency}</p>
-          <p className="pretendard-m-16 text-sub-black-1">
+    <div className="flex w-full items-center justify-between rounded-[12px] bg-main-cool-gray px-6 py-4">
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex items-center gap-1">
+          <div className="shrink-0">
+            <Profile src={sender.profileImageUrl ?? undefined} width={20} height={20} />
+          </div>
+          <p className="pretendard-m-16 text-sub-gray-1 truncate">
             {sender.nickname}{sender.isMe ? "(나)" : ""} → {receiver.nickname}{receiver.isMe ? "(나)" : ""}
           </p>
-          {receiver.bankAccount && (
-            <button
-              className="flex items-center gap-1 rounded p-1 hover:bg-[#F2F2F2]"
-              onClick={() => navigator.clipboard.writeText(receiver.bankAccount!.accountNumber)}
-            >
-              <span className="pretendard-m-14 text-sub-gray-1">{receiver.bankAccount.bankName} {receiver.bankAccount.accountNumber}</span>
-              <Image src="/icons/bill-log/copy_icon.svg" alt="복사" width={16} height={16} />
-            </button>
-          )}
         </div>
+        <p className="pretendard-sb-18 text-main-black">{amount.toLocaleString()} {currency}</p>
+          <button
+            className="flex w-fit items-center gap-1 rounded p-1 hover:bg-[#F2F2F2]"
+            onClick={() => navigator.clipboard.writeText(receiver.bankAccount!.accountNumber)}
+          >
+            <Image src="/icons/bill-log/copy_icon.svg" alt="복사" width={16} height={16} />
+            <span className="pretendard-m-12 text-sub-gray-2">{receiver?.bankAccount?.bankName} {receiver?.bankAccount?.accountNumber}</span>
+          </button>
       </div>
       <button
         onClick={handleClick}
         disabled={action === "NONE" || isCompleting || isReminding}
-        className={`flex items-center rounded-[18px] px-[14px] py-[6px] ${buttonStyleByAction[action].bg}`}
+        className={`flex shrink-0 items-center rounded-[18px] px-[14px] py-[6px] ${buttonStyleByAction[action].bg}`}
       >
         <p className="pretendard-m-15 font-semibold text-main-white">{buttonStyleByAction[action].label}</p>
       </button>
