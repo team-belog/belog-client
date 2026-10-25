@@ -86,7 +86,7 @@ export default function PreLogMemoDetailView({
   };
 
   return (
-    <main className="pb-[130px]">
+    <main className="pb-[130px] pt-[60px]">
       <BackHeader title="메모" onBack={handleBack} />
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
 

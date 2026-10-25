@@ -43,7 +43,7 @@ export default function MeetupRespondView({
     );
 
   return (
-    <main className="flex min-h-screen flex-col pb-[114px]">
+    <main className="flex min-h-screen flex-col pb-[114px] pt-[60px]">
       <BackHeader title="가능한 날짜 선택" />
       <Divider />
 

@@ -73,7 +73,7 @@ export default function PreLogAddView({
   };
 
   return (
-    <main className="pb-[130px]">
+    <main className="pb-[130px] pt-[60px]">
       <BackHeader title="계획 추가" onBack={handleCancel} />
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
 

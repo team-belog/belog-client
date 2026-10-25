@@ -77,7 +77,7 @@ export default function RegisterProfilePage() {
   };
 
   return (
-    <main className="pb-[114px]">
+    <main className="pb-[114px] pt-[60px]">
       <BackHeader title="회원가입" />
       <Divider />
       <div className="mx-4 mb-4 mt-[30px] flex flex-col items-start gap-[6px]">

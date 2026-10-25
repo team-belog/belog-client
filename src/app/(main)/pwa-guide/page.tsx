@@ -4,7 +4,7 @@ import PwaInstallGuide from "@/features/pwa/components/PwaInstallGuide";
 
 export default function PwaGuidePage() {
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col pt-[60px]">
       <BackHeader title="추가 방법" />
       <Divider />
       <PwaInstallGuide />

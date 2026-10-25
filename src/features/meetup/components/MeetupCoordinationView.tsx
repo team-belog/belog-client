@@ -78,7 +78,7 @@ export default function MeetupCoordinationView({
   };
 
   return (
-    <main className="flex min-h-screen flex-col pb-[114px]">
+    <main className="flex min-h-screen flex-col pb-[114px] pt-[60px]">
       <BackHeader title="조율 현황" />
       <Divider />
 
