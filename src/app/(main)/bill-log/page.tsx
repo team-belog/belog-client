@@ -49,12 +49,12 @@ function BillLogContent() {
                 title="현재까지 완료된 정산"
                 fields={[
                   { label: "완료 인원", value: data.completedParticipantCount + "명" },
-                  { label: "총 정산 금액", value: data.totalSpentAmount + "원" },
+                  { label: "총 정산 금액", value: data.totalSpentAmounts?.map((a) => `${a.amount.toLocaleString()} ${a.currency}`).join(" / ") ?? "-" },
                 ]}
               />
               <ProgressBar current={data.completedParticipantCount} total={totalParticipantCount} />
               <TabBar tabs={["정산 현황", "결제 내역"]} activeIndex={activeTab} onChange={setActiveTab} />
-              {activeTab === 0 ? <SettlementStatusTab pendingParticipantCount={data.pendingParticipantCount} totalSpentAmount={data.totalSpentAmount} /> : <PaymentHistoryTab />}
+              {activeTab === 0 ? <SettlementStatusTab pendingParticipantCount={data.pendingParticipantCount} /> : <PaymentHistoryTab />}
             </div>
           )}
         </div>

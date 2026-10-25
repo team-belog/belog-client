@@ -6,10 +6,9 @@ import { useGetSettlement } from "@/features/bill-log/hooks/useGetSettlement";
 
 interface SettlementStatusTabProps {
   pendingParticipantCount: number
-  totalSpentAmount: number
 }
 
-export default function SettlementStatusTab({ pendingParticipantCount, totalSpentAmount}:SettlementStatusTabProps) {
+export default function SettlementStatusTab({ pendingParticipantCount }: SettlementStatusTabProps) {
   const searchParams = useSearchParams();
   const meetingId = Number(searchParams.get("meetingId"))
   const { data, isLoading, fetchNextPage, hasNextPage } = useGetSettlement(meetingId)

@@ -1,6 +1,11 @@
 
+export type SpentAmount = {
+  currency: string
+  amount: number
+}
+
 export type BillLogResponse = {
-  totalSpentAmount: number
+  totalSpentAmounts: SpentAmount[]
   completedParticipantCount: number
   pendingParticipantCount: number
 }
