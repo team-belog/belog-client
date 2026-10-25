@@ -9,7 +9,11 @@ interface PwaInstallSheetProps {
   onLater: () => void;
 }
 
-export default function PwaInstallSheet({ isOpen, onStart, onLater }: PwaInstallSheetProps) {
+export default function PwaInstallSheet({
+  isOpen,
+  onStart,
+  onLater,
+}: PwaInstallSheetProps) {
   if (!isOpen) return null;
 
   return (
@@ -25,16 +29,26 @@ export default function PwaInstallSheet({ isOpen, onStart, onLater }: PwaInstall
         </div>
 
         <p className="pretendard-sb-20 mt-[22px] text-center leading-[30px] text-main-black">
-          바탕화면에 <span className="font-bold text-main-mint">BELOG</span>를 추가하고
-          <br />
-          더 많은 기능을 편하게 이용해 보세요
+          홈 화면에 <span className="font-bold text-main-mint">BELOG</span>를
+          추가하고
+          <br />더 많은 기능을 편하게 이용해 보세요
         </p>
 
-        <Button bare variant="primary" disabled={false} onClick={onStart} className="mt-8 w-full">
+        <Button
+          bare
+          variant="primary"
+          disabled={false}
+          onClick={onStart}
+          className="mt-8 w-full"
+        >
           시작하기
         </Button>
 
-        <button type="button" onClick={onLater} className="pretendard-m-15 mt-5 text-sub-gray-2">
+        <button
+          type="button"
+          onClick={onLater}
+          className="pretendard-m-15 mt-5 text-sub-gray-2"
+        >
           나중에 시작할게요
         </button>
       </div>
