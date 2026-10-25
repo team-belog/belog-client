@@ -12,5 +12,6 @@ export function useGetMapPlans(meetingId: number, category?: MapPlanCategory) {
         initialPageParam: undefined as string | undefined,
         getNextPageParam: (lastPage) =>
             lastPage.hasNext ? lastPage.nextCursor ?? undefined : undefined,
+        staleTime: 0,
     });
 }
