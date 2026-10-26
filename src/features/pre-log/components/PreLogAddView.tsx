@@ -12,7 +12,7 @@ import type {
   CreatePreLogPlanRequest,
   PreLogCategory,
 } from "@/features/pre-log/types";
-import { isHttpsUrl } from "@/features/pre-log/utils/mapUrl";
+import { isHttpUrl } from "@/features/pre-log/utils/mapUrl";
 
 interface PreLogAddViewProps {
   isSubmitting?: boolean;
@@ -45,7 +45,7 @@ export default function PreLogAddView({
   const title = isLinkMode ? locationTitle : memoTitle;
   const setTitle = isLinkMode ? setLocationTitle : setMemoTitle;
   // 입력 중에는 에러를 띄우지 않도록 값이 있을 때만 형식 검사
-  const isUrlInvalid = url.trim() !== "" && !isHttpsUrl(url);
+  const isUrlInvalid = url.trim() !== "" && !isHttpUrl(url);
   const isValid =
     title.trim() !== "" &&
     (isLinkMode ? url.trim() !== "" && !isUrlInvalid : content.trim() !== "");
@@ -92,7 +92,7 @@ export default function PreLogAddView({
             onChange={setUrl}
             errorMessage={
               isUrlInvalid
-                ? "https:// 링크만 입력할 수 있어요. 앞에 있는 문자를 삭제해 주세요."
+                ? "http(s):// 링크만 입력할 수 있어요. 앞에 있는 문자를 삭제해 주세요."
                 : undefined
             }
           />
