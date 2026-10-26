@@ -3,18 +3,27 @@
 import { useEffect, useState } from "react";
 import Cropper, { type Area, type Point } from "react-easy-crop";
 
-import { getCroppedImage } from "@/lib/cropImage";
+import { getCroppedImage, type CropOutput } from "@/lib/cropImage";
 
 interface ImageCropModalProps {
   imageSrc: string;
   onClose: () => void;
   onComplete: (file: File) => void;
+  // 기본값은 프로필 사진용 (정사각형, 원형 가이드)
+  title?: string;
+  aspect?: number;
+  cropShape?: "rect" | "round";
+  output?: CropOutput;
 }
 
 export default function ImageCropModal({
   imageSrc,
   onClose,
   onComplete,
+  title = "프로필 사진",
+  aspect = 1,
+  cropShape = "round",
+  output,
 }: ImageCropModalProps) {
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -33,7 +42,7 @@ export default function ImageCropModal({
     if (!croppedAreaPixels) return;
     setIsProcessing(true);
     try {
-      const file = await getCroppedImage(imageSrc, croppedAreaPixels);
+      const file = await getCroppedImage(imageSrc, croppedAreaPixels, output);
       onComplete(file);
     } finally {
       setIsProcessing(false);
@@ -50,7 +59,7 @@ export default function ImageCropModal({
         >
           취소
         </button>
-        <p className="pretendard-sb-16 text-main-black">프로필 사진</p>
+        <p className="pretendard-sb-16 text-main-black">{title}</p>
         <button
           type="button"
           onClick={handleComplete}
@@ -66,8 +75,8 @@ export default function ImageCropModal({
           image={imageSrc}
           crop={crop}
           zoom={zoom}
-          aspect={1}
-          cropShape="round"
+          aspect={aspect}
+          cropShape={cropShape}
           showGrid={true}
           onCropChange={setCrop}
           onZoomChange={setZoom}

@@ -61,15 +61,13 @@ function BlockDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "onS
 
   const cellClass = isRangeSelected
     ? "bg-main-mint"
-    : disabled && day.isCurrentMonth
+    : disabled
       ? "bg-[#DFE1E5]"
       : "border border-[#F7F8F9] bg-[#FBFCFE]";
 
   const textClass = isRangeSelected
     ? "pretendard-m-15 text-white"
-    : day.isCurrentMonth
-      ? "pretendard-m-15 text-main-black"
-      : "pretendard-m-15 text-sub-gray-1";
+    : "pretendard-m-15 text-main-black";
 
   // 여러 날 묶음은 셀 뒤에 연한 민트 띠를 깔아 한 덩어리로 보이게 한다 (셀 사이 gap 7px 포함)
   const bandClass =

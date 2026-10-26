@@ -19,11 +19,7 @@ function GroupCompleteContent() {
       <BackHeader title="그룹 만들기" />
       <Divider />
       <div className="mt-[30px]">
-        <GroupSummaryCard
-          groupName={groupName}
-          leaderName="이정원"
-          memberCount={3}
-        />
+        <GroupSummaryCard groupName={groupName} />
       </div>
       <div className="flex flex-1 items-center justify-center">
         <GroupCreatedNotice />

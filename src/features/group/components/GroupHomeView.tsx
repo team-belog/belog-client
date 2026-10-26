@@ -19,7 +19,6 @@ const TABS = ["조율 중인 만남", "진행 중인 만남"];
 
 interface GroupHomeViewProps {
   group: GroupDetailData;
-  // undefined면 아직 불러오는 중
   pastMeetings?: PastMeetingDto[];
   hasMorePastMeetings: boolean;
   onLoadMorePastMeetings: () => void;
@@ -46,7 +45,11 @@ export default function GroupHomeView({
   onCancelDeleteGroup,
 }: GroupHomeViewProps) {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(() =>
+    group.schedulingMeetings.length === 0 && group.activeMeetings.length > 0
+      ? 1
+      : 0,
+  );
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -162,7 +165,13 @@ export default function GroupHomeView({
           ) : (
             <div className="flex flex-col gap-[15px]">
               {pastMeetings.map((meeting) => (
-                <GroupPastMeetupItem key={meeting.meetingId} meeting={meeting} />
+                <GroupPastMeetupItem
+                  key={meeting.meetingId}
+                  meeting={meeting}
+                  onClick={() =>
+                    router.push(`/meetup/${meeting.meetingId}?groupId=${group.groupId}`)
+                  }
+                />
               ))}
               <div ref={sentinelRef} />
             </div>
