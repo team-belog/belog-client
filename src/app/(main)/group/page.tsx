@@ -4,7 +4,7 @@ import GroupList from "@/features/group/components/GroupList";
 
 export default function GroupPage() {
   return (
-    <main>
+    <main className="pt-[60px]">
       <Header />
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />
       <GroupList />

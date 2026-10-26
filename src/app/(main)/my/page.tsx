@@ -13,7 +13,7 @@ export default function MyPage() {
   const { data: profile } = useGetMyProfile();
 
   return (
-    <main>
+    <main className="pt-[60px]">
       <Header/>
       <Divider />
       <ProfileSection

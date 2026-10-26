@@ -6,7 +6,7 @@ import HomeGuideLayer from "@/features/home/components/HomeGuideLayer";
 
 export default function HomePage() {
   return (
-    <main>
+    <main className="pt-[60px]">
       <Header />
       <HomeCalendar />
       <div className="h-2 w-full bg-[#F1F4F9] opacity-50" />

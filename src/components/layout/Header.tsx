@@ -33,7 +33,7 @@ export default function Header({ title, onSettingClick, onAlarmClick }: HeaderPr
   };
 
   return (
-    <header className="relative flex h-[60px] w-full items-center bg-white px-4">
+    <header className="fixed top-0 z-50 flex h-[60px] w-full items-center bg-white px-4">
       {title ? (
         <p className="pretendard-sb-18 absolute left-1/2 -translate-x-1/2 text-main-black">
           {title}
