@@ -6,5 +6,6 @@ export function useGetPostLogTicket(ticketId: number | null) {
         queryKey: ["postLogTicket", ticketId],
         queryFn: () => getPostLogTicket(ticketId!),
         enabled: ticketId !== null,
+        staleTime: 0,
     });
 }
