@@ -168,6 +168,9 @@ export default function GroupHomeView({
                 <GroupPastMeetupItem
                   key={meeting.meetingId}
                   meeting={meeting}
+                  onClick={() =>
+                    router.push(`/meetup/${meeting.meetingId}?groupId=${group.groupId}`)
+                  }
                 />
               ))}
               <div ref={sentinelRef} />

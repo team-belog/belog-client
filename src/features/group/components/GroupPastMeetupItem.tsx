@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import ChevronIcon from "@/components/ui/ChevronIcon";
 import type { PastMeetingDto } from "@/features/group/types";
 import { formatDateRange } from "@/lib/date";
 
@@ -33,9 +34,7 @@ export default function GroupPastMeetupItem({ meeting, onClick }: GroupPastMeetu
         </div>
       </div>
 
-      <span className="pretendard-m-15 whitespace-nowrap rounded-[100px] bg-sub-gray-3 px-[15px] py-[6px] text-main-white">
-        종료
-      </span>
+      <ChevronIcon className="shrink-0 text-sub-gray-2" />
     </button>
   );
 }
