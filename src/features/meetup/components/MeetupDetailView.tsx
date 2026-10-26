@@ -5,8 +5,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
+import Button from "@/components/ui/Button";
 import TrashIcon from "@/components/ui/TrashIcon";
 import MeetupDeleteModal from "@/features/meetup/components/MeetupDeleteModal";
+import MeetupEndModal from "@/features/meetup/components/MeetupEndModal";
 import MeetupLogRow from "@/features/meetup/components/MeetupLogRow";
 import MeetupSummary from "@/features/meetup/components/MeetupSummary";
 import {
@@ -35,6 +37,10 @@ interface MeetupDetailViewProps {
   deleteErrorMessage?: string;
   onDelete: () => void;
   onCancelDelete: () => void;
+  isEnding: boolean;
+  endErrorMessage?: string;
+  onEnd: () => void;
+  onCancelEnd: () => void;
 }
 
 function toDraft(meeting: MeetingDetailData): UpdateMeetingRequest {
@@ -55,11 +61,16 @@ export default function MeetupDetailView({
   deleteErrorMessage,
   onDelete,
   onCancelDelete,
+  isEnding,
+  endErrorMessage,
+  onEnd,
+  onCancelEnd,
 }: MeetupDetailViewProps) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [isEditDatesOpen, setIsEditDatesOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEndModalOpen, setIsEndModalOpen] = useState(false);
   const [draft, setDraft] = useState(() => toDraft(meeting));
 
   const { name, location, startDate, endDate } = isEditing
@@ -72,6 +83,8 @@ export default function MeetupDetailView({
     meeting.endDate !== null &&
     differenceInCalendarDays(parseISO(meeting.endDate), new Date()) < 0;
   const canEditDates = meeting.meetingStatus === "CONFIRMED" && !isEnded;
+  // 만남 종료는 만남장만 가능하고, Post-log까지 완료된 뒤에만 활성화
+  const canEndMeeting = logStatuses.postLog === "COMPLETED";
 
   const summary = {
     title: name,
@@ -115,6 +128,11 @@ export default function MeetupDetailView({
     onCancelDelete();
   };
 
+  const handleCancelEnd = () => {
+    setIsEndModalOpen(false);
+    onCancelEnd();
+  };
+
   const handleConfirmDates = (range: { startDate: Date; endDate: Date }) => {
     setDraft((prev) => ({
       ...prev,
@@ -125,7 +143,8 @@ export default function MeetupDetailView({
   };
 
   return (
-    <main className="pt-[60px]">
+    // 레이아웃이 하단 네비바 여백(96px)을 주므로 만남 종료 버튼 영역만큼만 더 띄움
+    <main className={`pt-[60px] ${meeting.canEditMeeting ? "pb-[97px]" : ""}`}>
       <BackHeader
         title="만남 상세"
         right={
@@ -168,6 +187,7 @@ export default function MeetupDetailView({
           iconSrc="/icons/meetup/pre-log.png"
           title="Pre-log"
           status={PRE_LOG_STATUS_LABEL[logStatuses.preLog]}
+          isCompleted={logStatuses.preLog === "COMPLETED"}
           description="만남 일정과 장소를 정해요"
           onClick={() => router.push(`/pre-log?meetingId=${meeting.meetingId}`)}
         />
@@ -175,6 +195,7 @@ export default function MeetupDetailView({
           iconSrc="/icons/meetup/bill-log.png"
           title="Bill-log"
           status={BILL_LOG_STATUS_LABEL[logStatuses.billLog]}
+          isCompleted={logStatuses.billLog === "COMPLETED"}
           description="영수증으로 정산해요"
           onClick={() => router.push(`/bill-log?meetingId=${meeting.meetingId}&groupId=${meeting.groupId}`)}
         />
@@ -182,6 +203,7 @@ export default function MeetupDetailView({
           iconSrc="/icons/post-log.png"
           title="Post-log"
           status={POST_LOG_STATUS_LABEL[logStatuses.postLog]}
+          isCompleted={logStatuses.postLog === "COMPLETED"}
           description="사진을 기록하고 티켓을 생성해요"
           onClick={() => router.push(`/post-log?meetingId=${meeting.meetingId}`)}
         />
@@ -203,6 +225,28 @@ export default function MeetupDetailView({
           errorMessage={deleteErrorMessage}
           onCancel={handleCancelDelete}
           onConfirm={onDelete}
+        />
+      )}
+
+      {meeting.canEditMeeting && (
+        // 하단 네비바 위에 고정
+        <Button
+          variant="primary"
+          disabled={!canEndMeeting}
+          onClick={() => setIsEndModalOpen(true)}
+          className="fixed bottom-[79px] left-0 right-0"
+        >
+          만남 종료
+        </Button>
+      )}
+
+      {isEndModalOpen && (
+        <MeetupEndModal
+          meetingName={meeting.meetingName}
+          isEnding={isEnding}
+          errorMessage={endErrorMessage}
+          onCancel={handleCancelEnd}
+          onConfirm={onEnd}
         />
       )}
     </main>

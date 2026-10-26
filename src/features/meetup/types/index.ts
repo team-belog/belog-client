@@ -21,7 +21,7 @@ export type MeetingScheduleType = "FIXED" | "POLL";
 
 export type MeetingStatus = "SCHEDULING" | "CONFIRMED";
 
-export type LogStatus = "NOT_STARTED" | "IN_PROGRESS";
+export type LogStatus = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
 
 export type MeetingDetailData = {
   meetingId: number;

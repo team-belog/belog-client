@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-import BottomNav, { BOTTOM_NAV_PATHS } from "@/components/layout/BottomNav";
+import BottomNav, { hasBottomNav } from "@/components/layout/BottomNav";
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard";
 import { usePushNotification } from "@/features/notification/hooks/usePushNotification";
 import { useCaptureInstallPrompt } from "@/features/pwa/hooks/useCaptureInstallPrompt";
@@ -23,7 +23,7 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   usePushNotification();
   useCaptureInstallPrompt();
-  const showBottomNav = (BOTTOM_NAV_PATHS as readonly string[]).includes(pathname);
+  const showBottomNav = hasBottomNav(pathname);
 
   return (
     <div className={`relative min-h-screen ${showBottomNav ? "pb-24" : ""}`}>

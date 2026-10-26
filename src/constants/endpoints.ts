@@ -77,6 +77,7 @@ export const ENDPOINTS = {
     create: (groupId: number) => `/groups/${groupId}/meetings`,
     update: (meetingId: number) => `/meetings/${meetingId}`,
     delete: (meetingId: number) => `/meetings/${meetingId}`,
+    end: (meetingId: number) => `/meetings/${meetingId}/end`,
     datePoll: (meetingId: number) => `/meetings/${meetingId}/date-poll`,
     datePollResults: (meetingId: number) =>
       `/meetings/${meetingId}/date-poll/results`,

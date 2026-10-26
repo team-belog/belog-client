@@ -12,12 +12,22 @@ const NAV_ITEMS = [
   { label: "마이", href: "/my", icon: "my" },
 ] as const;
 
-export const BOTTOM_NAV_PATHS = NAV_ITEMS.map((item) => item.href);
+// 탭 화면은 아니지만 하단 네비바를 띄우는 화면 (홈 탭을 활성으로 표시)
+const MEETUP_DETAIL_PATH = /^\/meetup\/\d+$/;
+
+function getActiveIndex(pathname: string) {
+  if (MEETUP_DETAIL_PATH.test(pathname)) return 0;
+  return NAV_ITEMS.findIndex((item) => item.href === pathname);
+}
+
+export function hasBottomNav(pathname: string) {
+  return getActiveIndex(pathname) !== -1;
+}
 
 export default function BottomNav() {
   const pathname = usePathname();
 
-  const activeIndex = NAV_ITEMS.findIndex((item) => item.href === pathname);
+  const activeIndex = getActiveIndex(pathname);
 
   if (activeIndex === -1) return null;
 
