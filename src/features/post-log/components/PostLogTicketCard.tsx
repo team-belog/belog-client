@@ -82,9 +82,7 @@ export default function PostLogTicketCard({ ticket }: PostLogTicketCardProps) {
         </div>
 
         <div className="mt-[5px] relative w-full h-[169px] overflow-hidden bg-main-cool-gray shrink-0">
-          {ticket.coverPhotoUrl && (
-            <Image src={ticket.coverPhotoUrl} alt="" fill className="object-cover" />
-          )}
+          <Image src={ticket.coverPhotoUrl ?? "/icons/post-log/ticket-cover.jpg"} alt="" fill className="object-cover" />
         </div>
 
         <div className="mt-5 flex flex-col px-4">
