@@ -89,8 +89,19 @@ export default function MeetupSummary({
         </div>
 
         {canEdit && (
-          <button type="button" onClick={onEdit} aria-label="만남 정보 수정" className="shrink-0">
-            <Image src="/icons/edit.svg" alt="" width={40} height={40} />
+          // 편집 중에는 체크 아이콘을 눌러 저장
+          <button
+            type="button"
+            onClick={onEdit}
+            aria-label={isEditing ? "만남 정보 저장" : "만남 정보 수정"}
+            className="shrink-0"
+          >
+            <Image
+              src={isEditing ? "/icons/edit-done.svg" : "/icons/edit.svg"}
+              alt=""
+              width={40}
+              height={40}
+            />
           </button>
         )}
       </div>
