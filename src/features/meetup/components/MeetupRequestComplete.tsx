@@ -14,15 +14,10 @@ export default function MeetupRequestComplete({
   return (
     <main className="flex min-h-screen flex-col pb-[114px]">
       <div className="flex flex-1 items-center justify-center">
-        <div className="flex w-[200px] flex-col gap-[15px] pb-[87px]">
+        <div className="flex w-[200px] flex-col gap-[15px]">
           <div className="flex flex-col items-center gap-[15px]">
-            <Image
-              src="/icons/bell-active.svg"
-              alt=""
-              width={60}
-              height={60}
-            />
-            <p className="pretendard-sb-18 text-center text-main-black">
+            <Image src="/icons/bell-active.svg" alt="" width={60} height={60} />
+            <p className="pretendard-sb-18 whitespace-nowrap text-center text-main-black">
               멤버들에게 알림을 보냈어요
             </p>
           </div>
