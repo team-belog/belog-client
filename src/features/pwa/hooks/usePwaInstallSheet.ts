@@ -1,14 +1,6 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
-import { usePwaInstallStore } from "@/features/pwa/store/usePwaInstallStore";
-
-function isStandalone() {
-  return (
-    window.matchMedia("(display-mode: standalone)").matches ||
-    (navigator as Navigator & { standalone?: boolean }).standalone === true
-  );
-}
+import { isStandalone, usePwaInstall } from "@/features/pwa/hooks/usePwaInstall";
 
 function isIos() {
   return (
@@ -18,8 +10,7 @@ function isIos() {
 }
 
 export function usePwaInstallSheet() {
-  const router = useRouter();
-  const { installPrompt, setInstallPrompt } = usePwaInstallStore();
+  const { installPrompt, install } = usePwaInstall();
   const [isEligible, setIsEligible] = useState(false);
   const [isIosDevice, setIsIosDevice] = useState(false);
 
@@ -37,16 +28,7 @@ export function usePwaInstallSheet() {
 
   const handleStart = async () => {
     close();
-
-    if (!installPrompt) {
-      router.push("/pwa-guide");
-      return;
-    }
-
-    await installPrompt.prompt();
-    await installPrompt.userChoice;
-    // 설치 이벤트는 한 번만 쓸 수 있다
-    setInstallPrompt(null);
+    await install();
   };
 
   return { isOpen, handleStart, handleLater: close };

@@ -11,6 +11,7 @@ import { useWithdrawAccount } from "@/features/auth/hooks/useWithdrawAccount";
 import { useNotificationSettings } from "@/features/notification/hooks/useNotificationSettings";
 import { useUpdateNotificationSettings } from "@/features/notification/hooks/useUpdateNotificationSettings";
 import { isPushSupported, registerPushDevice } from "@/features/notification/utils/pushDevice";
+import { isStandalone, usePwaInstall } from "@/features/pwa/hooks/usePwaInstall";
 
 function SwitchToggle({ checked = false, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -55,10 +56,14 @@ export default function SettingPage() {
   const [modal, setModal] = useState<"logout" | "withdraw" | null>(null);
   // 웹 푸시 미지원 환경(iOS Safari 탭 등)은 "unsupported"
   const [pushPermission, setPushPermission] = useState<NotificationPermission | "unsupported" | null>(null);
+  const { install } = usePwaInstall();
+  // 이미 앱으로 실행 중이면 홈 화면 추가 메뉴를 숨김
+  const [isAppMode, setIsAppMode] = useState(true);
 
   // SSR에는 Notification이 없으므로 마운트 후에 읽음
   useEffect(() => {
     setPushPermission(isPushSupported() ? Notification.permission : "unsupported");
+    setIsAppMode(isStandalone());
   }, []);
 
   // 서버 수신 설정과 브라우저 권한이 둘 다 켜져 있어야 푸시를 받을 수 있음
@@ -102,7 +107,7 @@ export default function SettingPage() {
         </p>
       )}
       <SettingRow label="계좌 관리" account={true} />
-      <SettingRow label="홈 화면 추가" />
+      {!isAppMode && <SettingRow label="홈 화면 추가" onClick={install} />}
       <SettingRow label="로그아웃" onClick={() => setModal("logout")} />
       <SettingRow label="회원 탈퇴" onClick={() => setModal("withdraw")} />
 
