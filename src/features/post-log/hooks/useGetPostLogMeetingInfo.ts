@@ -6,5 +6,6 @@ export function useGetPostLogMeetingInfo(meetingId: number) {
         queryKey: ["postLogMeetingInfo", meetingId],
         queryFn: () => getPostLogMeetingInfo(meetingId),
         enabled: !!meetingId,
+        staleTime: 0,
     });
 }
