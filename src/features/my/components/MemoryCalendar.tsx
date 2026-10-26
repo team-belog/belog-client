@@ -22,7 +22,7 @@ function getCalendarCells(year: number, month: number): (number | null)[] {
 function CalendarCell({ day, ticket, onClick }: { day: number; ticket?: PostLogTicket; onClick?: () => void }) {
   return (
     <div
-      className="relative aspect-square overflow-hidden rounded-[10px] bg-sub-white border border-[#F7F8F9]"
+      className={`relative aspect-square overflow-hidden rounded-[10px] border ${ticket ? "bg-main-mint border-main-mint" : "bg-sub-white border-[#F7F8F9]"}`}
       onClick={ticket ? onClick : undefined}
     >
       {ticket?.thumbnailUrl && (
@@ -31,7 +31,7 @@ function CalendarCell({ day, ticket, onClick }: { day: number; ticket?: PostLogT
           <div className="absolute inset-0 bg-black/30" />
         </>
       )}
-      <span className={`pretendard-m-15 absolute inset-0 flex items-center justify-center ${ticket?.thumbnailUrl ? "text-white" : "text-main-black"}`}>
+      <span className={`pretendard-m-15 absolute inset-0 flex items-center justify-center ${ticket ? "text-white" : "text-main-black"}`}>
         {day}
       </span>
     </div>
