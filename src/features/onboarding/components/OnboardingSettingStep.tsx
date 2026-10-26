@@ -3,12 +3,28 @@
 import Image from "next/image";
 
 import Button from "@/components/ui/Button";
+import { useUpdateNotificationSettings } from "@/features/notification/hooks/useUpdateNotificationSettings";
+import { isPushSupported, registerPushDevice } from "@/features/notification/utils/pushDevice";
 
 interface OnboardingSettingStepProps {
   onNext: () => void;
 }
 
 export default function OnboardingSettingStep({ onNext }: OnboardingSettingStepProps) {
+  const { mutate: updateNotificationSettings } = useUpdateNotificationSettings();
+
+  // 알림을 기본으로 켜 두기 위해 시작하기를 누를 때 권한을 요청 (iOS는 사용자 클릭 중에만 요청 가능)
+  const handleStart = async () => {
+    if (isPushSupported() && Notification.permission === "default") {
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        updateNotificationSettings({ pushNotificationEnabled: true });
+        registerPushDevice().catch(() => {});
+      }
+    }
+    onNext();
+  };
+
   return (
     <div className="fixed inset-0 z-[100] bg-black/75">
       {/* Header의 설정 버튼과 같은 위치에 아이콘을 띄워 강조 */}
@@ -53,7 +69,7 @@ export default function OnboardingSettingStep({ onNext }: OnboardingSettingStepP
       <Button
         variant="secondary"
         disabled={false}
-        onClick={onNext}
+        onClick={handleStart}
         bare
         className="absolute bottom-[29px] left-4 right-4"
       >
