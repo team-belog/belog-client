@@ -8,11 +8,11 @@ import Divider from "@/components/layout/Divider";
 import NicknameField, {
   type NicknameStatus,
 } from "@/features/auth/components/register/NicknameField";
-import NameField from "@/features/auth/components/register/NameField";
+import FamilyNameField from "@/features/auth/components/register/FamilyNameField";
+import FirstNameField from "@/features/auth/components/register/FirstNameField";
 import ProfileImagePicker from "@/features/auth/components/register/ProfileImagePicker";
 import BankSelectField from "@/features/auth/components/register/BankSelectField";
 import AccountNumberField from "@/features/auth/components/register/AccountNumberField";
-import AccountHolderField from "@/features/auth/components/register/AccountHolderField";
 import Button from "@/components/ui/Button";
 import { useCompleteOnboarding } from "@/features/auth/hooks/useCompleteOnboarding";
 import { useGetProfileImageUploadUrl } from "@/features/auth/hooks/useGetProfileImageUploadUrl";
@@ -21,27 +21,27 @@ import { markTutorialPending } from "@/features/onboarding/utils/tutorialStorage
 
 export default function RegisterProfilePage() {
   const router = useRouter();
-  const { mutate: completeOnboarding, isPending: isOnboardingPending } = useCompleteOnboarding();
-  const { mutate: getUploadUrl, isPending: isUploadPending } = useGetProfileImageUploadUrl();
+  const { mutate: completeOnboarding, isPending: isOnboardingPending } =
+    useCompleteOnboarding();
+  const { mutate: getUploadUrl, isPending: isUploadPending } =
+    useGetProfileImageUploadUrl();
 
-  const [name, setName] = useState("");
+  const [familyName, setFamilyName] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [nickname, setNickname] = useState("");
   const [nicknameStatus, setNicknameStatus] = useState<NicknameStatus>("idle");
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [bank, setBank] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
-  const [accountHolder, setAccountHolder] = useState("");
-
   const isPending = isOnboardingPending || isUploadPending;
 
   const submitOnboarding = (profileImageObjectKey?: string) => {
     completeOnboarding(
       {
         nickname,
-        name,
+        name: `${familyName}${firstName}`,
         bankCode: bank as BankCode,
         accountNumber,
-        accountHolderName: accountHolder,
         profileImageObjectKey,
       },
       {
@@ -49,7 +49,7 @@ export default function RegisterProfilePage() {
           markTutorialPending();
           router.replace("/");
         },
-      }
+      },
     );
   };
 
@@ -69,7 +69,7 @@ export default function RegisterProfilePage() {
             });
             submitOnboarding(uploadData.objectKey);
           },
-        }
+        },
       );
     } else {
       submitOnboarding();
@@ -80,19 +80,16 @@ export default function RegisterProfilePage() {
     <main className="pb-[114px] pt-[60px]">
       <BackHeader title="회원가입" />
       <Divider />
-      <div className="mx-4 mb-4 mt-[30px] flex flex-col items-start gap-[6px]">
-        <p className="pretendard-sb-18 text-main-black">
-          회원가입을 진행해 주세요
-        </p>
-        <p className="pretendard-m-15 text-sub-gray-2">
-          닉네임은 멤버들에게 보여질 닉네임이에요
-        </p>
+      <div className="mt-[30px]">
+        <ProfileImagePicker onChange={setProfileImage} />
       </div>
-      <ProfileImagePicker onChange={setProfileImage} />
       <div className="mt-4">
-        <NameField value={name} onChange={setName} />
+        <FamilyNameField value={familyName} onChange={setFamilyName} />
       </div>
       <div className="mt-[14px]">
+        <FirstNameField value={firstName} onChange={setFirstName} />
+      </div>
+      <div className="mt-[50px]">
         <NicknameField
           value={nickname}
           onChange={setNickname}
@@ -111,22 +108,18 @@ export default function RegisterProfilePage() {
             value={accountNumber}
             onChange={setAccountNumber}
           />
-          <AccountHolderField
-            value={accountHolder}
-            onChange={setAccountHolder}
-          />
         </div>
       </div>
       <Button
         onClick={handleSubmit}
         variant="primary"
         disabled={
-          !name ||
+          !familyName ||
+          !firstName ||
           !nickname ||
           nicknameStatus !== "available" ||
           !bank ||
           !accountNumber ||
-          !accountHolder ||
           isPending
         }
         className="fixed bottom-0 left-0 right-0 z-20"

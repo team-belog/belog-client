@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import ImageCropModal from "@/components/ui/ImageCropModal";
 import Profile from "@/components/ui/Profile";
 
 interface ProfileImagePickerProps {
@@ -12,6 +13,7 @@ interface ProfileImagePickerProps {
 export default function ProfileImagePicker({ onChange }: ProfileImagePickerProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string>();
+  const [originalUrl, setOriginalUrl] = useState<string | null>(null);
 
   // objectURL 메모리 정리
   useEffect(() => {
@@ -27,11 +29,20 @@ export default function ProfileImagePicker({ onChange }: ProfileImagePickerProps
     e.target.value = ""; // 같은 파일 다시 선택해도 onChange 발생하도록
     if (!file) return;
 
-    setPreviewUrl((prev) => {
-      if (prev) URL.revokeObjectURL(prev);
-      return URL.createObjectURL(file);
-    });
+    // 바로 반영하지 않고 크롭 모달에서 원본을 먼저 보여줌
+    setOriginalUrl(URL.createObjectURL(file));
+  };
+
+  const closeCropModal = () => {
+    if (originalUrl) URL.revokeObjectURL(originalUrl);
+    setOriginalUrl(null);
+  };
+
+  const handleCropComplete = (file: File) => {
+    // 이전 previewUrl은 위 useEffect cleanup에서 정리됨
+    setPreviewUrl(URL.createObjectURL(file));
     onChange?.(file);
+    closeCropModal();
   };
 
   return (
@@ -58,6 +69,13 @@ export default function ProfileImagePicker({ onChange }: ProfileImagePickerProps
         onChange={handleFile}
         className="hidden"
       />
+      {originalUrl && (
+        <ImageCropModal
+          imageSrc={originalUrl}
+          onClose={closeCropModal}
+          onComplete={handleCropComplete}
+        />
+      )}
     </div>
   );
 }
