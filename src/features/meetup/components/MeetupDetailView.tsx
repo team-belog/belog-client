@@ -143,8 +143,7 @@ export default function MeetupDetailView({
   };
 
   return (
-    // 레이아웃이 하단 네비바 여백(96px)을 주므로 만남 종료 버튼 영역만큼만 더 띄움
-    <main className={`pt-[60px] ${meeting.canEditMeeting ? "pb-[97px]" : ""}`}>
+    <main className={`pt-[60px] ${meeting.canEditMeeting ? "pb-[114px]" : ""}`}>
       <BackHeader
         title="만남 상세"
         right={
@@ -229,12 +228,11 @@ export default function MeetupDetailView({
       )}
 
       {meeting.canEditMeeting && (
-        // 하단 네비바 위에 고정
         <Button
           variant="primary"
           disabled={!canEndMeeting}
           onClick={() => setIsEndModalOpen(true)}
-          className="fixed bottom-[79px] left-0 right-0"
+          className="fixed bottom-0 left-0 right-0"
         >
           만남 종료
         </Button>
