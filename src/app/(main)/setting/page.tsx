@@ -102,6 +102,7 @@ export default function SettingPage() {
         </p>
       )}
       <SettingRow label="계좌 관리" account={true} />
+      <SettingRow label="홈 화면 추가" />
       <SettingRow label="로그아웃" onClick={() => setModal("logout")} />
       <SettingRow label="회원 탈퇴" onClick={() => setModal("withdraw")} />
 
