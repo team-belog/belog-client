@@ -29,7 +29,7 @@ export default function NotificationRow({ notification, onClick }: Props) {
     <button
       type="button"
       onClick={() => onClick(notification)}
-      className="flex w-full items-center gap-[10px] px-4 py-[10px] text-left"
+      className="flex w-full items-center gap-[10px] px-4 text-left"
     >
       <div className="relative size-[50px] shrink-0">
         <Image src={icon} alt="" fill className="object-contain" />

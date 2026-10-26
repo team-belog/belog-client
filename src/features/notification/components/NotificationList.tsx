@@ -57,7 +57,6 @@ export default function NotificationList() {
     );
   }
 
-  // 읽은 알림을 숨기므로 뒤 페이지에 안 읽은 알림이 남아 있을 수 있음 → 다 불러온 뒤에만 빈 화면
   if (data.length === 0 && !hasNextPage) {
     return (
       <p className="pretendard-m-15 pt-[25px] text-center text-sub-gray-2">
@@ -66,7 +65,6 @@ export default function NotificationList() {
     );
   }
 
-  // 읽음 처리 응답을 기다리지 않고 바로 이동
   const handleClick = (notification: NotificationItem) => {
     if (!notification.read) {
       readNotification.mutate(notification.notificationId);
@@ -75,7 +73,7 @@ export default function NotificationList() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-5 pt-5">
       {data.map((notification) => (
         <NotificationRow
           key={notification.notificationId}
