@@ -79,12 +79,7 @@ export default function MeetupDetailView({
   const { logStatuses } = meeting;
 
   // 일정 조율 중인 만남은 일정이 없고, 종료된 만남은 일정을 바꿀 수 없음
-  const isEnded =
-    meeting.endDate !== null &&
-    differenceInCalendarDays(parseISO(meeting.endDate), new Date()) < 0;
-  const canEditDates = meeting.meetingStatus === "CONFIRMED" && !isEnded;
-  // 만남 종료는 만남장만 가능하고, Post-log까지 완료된 뒤에만 활성화
-  const canEndMeeting = logStatuses.postLog === "COMPLETED";
+  const canEditDates = meeting.meetingStatus === "CONFIRMED" && !meeting.isEnded;
 
   const summary = {
     title: name,
@@ -230,7 +225,7 @@ export default function MeetupDetailView({
       {meeting.canEditMeeting && (
         <Button
           variant="primary"
-          disabled={!canEndMeeting}
+          disabled={!meeting.canEndMeeting}
           onClick={() => setIsEndModalOpen(true)}
           className="fixed bottom-0 left-0 right-0"
         >

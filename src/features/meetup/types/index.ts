@@ -21,6 +21,7 @@ export type MeetingScheduleType = "FIXED" | "POLL";
 
 export type MeetingStatus = "SCHEDULING" | "CONFIRMED";
 
+// COMPLETED는 서버에 아직 없음. 백엔드가 완료 상태를 추가하면 바로 완료 배지가 표시되도록 미리 둠
 export type LogStatus = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
 
 export type MeetingDetailData = {
@@ -35,7 +36,11 @@ export type MeetingDetailData = {
   endDate: string | null;
   // 미등록 시 null
   location: string | null;
+  // 만남장이 만남 종료를 누른 경우 true (일정 종료일과 무관)
+  isEnded: boolean;
   canEditMeeting: boolean;
+  // 만남장 + 미종료 + 시작일 이후 + 각 로그 1개 이상일 때 true
+  canEndMeeting: boolean;
   logStatuses: {
     preLog: LogStatus;
     billLog: LogStatus;
