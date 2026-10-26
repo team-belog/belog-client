@@ -6,6 +6,7 @@ import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
 import ChevronIcon from "@/components/ui/ChevronIcon";
+import Modal from "@/components/ui/Modal";
 import type {
   DatePollMember,
   DatePollResultsData,
@@ -73,7 +74,10 @@ export default function MeetupCoordinationView({
     (typeof candidateDateResults)[number] | undefined
   >((top, item) => (!top || item.rank < top.rank ? item : top), undefined);
 
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+
   const handleConfirm = () => {
+    setIsConfirmModalOpen(false);
     if (topCandidate) onConfirm(topCandidate.candidateDateRangeId);
   };
 
@@ -184,11 +188,19 @@ export default function MeetupCoordinationView({
       <Button
         variant="primary"
         disabled={!isHost || isConfirming || !topCandidate}
-        onClick={handleConfirm}
+        onClick={() => setIsConfirmModalOpen(true)}
         className="fixed bottom-0 left-0 right-0"
       >
         지금 확정하기
       </Button>
+
+      <Modal
+        isOpen={isConfirmModalOpen}
+        message={"지금 확정 후\n일정 변경은 만남 상세에서 가능합니다"}
+        confirmLabel="확인"
+        onConfirm={handleConfirm}
+        onCancel={() => setIsConfirmModalOpen(false)}
+      />
     </main>
   );
 }

@@ -2,12 +2,12 @@
 
 import InputField from "@/components/ui/InputField";
 
-interface NameFieldProps {
+interface FirstNameFieldProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export default function NameField({ value, onChange }: NameFieldProps) {
+export default function FirstNameField({ value, onChange }: FirstNameFieldProps) {
   return (
     <InputField
       label="이름"
@@ -15,6 +15,7 @@ export default function NameField({ value, onChange }: NameFieldProps) {
       value={value}
       onChange={(value) => onChange(value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣]/g, ""))}
       placeholder="본명을 입력해주세요"
+      required={true}
     />
   );
 }

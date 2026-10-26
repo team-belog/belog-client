@@ -20,8 +20,6 @@ export function useNotifications() {
     initialPageParam: undefined,
     getNextPageParam: (last) =>
       last.hasNext ? (last.nextCursor ?? undefined) : undefined,
-    // 읽은 알림은 화면에서 숨김 (서버는 읽음 여부와 상관없이 내려줌)
-    select: (data) =>
-      data.pages.flatMap((page) => page.items).filter((item) => !item.read),
+    select: (data) => data.pages.flatMap((page) => page.items),
   });
 }

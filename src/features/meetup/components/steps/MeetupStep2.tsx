@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 
 import Button from "@/components/ui/Button";
@@ -44,11 +45,11 @@ export default function MeetupStep2({
           어떤 만남을 만들까요?
         </h1>
         <p className="pretendard-m-14 text-sub-gray-2">
-          그룹 멤버로 초대된 사람들만 만남 멤버로 선택할 수 있어요
+          그룹 멤버로 초대된 사용자만 만남 멤버로 선택할 수 있어요
         </p>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-[10px]">
         <p className="pretendard-sb-16 text-main-black">멤버 선택</p>
         <SearchBar
           value={searchQuery}
@@ -57,16 +58,28 @@ export default function MeetupStep2({
         />
       </div>
 
-      <div className="flex flex-col">
-        {filteredMembers.map((member) => (
-          <MeetupMemberRow
-            key={member.groupMemberId}
-            member={member}
-            selected={selectedIds.includes(member.groupMemberId)}
-            onToggle={() => toggleMember(member.groupMemberId)}
-          />
-        ))}
-      </div>
+      {filteredMembers.length > 0 ? (
+        <div className="flex flex-col">
+          {filteredMembers.map((member) => (
+            <MeetupMemberRow
+              key={member.groupMemberId}
+              member={member}
+              selected={selectedIds.includes(member.groupMemberId)}
+              onToggle={() => toggleMember(member.groupMemberId)}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="mt-12 flex flex-col items-center">
+          <Image src="/icons/empty-state.svg" alt="" width={134} height={134} />
+          <p className="pretendard-sb-18 text-main-black">사용자가 존재하지 않아요</p>
+          <p className="pretendard-m-15 mt-[15px] text-center text-sub-gray-2">
+            초대하고 싶은 사용자를
+            <br />
+            그룹 멤버로 먼저 추가해 주세요
+          </p>
+        </div>
+      )}
 
       <Button
         variant="primary"

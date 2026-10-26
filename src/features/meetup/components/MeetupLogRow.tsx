@@ -5,6 +5,7 @@ interface MeetupLogRowProps {
   iconSrc: string;
   title: string;
   status: string;
+  isCompleted?: boolean;
   description: string;
   onClick?: () => void;
 }
@@ -13,6 +14,7 @@ export default function MeetupLogRow({
   iconSrc,
   title,
   status,
+  isCompleted = false,
   description,
   onClick,
 }: MeetupLogRowProps) {
@@ -29,7 +31,13 @@ export default function MeetupLogRow({
         <div className="flex flex-col items-start gap-[15px]">
           <div className="flex items-center gap-2">
             <p className="pretendard-sb-18 text-main-black">{title}</p>
-            <span className="pretendard-m-12 rounded-[8px] border border-sub-gray-3 bg-sub-white px-2 py-1 text-sub-gray-2">
+            <span
+              className={`pretendard-m-12 rounded-[8px] border px-2 py-1 ${
+                isCompleted
+                  ? "border-main-mint bg-main-mint text-main-white"
+                  : "border-sub-gray-3 bg-sub-white text-sub-gray-2"
+              }`}
+            >
               {status}
             </span>
           </div>

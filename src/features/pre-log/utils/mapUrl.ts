@@ -1,33 +1,15 @@
-// 서버가 위치를 추출할 수 있는 지도 링크만 허용
-// - 카카오맵: https://place.map.kakao.com/{장소ID}
-// - 구글지도: maps.app.goo.gl, goo.gl/maps, www.google.com/maps, maps.google.com
-const KAKAO_PLACE_PATH = /^\/\d+\/?$/;
+// 지도 종류와 상관없이 http(s) 링크면 허용
+// 공유하기로 복사하면 "[네이버지도] 장소명 주소 https://..."처럼 앞에 문구가 붙으므로 http(s)://로 시작해야 함
+const HTTP_URL_PREFIX = /^https?:\/\//;
 
-export function isSupportedMapUrl(value: string): boolean {
-  let url: URL;
+export function isHttpUrl(value: string): boolean {
+  const trimmed = value.trim();
+  if (!HTTP_URL_PREFIX.test(trimmed)) return false;
+
   try {
-    url = new URL(value.trim());
+    new URL(trimmed);
+    return true;
   } catch {
     return false;
-  }
-
-  if (url.protocol !== "https:") return false;
-
-  const { hostname, pathname } = url;
-
-  switch (hostname) {
-    case "place.map.kakao.com":
-      return KAKAO_PLACE_PATH.test(pathname);
-    case "maps.app.goo.gl":
-      return pathname.length > 1;
-    case "goo.gl":
-      return pathname.startsWith("/maps/");
-    case "www.google.com":
-    case "google.com":
-      return pathname === "/maps" || pathname.startsWith("/maps/");
-    case "maps.google.com":
-      return true;
-    default:
-      return false;
   }
 }

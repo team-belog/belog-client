@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 import MeetupDetailView from "@/features/meetup/components/MeetupDetailView";
 import { useDeleteMeeting } from "@/features/meetup/hooks/useDeleteMeeting";
+import { useEndMeeting } from "@/features/meetup/hooks/useEndMeeting";
 import { useMeetingDetail } from "@/features/meetup/hooks/useMeetingDetail";
 import { useUpdateMeeting } from "@/features/meetup/hooks/useUpdateMeeting";
 
@@ -16,6 +17,7 @@ export default function MeetupDetailContainer({
     useMeetingDetail(meetingId);
   const updateMeeting = useUpdateMeeting(meetingId);
   const deleteMeeting = useDeleteMeeting();
+  const endMeeting = useEndMeeting();
   const router = useRouter();
 
   if (isPending) {
@@ -55,6 +57,14 @@ export default function MeetupDetailContainer({
         })
       }
       onCancelDelete={deleteMeeting.reset}
+      isEnding={endMeeting.isPending}
+      endErrorMessage={endMeeting.error?.message}
+      onEnd={() =>
+        endMeeting.mutate(meetingId, {
+          onSuccess: () => router.replace(`/group/${data.groupId}`),
+        })
+      }
+      onCancelEnd={endMeeting.reset}
     />
   );
 }

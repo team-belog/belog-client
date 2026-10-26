@@ -74,6 +74,10 @@ export async function deleteMeeting(meetingId: number) {
   await api.delete(ENDPOINTS.meeting.delete(meetingId));
 }
 
+export async function endMeeting(meetingId: number) {
+  await api.post(ENDPOINTS.meeting.end(meetingId));
+}
+
 export async function getMeetingMembers(meetingId: number) {
   const { data } = await api.get<ApiResponse<MeetingMembersData>>(
     ENDPOINTS.meeting.members(meetingId),
