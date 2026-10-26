@@ -39,7 +39,7 @@ export default function MeetingInfoTab() {
       ? meetingInfo.startDate
       : `${meetingInfo.startDate} - ${meetingInfo.endDate}`
     : "";
-  const totalAmount = meetingInfo ? `${(meetingInfo.settlement?.totalAmount ?? 0).toLocaleString()}원` : "";
+  const totalAmount = meetingInfo?.settlement?.totalSpentAmounts?.map((a) => `${a.amount.toLocaleString()} ${a.currency}`).join(" / ") ?? "-";
 
   return (
     <>
@@ -47,7 +47,7 @@ export default function MeetingInfoTab() {
         <ReadOnlyFieldGroup
           title={meetingInfo?.meetingName ?? ""}
           fields={[
-            { label: "완료 인원", value: `${meetingInfo?.settlement.completedParticipantCount ?? 0}명` },
+            { label: "완료 인원", value: `${meetingInfo?.settlement?.completedParticipantCount ?? 0}명` },
             { label: "총 정산 금액", value: totalAmount },
           ]}
         />
