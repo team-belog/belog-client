@@ -28,7 +28,7 @@ export default function PreLogPlanList({
   onLikePlan,
   emptyMessage,
   emptyClassName,
-  className = "flex flex-col",
+  className = "flex flex-col gap-[30px]",
 }: PreLogPlanListProps) {
   const {
     data,
