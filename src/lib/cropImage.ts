@@ -9,22 +9,31 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
+export interface CropOutput {
+  width: number;
+  height: number;
+  fileName: string;
+}
+
+const DEFAULT_OUTPUT: CropOutput = { width: 512, height: 512, fileName: "profile.jpg" };
+
 export async function getCroppedImage(
   src: string,
   area: Area,
-  outputSize = 512,
+  output: CropOutput = DEFAULT_OUTPUT,
 ): Promise<File> {
   const image = await loadImage(src);
+  const { width, height, fileName } = output;
 
   const canvas = document.createElement("canvas");
-  canvas.width = outputSize;
-  canvas.height = outputSize;
+  canvas.width = width;
+  canvas.height = height;
 
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("canvas를 사용할 수 없습니다.");
 
   ctx.fillStyle = "#fff";
-  ctx.fillRect(0, 0, outputSize, outputSize);
+  ctx.fillRect(0, 0, width, height);
 
   ctx.drawImage(
     image,
@@ -34,8 +43,8 @@ export async function getCroppedImage(
     area.height,
     0,
     0,
-    outputSize,
-    outputSize,
+    width,
+    height,
   );
 
   const blob = await new Promise<Blob | null>((resolve) =>
@@ -43,5 +52,5 @@ export async function getCroppedImage(
   );
   if (!blob) throw new Error("이미지 변환에 실패했습니다.");
 
-  return new File([blob], "profile.jpg", { type: "image/jpeg" });
+  return new File([blob], fileName, { type: "image/jpeg" });
 }

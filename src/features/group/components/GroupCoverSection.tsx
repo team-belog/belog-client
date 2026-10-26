@@ -3,7 +3,12 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 
+import ImageCropModal from "@/components/ui/ImageCropModal";
 import ImageUploadIcon from "@/components/ui/ImageUploadIcon";
+import {
+  GROUP_COVER_ASPECT,
+  GROUP_COVER_OUTPUT,
+} from "@/features/group/constants/coverImage";
 
 interface GroupCoverSectionProps {
   name: string;
@@ -24,6 +29,7 @@ export default function GroupCoverSection({
 }: GroupCoverSectionProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [copied, setCopied] = useState(false);
+  const [originalUrl, setOriginalUrl] = useState<string | null>(null);
 
   const handleCopy = async () => {
     try {
@@ -38,7 +44,20 @@ export default function GroupCoverSection({
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = ""; // 같은 파일 다시 선택해도 onChange 발생하도록
-    if (file) onChangeCoverImage?.(file);
+    if (!file) return;
+
+    // 바로 업로드하지 않고 크롭 모달에서 배너 비율로 먼저 자름
+    setOriginalUrl(URL.createObjectURL(file));
+  };
+
+  const closeCropModal = () => {
+    if (originalUrl) URL.revokeObjectURL(originalUrl);
+    setOriginalUrl(null);
+  };
+
+  const handleCropComplete = (file: File) => {
+    onChangeCoverImage?.(file);
+    closeCropModal();
   };
 
   return (
@@ -71,6 +90,17 @@ export default function GroupCoverSection({
             onChange={handleFile}
             className="hidden"
           />
+          {originalUrl && (
+            <ImageCropModal
+              imageSrc={originalUrl}
+              onClose={closeCropModal}
+              onComplete={handleCropComplete}
+              title="커버 이미지"
+              aspect={GROUP_COVER_ASPECT}
+              cropShape="rect"
+              output={GROUP_COVER_OUTPUT}
+            />
+          )}
         </>
       )}
 
