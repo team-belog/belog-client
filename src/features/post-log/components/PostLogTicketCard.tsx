@@ -82,9 +82,7 @@ export default function PostLogTicketCard({ ticket }: PostLogTicketCardProps) {
         </div>
 
         <div className="mt-[5px] relative w-full h-[169px] overflow-hidden bg-main-cool-gray shrink-0">
-          {ticket.coverPhotoUrl && (
-            <Image src={ticket.coverPhotoUrl} alt="" fill className="object-cover" />
-          )}
+          <Image src={ticket.coverPhotoUrl ?? "/icons/post-log/ticket-cover.jpg"} alt="" fill className="object-cover" />
         </div>
 
         <div className="mt-5 flex flex-col px-4">
@@ -113,11 +111,11 @@ export default function PostLogTicketCard({ ticket }: PostLogTicketCardProps) {
           )}
         </div>
 
-        {ticket.members.length > 0 && (
+        {(ticket.members?.length ?? 0) > 0 && (
           <div className="mt-[30px] flex flex-col gap-[10px] px-4">
             <span className="text-[12px] font-medium text-main-black">Member</span>
             <div className="flex flex-wrap gap-[5px]">
-              {ticket.members.map((m) => (
+              {ticket.members?.map((m) => (
                 <span
                   key={m.groupMemberId}
                   className="pt-sans-narrow-regular whitespace-nowrap rounded-[5px] bg-[#F7F8F9] px-2 py-[5px] text-[12px] text-sub-gray-2"

@@ -22,7 +22,7 @@ export type PostLogParticipant = {
 
 export type PostLogSettlement = {
     completedParticipantCount: number;
-    totalAmount: number;
+    totalSpentAmounts: { amount: number; currency: string }[];
 };
 
 export type PostLogMeetingInfo = {
