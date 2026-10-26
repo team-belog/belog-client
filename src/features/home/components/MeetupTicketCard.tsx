@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import BelogIcon from "@/components/ui/BelogIcon";
 import TicketShape from "@/components/ui/TicketShape";
@@ -16,7 +17,9 @@ export default function MeetupTicketCard({
   schedule,
   onClick,
 }: MeetupTicketCardProps) {
+  const router = useRouter();
   const {
+    meetingId,
     title,
     description,
     photoUrl,
@@ -25,10 +28,18 @@ export default function MeetupTicketCard({
     memberHandles,
   } = schedule;
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick(schedule);
+      return;
+    }
+    if (meetingId) router.push(`/meetup/${meetingId}`);
+  };
+
   return (
     <button
       type="button"
-      onClick={() => onClick?.(schedule)}
+      onClick={handleClick}
       className="w-full text-left"
     >
       <TicketShape orientation="vertical" className="w-full">
