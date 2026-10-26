@@ -219,6 +219,7 @@ export default function PreLogView({
             onDeletePlan={setDeleteTarget}
             onTogglePlanPin={handleTogglePin}
             onLikePlan={handleToggleLike}
+            className="flex flex-col gap-[30px] pt-[37px]"
           />
         </>
       ) : (

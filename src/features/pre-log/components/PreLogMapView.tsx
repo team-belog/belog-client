@@ -135,7 +135,7 @@ export default function PreLogMapView({
           onLikePlan={onLikePlan}
           emptyMessage="아직 등록된 목록이 없어요"
           emptyClassName="py-[40px]"
-          className="scrollbar-none flex flex-1 flex-col overflow-y-auto overscroll-contain"
+          className="scrollbar-none flex flex-1 flex-col gap-[30px] overflow-y-auto overscroll-contain"
         />
       </div>
     </div>
