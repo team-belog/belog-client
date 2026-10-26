@@ -39,7 +39,7 @@ export default function MeetingInfoTab() {
       ? meetingInfo.startDate
       : `${meetingInfo.startDate} - ${meetingInfo.endDate}`
     : "";
-  const totalAmount = meetingInfo ? `${meetingInfo.settlement.totalAmount.toLocaleString()}원` : "";
+  const totalAmount = meetingInfo ? `${(meetingInfo.settlement?.totalAmount ?? 0).toLocaleString()}원` : "";
 
   return (
     <>
