@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { clearTutorialPending, isTutorialPending } from "@/features/onboarding/utils/tutorialStorage";
 
-const LAST_STEP = 3;
+const LAST_STEP = 4;
 
 type TutorialStatus = "checking" | "active" | "done";
 

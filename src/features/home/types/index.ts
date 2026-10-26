@@ -4,6 +4,7 @@ export type ScheduleStatus = "before" | "ongoing" | "done";
 
 export type Schedule = {
   id: number;
+  meetingId?: number;
   title: string;
   startDate: string; // "YYYY-MM-DD"
   endDate: string; // "YYYY-MM-DD"
@@ -71,13 +72,13 @@ export type CompletedTicketParticipant = {
 
 export type CompletedTicket = {
   ticketId: number;
-  name: string;
+  meetingId: number;
+  meetingName: string;
   memory: string;
   coverPhotoUrl: string | null;
   startDate: string; // "YYYY-MM-DD"
   endDate: string; // "YYYY-MM-DD"
   location: string;
-  participantCount: number;
   participants: CompletedTicketParticipant[];
 };
 

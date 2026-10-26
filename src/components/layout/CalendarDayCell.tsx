@@ -10,7 +10,7 @@ interface CalendarDayCellProps {
 
 function BubbleDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "onSelect">) {
   const hasCircle =
-    day.isSelected ||
+    day.isToday ||
     day.rangePosition === "single" ||
     day.rangePosition === "start" ||
     day.rangePosition === "end";
@@ -24,7 +24,7 @@ function BubbleDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "on
         ? "left-0 right-1/2"
         : "left-0 right-0";
 
-  const circleColorClass = day.isSelected ? "bg-main-mint" : "bg-main-black";
+  const circleColorClass = day.isToday ? "bg-main-mint" : "bg-main-black";
 
   const textColorClass = hasCircle
     ? "pretendard-sb-15 text-main-white"

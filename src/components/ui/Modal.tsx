@@ -30,7 +30,7 @@ export default function Modal({
         className="mx-4 w-[310px] rounded-[12px] bg-white px-5 pb-5 pt-[61px]"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="pretendard-m-15 mb-[30px] text-center text-main-black">{message}</p>
+        <p className="pretendard-m-15 mb-[30px] whitespace-pre-line text-center text-main-black">{message}</p>
         <div className="flex gap-[10px]">
           <button
             type="button"

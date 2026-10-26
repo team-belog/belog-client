@@ -26,7 +26,8 @@ export function formatMemberLabel(leaderName: string, memberCount: number): stri
 export function toTicketSchedule(ticket: CompletedTicket): Schedule {
   return {
     id: ticket.ticketId,
-    title: ticket.name,
+    meetingId: ticket.meetingId,
+    title: ticket.meetingName,
     description: ticket.memory,
     photoUrl: ticket.coverPhotoUrl ?? undefined,
     startDate: ticket.startDate,
@@ -35,6 +36,6 @@ export function toTicketSchedule(ticket: CompletedTicket): Schedule {
     memberHandles: ticket.participants.map((participant) => participant.nickname),
     status: "done",
     leaderName: ticket.participants[0]?.nickname ?? "",
-    memberCount: ticket.participantCount,
+    memberCount: ticket.participants.length,
   };
 }
