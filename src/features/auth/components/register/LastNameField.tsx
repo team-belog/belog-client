@@ -2,12 +2,12 @@
 
 import InputField from "@/components/ui/InputField";
 
-interface FamilyNameFieldProps {
+interface LastNameFieldProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export default function FamilyNameField({ value, onChange }: FamilyNameFieldProps) {
+export default function LastNameField({ value, onChange }: LastNameFieldProps) {
   return (
     <InputField
       label="성"

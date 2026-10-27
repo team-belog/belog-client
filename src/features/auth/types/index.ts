@@ -31,7 +31,8 @@ export type BankResponse = {
 
 export type OnboardingRequest = {
   nickname: string;
-  name: string;
+  lastName: string;
+  firstName: string;
   bankCode: BankCode;
   accountNumber: string;
   profileImageObjectKey?: string;
