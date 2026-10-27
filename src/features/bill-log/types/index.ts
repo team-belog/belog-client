@@ -62,16 +62,17 @@ export type BillsResponse = {
 }
 
 export type Bills = {
-dayNumber: number
-paymentDate: string
-dailyTotalAmount: number
-bills: Bill[]
+  dayNumber: number
+  paymentDate: string
+  dailyTotalAmounts: SpentAmount[]
+  bills: Bill[]
 }
 
 export type Bill = {
   billId: number
   title: string
   payerNickname: string
+  currency: string
   totalAmount: number
 }
 

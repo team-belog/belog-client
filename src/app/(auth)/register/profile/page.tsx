@@ -8,7 +8,7 @@ import Divider from "@/components/layout/Divider";
 import NicknameField, {
   type NicknameStatus,
 } from "@/features/auth/components/register/NicknameField";
-import FamilyNameField from "@/features/auth/components/register/FamilyNameField";
+import LastNameField from "@/features/auth/components/register/LastNameField";
 import FirstNameField from "@/features/auth/components/register/FirstNameField";
 import ProfileImagePicker from "@/features/auth/components/register/ProfileImagePicker";
 import BankSelectField from "@/features/auth/components/register/BankSelectField";
@@ -26,7 +26,7 @@ export default function RegisterProfilePage() {
   const { mutate: getUploadUrl, isPending: isUploadPending } =
     useGetProfileImageUploadUrl();
 
-  const [familyName, setFamilyName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [nickname, setNickname] = useState("");
   const [nicknameStatus, setNicknameStatus] = useState<NicknameStatus>("idle");
@@ -39,7 +39,8 @@ export default function RegisterProfilePage() {
     completeOnboarding(
       {
         nickname,
-        name: `${familyName}${firstName}`,
+        lastName,
+        firstName,
         bankCode: bank as BankCode,
         accountNumber,
         profileImageObjectKey,
@@ -84,7 +85,7 @@ export default function RegisterProfilePage() {
         <ProfileImagePicker onChange={setProfileImage} />
       </div>
       <div className="mt-4">
-        <FamilyNameField value={familyName} onChange={setFamilyName} />
+        <LastNameField value={lastName} onChange={setLastName} />
       </div>
       <div className="mt-[14px]">
         <FirstNameField value={firstName} onChange={setFirstName} />
@@ -114,7 +115,7 @@ export default function RegisterProfilePage() {
         onClick={handleSubmit}
         variant="primary"
         disabled={
-          !familyName ||
+          !lastName ||
           !firstName ||
           !nickname ||
           nicknameStatus !== "available" ||

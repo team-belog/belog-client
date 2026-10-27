@@ -5,5 +5,6 @@ export function useGetPostLogCalendar(yearMonth: string) {
     return useQuery({
         queryKey: ["postLogCalendar", yearMonth],
         queryFn: () => getPostLogCalendar(yearMonth),
+        staleTime: 0,
     });
 }
