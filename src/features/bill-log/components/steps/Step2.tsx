@@ -104,7 +104,7 @@ export default function Step2({ onNext }: Step2Props) {
               }}
               right={{
                 placeholder: "4,000",
-                value: it.price,
+                value: it.price ? Number(it.price).toLocaleString() : "",
                 onChange: (value) => setItems((prev) => prev.map((item,i) => i === index ? {...item, price: value.replace(/\D/g, "")} : item))
               }}
             />

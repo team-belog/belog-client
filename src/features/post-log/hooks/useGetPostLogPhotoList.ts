@@ -8,5 +8,6 @@ export function useGetPostLogPhotoList(meetingId: number) {
         getNextPageParam: (lastPage) => lastPage.hasNext ? lastPage.nextCursor ?? undefined : undefined,
         initialPageParam: undefined as string | undefined,
         enabled: !!meetingId,
+        staleTime: 0,
     });
 }

@@ -3,8 +3,6 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useQueryClient, InfiniteData } from "@tanstack/react-query";
-
 
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
@@ -14,31 +12,18 @@ import { useDeletePhoto } from "@/features/post-log/hooks/useDeletePhoto";
 import PostLogLikeButton from "@/features/post-log/components/PostLogLikeButton";
 import { useLikePhoto } from "@/features/post-log/hooks/useLikePhoto";
 import { useUnlikePhoto } from "@/features/post-log/hooks/useUnLikePhoto";
-import { PostLogPhotoListResponse } from "@/features/post-log/types";
 
 export default function PostLogPhotoPage() {
   const { id } = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const photoId = Number(id);
   const photoUrl = searchParams.get("photoUrl");
   const meetingId = Number(searchParams.get("meetingId"));
 
-  const cachedData = queryClient.getQueryData<InfiniteData<PostLogPhotoListResponse>>(
-    ["postLogPhotoList", meetingId]
-  );
-  const cachedPhoto = cachedData?.pages
-    .flatMap((page) => page.days.flatMap((day) => day.photos))
-    .find((p) => p.photoId === photoId);
-
-  const [likedByMe, setLikedByMe] = useState(
-    cachedPhoto?.likedByMe ?? searchParams.get("likedByMe") === "true"
-  );
-  const [likeCount, setLikeCount] = useState(
-    cachedPhoto?.likeCount ?? Number(searchParams.get("likeCount") ?? 0)
-  );
+  const [likedByMe, setLikedByMe] = useState(searchParams.get("likedByMe") === "true");
+  const [likeCount, setLikeCount] = useState(Number(searchParams.get("likeCount") ?? 0));
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { mutate: deletePhoto, isPending: isDeleting } = useDeletePhoto(meetingId);
@@ -48,11 +33,11 @@ export default function PostLogPhotoPage() {
   const handleLike = () => {
     if (likedByMe) {
       unlike(photoId, {
-        onSuccess: () => { setLikedByMe(false); setLikeCount((c) => Math.max(0, c - 1)); },
+        onSuccess: (data) => { setLikedByMe(data.likedByMe); setLikeCount(data.likeCount); },
       });
     } else {
       like(photoId, {
-        onSuccess: () => { setLikedByMe(true); setLikeCount((c) => c + 1); },
+        onSuccess: (data) => { setLikedByMe(data.likedByMe); setLikeCount(data.likeCount); },
       });
     }
   };
@@ -67,13 +52,11 @@ export default function PostLogPhotoPage() {
       const fileName = `photo.${ext}`;
       const file = new File([blob], fileName, { type: blob.type });
 
-      // iOS: Web Share API로 공유 시트 열기 → "사진 저장"으로 갤러리에 저장
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file] });
         return;
       }
 
-      // 데스크톱 fallback
       const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = objectUrl;

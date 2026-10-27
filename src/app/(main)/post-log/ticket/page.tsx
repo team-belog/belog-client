@@ -30,13 +30,28 @@ function TicketContent() {
   const handleSave = async () => {
     const el = document.getElementById("ticket");
     if (!el) return;
-    const dataUrl = await domtoimage.toPng(el, { scale: 2 });
-    const link = document.createElement("a");
-    link.download = "ticket.png";
-    link.href = dataUrl;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      const dataUrl = await domtoimage.toPng(el, { scale: 2 });
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      const file = new File([blob], "ticket.png", { type: "image/png" });
+
+      // iOS PWA: Web Share API로 공유 시트 열기 → "사진 저장"으로 갤러리에 저장
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file] });
+        return;
+      }
+
+      // 데스크톱 fallback
+      const link = document.createElement("a");
+      link.download = "ticket.png";
+      link.href = dataUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch {
+      // 사용자가 공유 취소하거나 오류 발생 시 무시
+    }
   };
 
   if (isLoading) return <div className="flex items-center justify-center h-dvh">로딩 중...</div>;
