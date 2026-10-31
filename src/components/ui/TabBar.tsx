@@ -15,7 +15,7 @@ export default function TabBar({ tabs, activeIndex, onChange }: TabBarProps) {
           <button
             key={tab}
             onClick={() => onChange(index)}
-            className={`pretendard-sb-18 flex flex-1 items-center justify-center py-[18px] ${
+            className={`pretendard-sb-16 flex flex-1 items-center justify-center py-[18px] ${
               isActive
                 ? "border-b-2 border-main-black text-main-black"
                 : "border-b border-sub-gray-3 text-sub-gray-2"
