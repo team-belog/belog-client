@@ -31,6 +31,15 @@ function TicketContent() {
     const el = document.getElementById("ticket");
     if (!el) return;
     try {
+      // 이미지가 모두 로드된 후 캡처
+      const imgs = Array.from(el.querySelectorAll("img"));
+      await Promise.all(
+        imgs.map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise<void>((res) => { img.onload = () => res(); img.onerror = () => res(); })
+        )
+      );
       const dataUrl = await domtoimage.toPng(el, { scale: 2 });
       const res = await fetch(dataUrl);
       const blob = await res.blob();
