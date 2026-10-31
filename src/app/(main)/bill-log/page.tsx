@@ -17,7 +17,7 @@ import PaymentHistoryTab from "@/features/bill-log/components/tab/PaymentHistory
 import { useGetBillLogSummary } from "@/features/bill-log/hooks/useGetBillLogSummary";
 import Toast from "@/components/ui/Toast";
 import { useToast } from "@/hooks/useToast";
-import { track } from "@/lib/amplitude";
+import { track, setUserProperty } from "@/lib/amplitude";
 
 function BillLogContent() {
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -31,11 +31,12 @@ function BillLogContent() {
   const { toast, showToast, hideToast } = useToast();
 
   useEffect(() => {
-    track("Billlog Viewed", { meetingId });
+    track("Billlog Viewed", { meeting_id: String(meetingId) });
+    setUserProperty({ has_used_billlog: true });
   }, [meetingId]);
 
   useEffect(() => {
-    if (activeTab === 0) track("Settlement Status Viewed", { meetingId });
+    if (activeTab === 0) track("Settlement Status Viewed", { meeting_id: String(meetingId) });
   }, [activeTab, meetingId]);
   const totalParticipantCount = (data?.completedParticipantCount ?? 0) + (data?.pendingParticipantCount ?? 0)
 

@@ -8,7 +8,7 @@ import Divider from "@/components/layout/Divider";
 import TabBar from "@/components/ui/TabBar";
 import MeetingPhotoTab from "@/features/post-log/components/tab/MeetingPhotoTab";
 import MeetingInfoTab from "@/features/post-log/components/tab/MeetingInfoTab";
-import { track } from "@/lib/amplitude";
+import { track, setUserProperty } from "@/lib/amplitude";
 
 function PostLogContent() {
   const [activeTab, setActiveTab] = useState(0);
@@ -16,7 +16,10 @@ function PostLogContent() {
   const meetingId = searchParams.get("meetingId");
 
   useEffect(() => {
-    track("Postlog Viewed", { meetingId: meetingId ? Number(meetingId) : undefined });
+    if (meetingId) {
+      track("Postlog Viewed", { meeting_id: meetingId });
+      setUserProperty({ has_used_postlog: true });
+    }
   }, [meetingId]);
 
   return (

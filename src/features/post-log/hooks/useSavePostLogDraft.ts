@@ -7,7 +7,7 @@ export function useSavePostLogDraft() {
         mutationFn: ({ meetingId, memory }: { meetingId: number; memory: string }) =>
             savePostLogDraft(meetingId, memory),
         onSuccess: (_, { meetingId }) => {
-            track("Postlog Draft Saved", { meetingId });
+            track("Postlog Draft Saved", { meeting_id: String(meetingId) });
         },
     });
 }

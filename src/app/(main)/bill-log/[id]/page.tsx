@@ -16,7 +16,7 @@ export default function BillDetailPage() {
   const { data, isLoading } = useGetBillDetail(billId);
 
   useEffect(() => {
-    if (data) track("Receipt Viewed", { billId });
+    if (data) track("Receipt Viewed", { bill_id: String(billId) });
   }, [data, billId]);
 
   if (isLoading) return <div className="flex min-h-screen items-center justify-center">로딩 중...</div>;

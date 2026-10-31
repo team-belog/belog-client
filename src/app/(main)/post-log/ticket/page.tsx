@@ -20,7 +20,7 @@ function TicketContent() {
 
   useEffect(() => {
     if (ticket) {
-      track("Postlog Ticket Viewed", { ticketId: ticket.ticketId });
+      track("Postlog Ticket Viewed", { ticket_id: String(ticket.ticketId) });
     }
   }, [ticket]);
 

@@ -6,7 +6,7 @@ export function useCompleteSettlement() {
     return useMutation({
         mutationFn: (settlementRequestId: number) => completeSettlement(settlementRequestId),
         onSuccess: (_, settlementRequestId) => {
-            track("Settlement Completed", { settlementRequestId });
+            track("Settlement Completed", { settlement_request_id: String(settlementRequestId) });
         },
     });
 }

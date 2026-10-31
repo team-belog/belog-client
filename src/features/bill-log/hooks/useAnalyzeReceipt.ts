@@ -7,7 +7,10 @@ export function useAnalyzeReceipt(meetingId: number) {
     return useMutation({
         mutationFn: (body: ReceiptAnalysisRequest) => analyzeReceipt(meetingId, body),
         onSuccess: () => {
-            track("Receipt OCR Completed", { meetingId });
+            track("Receipt OCR Completed", { meeting_id: String(meetingId), ocr_status: "success" });
+        },
+        onError: () => {
+            track("Receipt OCR Completed", { meeting_id: String(meetingId), ocr_status: "failed" });
         },
     });
 }

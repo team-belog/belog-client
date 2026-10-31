@@ -6,7 +6,7 @@ export function useSendReminder() {
     return useMutation({
         mutationFn: (settlementRequestId: number) => sendReminder(settlementRequestId),
         onSuccess: (_, settlementRequestId) => {
-            track("Settlement Reminder Sent", { settlementRequestId });
+            track("Settlement Reminder Sent", { settlement_request_id: String(settlementRequestId) });
         },
     });
 }

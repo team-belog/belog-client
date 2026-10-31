@@ -6,8 +6,8 @@ export function useCreatePostLogTicket() {
     return useMutation({
         mutationFn: ({ meetingId, memory }: { meetingId: number; memory: string }) =>
             createPostLogTicket(meetingId, memory),
-        onSuccess: (_, { meetingId }) => {
-            track("Postlog Ticket Created", { meetingId });
+        onSuccess: (data, { meetingId }) => {
+            track("Postlog Ticket Created", { meeting_id: String(meetingId), ticket_id: String(data.ticketId) });
         },
     });
 }

@@ -9,7 +9,7 @@ export function useLikePhoto(meetingId: number) {
     return useMutation({
         mutationFn: (photoId: number) => likePhoto(photoId),
         onSuccess: (data: LikePhotoResponse) => {
-            track("Photo Liked", { photoId: data.photoId, meetingId });
+            track("Photo Liked", { photo_id: String(data.photoId) });
             queryClient.setQueryData<InfiniteData<PostLogPhotoListResponse>>(
                 ["postLogPhotoList", meetingId],
                 (old) => {

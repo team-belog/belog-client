@@ -9,7 +9,7 @@ export function useUnlikePhoto(meetingId: number) {
     return useMutation({
         mutationFn: (photoId: number) => unlikePhoto(photoId),
         onSuccess: (data: LikePhotoResponse) => {
-            track("Photo Unliked", { photoId: data.photoId, meetingId });
+            track("Photo Unliked", { photo_id: String(data.photoId) });
             queryClient.setQueryData<InfiniteData<PostLogPhotoListResponse>>(
                 ["postLogPhotoList", meetingId],
                 (old) => {

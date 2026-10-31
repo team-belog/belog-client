@@ -38,8 +38,11 @@ export function useUploadPostLogPhotos(meetingId: number) {
                 }))
             );
         },
-        onSuccess: (_, files) => {
-            track("Photo Uploaded", { meetingId, photoCount: files.length });
+        onSuccess: (data) => {
+            track("Photo Uploaded", {
+                meeting_id: String(meetingId),
+                photo_id: data.photos.map((p) => String(p.photoId)).join(","),
+            });
             queryClient.invalidateQueries({ queryKey: ["postLogPhotoList", meetingId] });
         },
     });
