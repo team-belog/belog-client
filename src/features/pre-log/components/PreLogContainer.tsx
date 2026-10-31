@@ -1,14 +1,23 @@
 "use client";
 
+import { useEffect } from "react";
 import PreLogView from "@/features/pre-log/components/PreLogView";
 import { useDeletePreLogPlan } from "@/features/pre-log/hooks/useDeletePreLogPlan";
 import { usePreLogMain } from "@/features/pre-log/hooks/usePreLogMain";
 import { useTogglePreLogPlanLike } from "@/features/pre-log/hooks/useTogglePreLogPlanLike";
 import { useTogglePreLogPlanPin } from "@/features/pre-log/hooks/useTogglePreLogPlanPin";
 import { useUpdateMeeting } from "@/features/meetup/hooks/useUpdateMeeting";
+import { track, setUserProperty } from "@/lib/amplitude";
 
 export default function PreLogContainer({ meetingId }: { meetingId: number }) {
   const { data, isPending, isError, error, refetch } = usePreLogMain(meetingId);
+
+  useEffect(() => {
+    if (data) {
+      track("Prelog Viewed", { meeting_id: String(meetingId) });
+      setUserProperty({ has_used_prelog: true });
+    }
+  }, [data, meetingId]);
   const updateMeeting = useUpdateMeeting(meetingId);
   const deletePlan = useDeletePreLogPlan(meetingId);
   const togglePlanPin = useTogglePreLogPlanPin(meetingId);

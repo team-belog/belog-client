@@ -14,6 +14,7 @@ import type {
   PreLogPlanLikeData,
   PreLogPlansData,
 } from "@/features/pre-log/types";
+import { track } from "@/lib/amplitude";
 
 type PreLogPlansCache = InfiniteData<PreLogPlansData, string | undefined>;
 
@@ -73,7 +74,8 @@ export function useTogglePreLogPlanLike(meetingId: number) {
       });
     },
     // 다른 멤버의 좋아요까지 반영된 서버 값으로 맞춤
-    onSuccess: ({ planId, likedByMe, likeCount }) => {
+    onSuccess: ({ planId, likedByMe, likeCount }, { liked }) => {
+      track(liked ? "Plan Liked" : "Plan Unliked", { plan_id: String(planId) });
       updatePlan(planId, () => ({ likedByMe, likeCount }));
     },
   });

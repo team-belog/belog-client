@@ -10,6 +10,7 @@ import {
 import { preLogKeys } from "@/features/pre-log/hooks/preLogKeys";
 import type { ApiError } from "@/lib/apiError";
 import type { PreLogPlansData } from "@/features/pre-log/types";
+import { track } from "@/lib/amplitude";
 
 type PreLogPlansCache = InfiniteData<PreLogPlansData, string | undefined>;
 
@@ -55,6 +56,9 @@ export function useTogglePreLogPlanPin(meetingId: number) {
       context?.previous.forEach(([key, data]) => {
         queryClient.setQueryData(key, data);
       });
+    },
+    onSuccess: (_, { planId, pinned }) => {
+      track("Plan Pin Changed", { plan_id: String(planId), pinned });
     },
     // 고정 계획이 맨 앞으로 정렬되고 고정 탭 구성도 바뀌므로 다시 조회
     onSettled: () => {
