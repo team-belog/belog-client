@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { PT_Sans_Narrow } from "next/font/google";
 import "./globals.css";
@@ -16,6 +16,14 @@ const pretendard = localFont({
   variable: "--font-pretendard",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "BELOG",
