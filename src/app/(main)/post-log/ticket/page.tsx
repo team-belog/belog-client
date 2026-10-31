@@ -31,16 +31,28 @@ function TicketContent() {
     const el = document.getElementById("ticket");
     if (!el) return;
     try {
-      // 이미지가 모두 로드된 후 캡처
+      // 외부 이미지(S3 등)를 base64로 변환해서 CORS 문제 없이 캡처
       const imgs = Array.from(el.querySelectorAll("img"));
+      const originalSrcs = imgs.map((img) => img.src);
       await Promise.all(
-        imgs.map((img) =>
-          img.complete
-            ? Promise.resolve()
-            : new Promise<void>((res) => { img.onload = () => res(); img.onerror = () => res(); })
-        )
+        imgs.map(async (img) => {
+          try {
+            const res = await fetch(img.src, { mode: "cors" });
+            const blob = await res.blob();
+            const base64 = await new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result as string);
+              reader.readAsDataURL(blob);
+            });
+            img.src = base64;
+          } catch {
+            // CORS 실패 시 원본 유지
+          }
+        })
       );
       const dataUrl = await domtoimage.toPng(el, { scale: 2 });
+      // 원본 src 복원
+      imgs.forEach((img, i) => { img.src = originalSrcs[i]; });
       const res = await fetch(dataUrl);
       const blob = await res.blob();
       const file = new File([blob], "ticket.png", { type: "image/png" });
