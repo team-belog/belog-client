@@ -46,7 +46,8 @@ function TicketContent() {
       const file = new File([blob], "ticket.png", { type: "image/png" });
 
       // iOS PWA: Web Share API로 공유 시트 열기 → "사진 저장"으로 갤러리에 저장
-      if (navigator.canShare?.({ files: [file] })) {
+      const isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+      if (isMobile && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file] });
         return;
       }
