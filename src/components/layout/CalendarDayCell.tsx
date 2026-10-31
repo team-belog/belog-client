@@ -10,7 +10,6 @@ interface CalendarDayCellProps {
 
 function BubbleDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "onSelect">) {
   const hasCircle =
-    day.isToday ||
     day.rangePosition === "single" ||
     day.rangePosition === "start" ||
     day.rangePosition === "end";
@@ -24,13 +23,14 @@ function BubbleDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "on
         ? "left-0 right-1/2"
         : "left-0 right-0";
 
-  const circleColorClass = day.isToday ? "bg-main-mint" : "bg-main-black";
-
-  const textColorClass = hasCircle
-    ? "pretendard-sb-15 text-main-white"
-    : day.isCurrentMonth
-      ? "pretendard-m-15 text-main-black"
-      : "pretendard-m-15 text-sub-gray-3";
+  // 오늘은 일정 여부와 관계없이 흰 바탕 + 민트 테두리 원으로 표시한다
+  const textColorClass = day.isToday
+    ? "pretendard-sb-15 text-main-mint"
+    : hasCircle
+      ? "pretendard-m-15 text-main-white"
+      : day.isCurrentMonth
+        ? "pretendard-m-15 text-main-black"
+        : "pretendard-m-15 text-sub-gray-3";
 
   return (
     <button
@@ -40,14 +40,21 @@ function BubbleDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "on
       className="relative flex h-[34px] w-full items-center justify-center disabled:cursor-default"
     >
       {hasBar && (
-        <span aria-hidden className={`absolute inset-y-0 bg-main-black/25 ${barPositionClass}`} />
+        <span aria-hidden className={`absolute inset-y-0 bg-main-mint/40 ${barPositionClass}`} />
       )}
 
-      {hasCircle && (
+      {day.isToday ? (
         <span
           aria-hidden
-          className={`absolute left-1/2 top-1/2 size-[34px] -translate-x-1/2 -translate-y-1/2 rounded-full ${circleColorClass}`}
+          className="absolute left-1/2 top-1/2 size-[36px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-main-mint bg-main-white"
         />
+      ) : (
+        hasCircle && (
+          <span
+            aria-hidden
+            className="absolute left-1/2 top-1/2 size-[34px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-main-mint"
+          />
+        )
       )}
 
       <p className={`relative z-10 ${textColorClass}`}>{day.date.getDate()}</p>
