@@ -31,13 +31,23 @@ function TicketContent() {
     const el = document.getElementById("ticket");
     if (!el) return;
     try {
+      // 이미지가 모두 로드된 후 캡처
+      const imgs = Array.from(el.querySelectorAll("img"));
+      await Promise.all(
+        imgs.map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise<void>((res) => { img.onload = () => res(); img.onerror = () => res(); })
+        )
+      );
       const dataUrl = await domtoimage.toPng(el, { scale: 2 });
       const res = await fetch(dataUrl);
       const blob = await res.blob();
       const file = new File([blob], "ticket.png", { type: "image/png" });
 
       // iOS PWA: Web Share API로 공유 시트 열기 → "사진 저장"으로 갤러리에 저장
-      if (navigator.canShare?.({ files: [file] })) {
+      const isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+      if (isMobile && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file] });
         return;
       }
