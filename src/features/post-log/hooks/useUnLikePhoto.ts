@@ -1,6 +1,7 @@
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import { unlikePhoto } from "@/features/post-log/api/postLogApi";
 import type { LikePhotoResponse, PostLogPhotoListResponse } from "@/features/post-log/types";
+import { track } from "@/lib/amplitude";
 
 export function useUnlikePhoto(meetingId: number) {
     const queryClient = useQueryClient();
@@ -8,6 +9,7 @@ export function useUnlikePhoto(meetingId: number) {
     return useMutation({
         mutationFn: (photoId: number) => unlikePhoto(photoId),
         onSuccess: (data: LikePhotoResponse) => {
+            track("Photo Unliked", { photoId: data.photoId, meetingId });
             queryClient.setQueryData<InfiniteData<PostLogPhotoListResponse>>(
                 ["postLogPhotoList", meetingId],
                 (old) => {

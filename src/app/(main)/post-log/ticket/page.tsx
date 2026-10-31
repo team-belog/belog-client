@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -10,12 +10,19 @@ import PostLogTicketCard from "@/features/post-log/components/PostLogTicketCard"
 
 import { useGetPostLogTicket } from "@/features/post-log/hooks/useGetPostLogTicket";
 import domtoimage from "dom-to-image-more";
+import { track } from "@/lib/amplitude";
 
 function TicketContent() {
   const searchParams = useSearchParams();
   const ticketId = searchParams.get("ticketId") ? Number(searchParams.get("ticketId")) : null;
 
   const { data: ticket, isLoading } = useGetPostLogTicket(ticketId);
+
+  useEffect(() => {
+    if (ticket) {
+      track("Postlog Ticket Viewed", { ticketId: ticket.ticketId });
+    }
+  }, [ticket]);
 
   const handleShare = async () => {
     if (navigator.share) {

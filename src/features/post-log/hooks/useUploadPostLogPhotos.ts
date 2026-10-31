@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import exifr from "exifr";
 import { getPhotoUploadUrls, uploadPhotoToS3, registerPhotoMetadata } from "@/features/post-log/api/postLogApi";
+import { track } from "@/lib/amplitude";
 
 export function useUploadPostLogPhotos(meetingId: number) {
     const queryClient = useQueryClient();
@@ -37,7 +38,8 @@ export function useUploadPostLogPhotos(meetingId: number) {
                 }))
             );
         },
-        onSuccess: () => {
+        onSuccess: (_, files) => {
+            track("Photo Uploaded", { meetingId, photoCount: files.length });
             queryClient.invalidateQueries({ queryKey: ["postLogPhotoList", meetingId] });
         },
     });

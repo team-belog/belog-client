@@ -5,6 +5,7 @@ import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { useGetReceiptImageUploadUrl } from "../../hooks/useGetReceiptImageUploadUrl";
 import { useAnalyzeReceipt } from "../../hooks/useAnalyzeReceipt";
 import { useBillFormStore } from "@/features/bill-log/store/useBillFormStore";
+import { track } from "@/lib/amplitude";
 
 interface Step1Props {
   onNext: () => void;
@@ -33,6 +34,7 @@ export default function Step1({ onNext }: Step1Props) {
           if (!res.ok) {
             return;
           }
+          track("Receipt Upload Completed", { meetingId });
           analyzeReceipt(
             { receiptImageObjectKey: uploadData.objectKey },
             {

@@ -1,0 +1,16 @@
+import * as amplitude from "@amplitude/analytics-browser";
+
+const API_KEY = process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY ?? "";
+
+let initialized = false;
+
+export function initAmplitude() {
+  if (initialized || !API_KEY || typeof window === "undefined") return;
+  amplitude.init(API_KEY, { defaultTracking: false });
+  initialized = true;
+}
+
+export function track(eventName: string, properties?: Record<string, unknown>) {
+  if (typeof window === "undefined") return;
+  amplitude.track(eventName, properties);
+}
