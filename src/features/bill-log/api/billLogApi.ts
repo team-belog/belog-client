@@ -52,8 +52,9 @@ export async function analyzeReceipt(meetingId: number, body: ReceiptAnalysisReq
     return data.data;
 }
 
-export async function createBill(meetingId: number, body: CreateBillRequest): Promise<void> {
-    await api.post(ENDPOINTS.billLog.createBill(meetingId), body);
+export async function createBill(meetingId: number, body: CreateBillRequest): Promise<{ billId: number }> {
+    const { data } = await api.post<ApiResponse<{ billId: number }>>(ENDPOINTS.billLog.createBill(meetingId), body);
+    return data.data;
 }
 
 export async function completeSettlement(settlementRequestId: number): Promise<void> {

@@ -38,7 +38,7 @@ export default function Step4({ onSubmit }: Step4Props) {
     payer: d.payer,
   }));
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending } = useMutation<{ billId: number }>({
     mutationFn: () =>
       createBill(meetingId, {
         title,
@@ -48,9 +48,10 @@ export default function Step4({ onSubmit }: Step4Props) {
         items,
         shares: storeShares,
       }),
-    onSuccess: () => {
+    onSuccess: (data) => {
       track("Expense Created", {
         meeting_id: String(meetingId),
+        bill_id: String(data.billId),
         ...(entryMethod && { entry_method: entryMethod }),
       });
       reset();
