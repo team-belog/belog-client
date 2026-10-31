@@ -19,6 +19,7 @@ type BillFormState = {
   shares: CreateBillShare[];
   shareDisplays: ShareDisplay[];
   analyzedData: ReceiptAnalysisResponse | null;
+  entryMethod: "manual" | "receipt_ocr" | null;
 };
 
 type BillFormActions = {
@@ -31,6 +32,7 @@ type BillFormActions = {
     shares: CreateBillShare[];
     shareDisplays: ShareDisplay[];
   }) => void;
+  setEntryMethod: (method: "manual" | "receipt_ocr") => void;
   reset: () => void;
 };
 
@@ -44,6 +46,7 @@ const initialState: BillFormState = {
   shares: [],
   shareDisplays: [],
   analyzedData: null,
+  entryMethod: null,
 };
 
 export const useBillFormStore = create<BillFormState & BillFormActions>((set) => ({
@@ -51,5 +54,6 @@ export const useBillFormStore = create<BillFormState & BillFormActions>((set) =>
   setAnalyzedData: (data) => set({ analyzedData: data }),
   setStep2Data: (data) => set(data),
   setStep3Data: (data) => set(data),
+  setEntryMethod: (method) => set({ entryMethod: method }),
   reset: () => set(initialState),
 }));
