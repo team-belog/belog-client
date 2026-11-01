@@ -87,6 +87,7 @@ export default function PreLogAddView({
         {isLinkMode ? (
           <InputField
             label="URL"
+            description="지도 내 위치 표시는 카카오맵과 구글지도 링크만 지원해요."
             placeholder="https://..."
             value={url}
             onChange={setUrl}
