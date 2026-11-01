@@ -38,8 +38,8 @@ api.interceptors.response.use(
 
     original._retry = true;
     try {
-      const token = await refreshAccessToken();
-      original.headers.Authorization = `Bearer ${token}`;
+      const { accessToken } = await refreshAccessToken();
+      original.headers.Authorization = `Bearer ${accessToken}`;
       return api(original);
     } catch (refreshError) {
       setAccessToken(null);
