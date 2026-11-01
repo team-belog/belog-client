@@ -184,6 +184,9 @@ export default function MeetupDetailView({
           setDraft((prev) => ({ ...prev, location: value }))
         }
         onDateClick={canEditDates ? () => setIsEditDatesOpen(true) : undefined}
+        onManageMembers={() =>
+          router.push(`/meetup/${meeting.meetingId}/members`)
+        }
       />
 
       {isEditing && updateErrorMessage && (
