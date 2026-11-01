@@ -12,16 +12,13 @@ function BubbleDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "on
   const hasCircle =
     day.rangePosition === "single" ||
     day.rangePosition === "start" ||
-    day.rangePosition === "end";
+    day.rangePosition === "end" ||
+    day.rangePosition === "joint";
 
-  const hasBar = day.rangePosition === "middle" || day.rangePosition === "start" || day.rangePosition === "end";
-
-  const barPositionClass =
-    day.rangePosition === "start"
-      ? "left-1/2 right-0"
-      : day.rangePosition === "end"
-        ? "left-0 right-1/2"
-        : "left-0 right-0";
+  // 띠를 왼쪽/오른쪽 절반으로 나눠 그리고, 일정이 겹치는 절반은 더 짙게 칠한다
+  const hasLeftBar = day.rangePosition === "end" || day.rangePosition === "middle" || day.rangePosition === "joint";
+  const hasRightBar = day.rangePosition === "start" || day.rangePosition === "middle" || day.rangePosition === "joint";
+  const barColorClass = (overlapped?: boolean) => (overlapped ? "bg-main-mint/65" : "bg-main-mint/40");
 
   // 오늘은 일정 여부와 관계없이 흰 바탕 + 민트 테두리 원으로 표시한다
   const textColorClass = day.isToday
@@ -39,8 +36,17 @@ function BubbleDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "on
       disabled={!day.isCurrentMonth}
       className="relative flex h-[34px] w-full items-center justify-center disabled:cursor-default"
     >
-      {hasBar && (
-        <span aria-hidden className={`absolute inset-y-0 bg-main-mint/40 ${barPositionClass}`} />
+      {hasLeftBar && (
+        <span
+          aria-hidden
+          className={`absolute inset-y-0 left-0 right-1/2 ${barColorClass(day.overlappedSides?.left)}`}
+        />
+      )}
+      {hasRightBar && (
+        <span
+          aria-hidden
+          className={`absolute inset-y-0 left-1/2 right-0 ${barColorClass(day.overlappedSides?.right)}`}
+        />
       )}
 
       {day.isToday ? (
