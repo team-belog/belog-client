@@ -7,6 +7,7 @@ import { useDeleteMeeting } from "@/features/meetup/hooks/useDeleteMeeting";
 import { useEndMeeting } from "@/features/meetup/hooks/useEndMeeting";
 import { useMeetingDetail } from "@/features/meetup/hooks/useMeetingDetail";
 import { useUpdateMeeting } from "@/features/meetup/hooks/useUpdateMeeting";
+import { useTrackView } from "@/hooks/useTrackView";
 
 export default function MeetupDetailContainer({
   meetingId,
@@ -19,6 +20,15 @@ export default function MeetupDetailContainer({
   const deleteMeeting = useDeleteMeeting();
   const endMeeting = useEndMeeting();
   const router = useRouter();
+
+  const viewProperties = data
+    ? { group_id: String(data.groupId), meeting_id: String(meetingId) }
+    : null;
+  useTrackView("Meetup Viewed", viewProperties);
+  useTrackView(
+    "Page Viewed",
+    viewProperties && { page_name: "meetup_detail", ...viewProperties },
+  );
 
   if (isPending) {
     return (

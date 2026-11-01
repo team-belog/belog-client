@@ -6,6 +6,7 @@ import ActiveMeetupList from "@/features/home/components/ActiveMeetupList";
 import MeetupItemList from "@/features/home/components/MeetupItemList";
 import { useMeetupItemList } from "@/features/home/hooks/useMeetupItemList";
 import type { Schedule } from "@/features/home/types";
+import { useTrackView } from "@/hooks/useTrackView";
 
 const TAB_LABELS = ["진행 중인 만남", "종료된 만남"];
 
@@ -14,6 +15,7 @@ interface MeetupSectionProps {
 }
 
 export default function MeetupSection({ onSelectSchedule }: MeetupSectionProps) {
+  useTrackView("Page Viewed", { page_name: "home" });
   const {
     activeIndex,
     onTabChange,

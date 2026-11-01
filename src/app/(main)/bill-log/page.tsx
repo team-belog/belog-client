@@ -17,6 +17,7 @@ import PaymentHistoryTab from "@/features/bill-log/components/tab/PaymentHistory
 import { useGetBillLogSummary } from "@/features/bill-log/hooks/useGetBillLogSummary";
 import Toast from "@/components/ui/Toast";
 import { useToast } from "@/hooks/useToast";
+import { useTrackView } from "@/hooks/useTrackView";
 
 function BillLogContent() {
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -29,6 +30,17 @@ function BillLogContent() {
   const { data, isLoading } = useGetBillLogSummary(meetingId);
   const { toast, showToast, hideToast } = useToast();
   const totalParticipantCount = (data?.completedParticipantCount ?? 0) + (data?.pendingParticipantCount ?? 0)
+
+  useTrackView(
+    "Page Viewed",
+    isLoading
+      ? null
+      : {
+          page_name: "billlog",
+          meeting_id: String(meetingId),
+          ...(groupId > 0 && { group_id: String(groupId) }),
+        },
+  );
 
   if (isLoading) return <div className="flex min-h-screen items-center justify-center">로딩 중...</div>;
 

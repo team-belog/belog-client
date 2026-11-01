@@ -3,6 +3,7 @@ import { createGroup } from "@/features/group/api/groupApi";
 import { groupKeys } from "@/features/group/hooks/groupKeys";
 import { uploadCoverImage } from "@/features/group/utils/uploadCoverImage";
 import type { ApiError } from "@/lib/apiError";
+import { track } from "@/lib/amplitude";
 import type { CreateGroupData, CreateGroupInput } from "@/features/group/types";
 
 export function useCreateGroup() {
@@ -16,7 +17,8 @@ export function useCreateGroup() {
 
       return createGroup({ name, coverImageObjectKey });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      track("Group Created", { group_id: String(data.groupId) });
       queryClient.invalidateQueries({ queryKey: groupKeys.list() });
     },
   });

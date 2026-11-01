@@ -1,15 +1,26 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import TabBar from "@/components/ui/TabBar";
 import MeetingPhotoTab from "@/features/post-log/components/tab/MeetingPhotoTab";
 import MeetingInfoTab from "@/features/post-log/components/tab/MeetingInfoTab";
+import { useTrackView } from "@/hooks/useTrackView";
 
 function PostLogContent() {
   const [activeTab, setActiveTab] = useState(0);
+  const searchParams = useSearchParams();
+  const meetingId = Number(searchParams.get("meetingId"));
+  const groupId = Number(searchParams.get("groupId"));
+
+  useTrackView("Page Viewed", {
+    page_name: "postlog",
+    meeting_id: String(meetingId),
+    ...(groupId > 0 && { group_id: String(groupId) }),
+  });
 
   return (
     <main className="flex flex-col pt-[60px]">
