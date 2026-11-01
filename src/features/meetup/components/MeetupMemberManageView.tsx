@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import SearchBar from "@/components/ui/SearchBar";
 import { useGroupMembers } from "@/features/group/hooks/useGroupMembers";
 import MeetupCurrentMemberRow from "@/features/meetup/components/MeetupCurrentMemberRow";
+import MeetupMemberRemoveModal from "@/features/meetup/components/MeetupMemberRemoveModal";
 import MeetupMemberRow from "@/features/meetup/components/MeetupMemberRow";
 import type { MeetingMemberDto } from "@/features/meetup/types";
 
@@ -25,6 +26,9 @@ export default function MeetupMemberManageView({
   );
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [removeTarget, setRemoveTarget] = useState<MeetingMemberDto | null>(
+    null,
+  );
 
   const currentMembers = members.filter((member) =>
     memberIds.includes(member.groupMemberId),
@@ -43,8 +47,12 @@ export default function MeetupMemberManageView({
   const hasChanges =
     memberIds.length !== members.length || selectedIds.length > 0;
 
-  const removeMember = (id: number) => {
-    setMemberIds((prev) => prev.filter((memberId) => memberId !== id));
+  const handleConfirmRemove = () => {
+    if (!removeTarget) return;
+    setMemberIds((prev) =>
+      prev.filter((memberId) => memberId !== removeTarget.groupMemberId),
+    );
+    setRemoveTarget(null);
   };
 
   const toggleCandidate = (id: number) => {
@@ -71,9 +79,7 @@ export default function MeetupMemberManageView({
               key={member.groupMemberId}
               member={member}
               onRemove={
-                member.isMe
-                  ? undefined
-                  : () => removeMember(member.groupMemberId)
+                member.isMe ? undefined : () => setRemoveTarget(member)
               }
             />
           ))}
@@ -111,6 +117,14 @@ export default function MeetupMemberManageView({
       >
         저장하기
       </Button>
+
+      {removeTarget && (
+        <MeetupMemberRemoveModal
+          nickname={removeTarget.nickname}
+          onCancel={() => setRemoveTarget(null)}
+          onConfirm={handleConfirmRemove}
+        />
+      )}
     </main>
   );
 }
