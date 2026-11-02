@@ -85,12 +85,13 @@ export default function TicketShape({
   return (
     <div
       ref={containerRef}
-      className={`relative drop-shadow-[0_0_1.5px_rgba(0,0,0,0.25)] ${className}`}
+      className={`relative ${className}`}
     >
       {size.width > 0 && size.height > 0 && (
+        // 그림자를 바깥 div에 걸면 iOS Safari가 SVG가 늦게 그려질 때 그림자를 다시 그리지 않아 SVG에 직접 건다
         <svg
           aria-hidden
-          className="absolute inset-0"
+          className="absolute inset-0 overflow-visible drop-shadow-[0_0_1.5px_rgba(0,0,0,0.25)]"
           width={size.width}
           height={size.height}
           viewBox={`0 0 ${size.width} ${size.height}`}
