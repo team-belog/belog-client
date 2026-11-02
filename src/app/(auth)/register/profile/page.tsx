@@ -18,6 +18,7 @@ import { useCompleteOnboarding } from "@/features/auth/hooks/useCompleteOnboardi
 import { useGetProfileImageUploadUrl } from "@/features/auth/hooks/useGetProfileImageUploadUrl";
 import type { BankCode } from "@/features/auth/types";
 import { markTutorialPending } from "@/features/onboarding/utils/tutorialStorage";
+import { hasPendingInviteCode } from "@/features/group/utils/pendingInviteStorage";
 
 export default function RegisterProfilePage() {
   const router = useRouter();
@@ -48,7 +49,8 @@ export default function RegisterProfilePage() {
       {
         onSuccess: () => {
           markTutorialPending();
-          router.replace("/");
+          // 초대 링크로 가입했다면 가입 후 바로 참여 화면으로
+          router.replace(hasPendingInviteCode() ? "/group/join" : "/");
         },
       },
     );

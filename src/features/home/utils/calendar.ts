@@ -12,14 +12,29 @@ export function getMeetingsForDate(date: Date, meetings: HomeCalendarMeeting[]):
   );
 }
 
-export function getRangePosition(date: Date, meeting: HomeCalendarMeeting): RangePosition {
-  const start = parseISO(meeting.startDate);
-  const end = parseISO(meeting.endDate);
+// 전날/다음 날로 이어지는 일정 수
+function getConnections(date: Date, meetings: HomeCalendarMeeting[]) {
+  return {
+    left: meetings.filter((meeting) => !isSameDay(date, parseISO(meeting.startDate))).length,
+    right: meetings.filter((meeting) => !isSameDay(date, parseISO(meeting.endDate))).length,
+  };
+}
 
-  if (isSameDay(start, end)) return "single";
-  if (isSameDay(date, start)) return "start";
-  if (isSameDay(date, end)) return "end";
-  return "middle";
+// 그날에 걸친 모든 일정을 합쳐서 모양을 정한다 (일정이 겹쳐도 띠가 끊기지 않도록)
+export function getRangePosition(date: Date, meetings: HomeCalendarMeeting[]): RangePosition | null {
+  if (meetings.length === 0) return null;
+
+  const connections = getConnections(date, meetings);
+  const connectsLeft = connections.left > 0;
+  const connectsRight = connections.right > 0;
+  const isEdge = meetings.some(
+    (meeting) => isSameDay(date, parseISO(meeting.startDate)) || isSameDay(date, parseISO(meeting.endDate))
+  );
+
+  if (connectsLeft && connectsRight) return isEdge ? "joint" : "middle";
+  if (connectsRight) return "start";
+  if (connectsLeft) return "end";
+  return "single";
 }
 
 export function buildCalendarDay(
@@ -30,7 +45,7 @@ export function buildCalendarDay(
   today?: string
 ): HomeCalendarDay {
   const dayMeetings = getMeetingsForDate(date, meetings);
-  const [primaryMeeting] = dayMeetings;
+  const connections = getConnections(date, dayMeetings);
 
   return {
     date,
@@ -38,6 +53,7 @@ export function buildCalendarDay(
     isToday: today ? isSameDay(date, parseISO(today)) : isToday(date),
     isSelected: selectedDate ? isSameDay(date, selectedDate) : false,
     meetings: dayMeetings,
-    rangePosition: primaryMeeting ? getRangePosition(date, primaryMeeting) : null,
+    rangePosition: getRangePosition(date, dayMeetings),
+    overlappedSides: { left: connections.left >= 2, right: connections.right >= 2 },
   };
 }

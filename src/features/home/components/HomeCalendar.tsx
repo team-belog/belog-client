@@ -18,7 +18,7 @@ export default function HomeCalendar({
     useHomeCalendar(initialMonth, initialSelectedDate);
 
   return (
-    <div className="flex flex-col gap-[15px] mx-4 mt-[10px] mb-4">
+    <div className="flex flex-col gap-[15px] mx-4 mt-[10px] mb-[25px]">
       <CalendarMonthNav
         label={monthLabel}
         onPrev={goToPrevMonth}

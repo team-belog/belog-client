@@ -94,7 +94,7 @@ export type PostLogPhoto = {
 }
 
 export type PostLogPhotoDay = {
-    dayNumber: number;
+    dayNumber: string;
     date: string;
     photos: PostLogPhoto[];
 }
