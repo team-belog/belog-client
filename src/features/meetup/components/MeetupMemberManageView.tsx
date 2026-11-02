@@ -5,18 +5,28 @@ import { useMemo, useState } from "react";
 import BackHeader from "@/components/layout/BackHeader";
 import Button from "@/components/ui/Button";
 import SearchBar from "@/components/ui/SearchBar";
+import Toast from "@/components/ui/Toast";
 import MeetupCurrentMemberRow from "@/features/meetup/components/MeetupCurrentMemberRow";
 import MeetupMemberRemoveModal from "@/features/meetup/components/MeetupMemberRemoveModal";
 import MeetupMemberRow from "@/features/meetup/components/MeetupMemberRow";
 import type { MeetingMemberOptionDto } from "@/features/meetup/types";
+import { useToast } from "@/hooks/useToast";
 
 interface MeetupMemberManageViewProps {
   options: MeetingMemberOptionDto[];
+  isSaving: boolean;
+  onSave: (
+    participantMemberIds: number[],
+    options?: { onError?: (message: string) => void },
+  ) => void;
 }
 
 export default function MeetupMemberManageView({
   options,
+  isSaving,
+  onSave,
 }: MeetupMemberManageViewProps) {
+  const { toast, showToast, hideToast } = useToast();
   const [memberIds, setMemberIds] = useState(() =>
     options
       .filter((option) => option.isParticipant)
@@ -62,8 +72,16 @@ export default function MeetupMemberManageView({
     );
   };
 
-  // TODO: 멤버 추가·삭제 API가 나오면 memberIds, selectedIds로 저장
-  const handleSave = () => {};
+  // 방장은 항상 참여자로 유지되므로 본인(방장)은 목록에서 제외
+  const handleSave = () => {
+    const myId = options.find((option) => option.isMe)?.groupMemberId;
+    const participantMemberIds = [...memberIds, ...selectedIds].filter(
+      (id) => id !== myId,
+    );
+    onSave(participantMemberIds, {
+      onError: (message) => showToast(message, "error"),
+    });
+  };
 
   return (
     <main className="pb-[114px] pt-[60px]">
@@ -110,7 +128,7 @@ export default function MeetupMemberManageView({
 
       <Button
         variant="primary"
-        disabled={!hasChanges}
+        disabled={!hasChanges || isSaving}
         onClick={handleSave}
         className="fixed bottom-0 left-0 right-0"
       >
@@ -124,6 +142,14 @@ export default function MeetupMemberManageView({
           onConfirm={handleConfirmRemove}
         />
       )}
+
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        visible={toast.visible}
+        onHide={hideToast}
+      />
+
     </main>
   );
 }

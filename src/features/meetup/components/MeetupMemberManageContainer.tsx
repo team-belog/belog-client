@@ -1,7 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import MeetupMemberManageView from "@/features/meetup/components/MeetupMemberManageView";
 import { useMeetingMemberOptions } from "@/features/meetup/hooks/useMeetingMemberOptions";
+import { useUpdateMeetingMembers } from "@/features/meetup/hooks/useUpdateMeetingMembers";
 
 export default function MeetupMemberManageContainer({
   meetingId,
@@ -10,6 +13,8 @@ export default function MeetupMemberManageContainer({
 }) {
   const { data, isPending, isError, error, refetch } =
     useMeetingMemberOptions(meetingId);
+  const updateMembers = useUpdateMeetingMembers(meetingId);
+  const router = useRouter();
 
   if (isPending) {
     return (
@@ -34,5 +39,19 @@ export default function MeetupMemberManageContainer({
     );
   }
 
-  return <MeetupMemberManageView options={data.items} />;
+  return (
+    <MeetupMemberManageView
+      options={data.items}
+      isSaving={updateMembers.isPending}
+      onSave={(participantMemberIds, options) =>
+        updateMembers.mutate(
+          { participantMemberIds },
+          {
+            onSuccess: () => router.back(),
+            onError: (error) => options?.onError?.(error.message),
+          },
+        )
+      }
+    />
+  );
 }

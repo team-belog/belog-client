@@ -129,6 +129,11 @@ export type MeetingMemberDto = {
   isMe: boolean;
 };
 
+export type UpdateMeetingMembersRequest = {
+  // 수정 후 참여자 전체 목록. 방장은 항상 참여자로 유지되므로 제외
+  participantMemberIds: number[];
+};
+
 export type MeetingMemberOptionsData = {
   items: MeetingMemberOptionDto[];
 };
