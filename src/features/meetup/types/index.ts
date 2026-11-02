@@ -21,8 +21,7 @@ export type MeetingScheduleType = "FIXED" | "POLL";
 
 export type MeetingStatus = "SCHEDULING" | "CONFIRMED";
 
-// COMPLETED는 서버에 아직 없음. 백엔드가 완료 상태를 추가하면 바로 완료 배지가 표시되도록 미리 둠
-export type LogStatus = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
+export type LogStatus = "NOT_STARTED" | "IN_PROGRESS";
 
 export type MeetingDetailData = {
   meetingId: number;

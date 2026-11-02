@@ -10,6 +10,8 @@ interface MeetupSummaryProps {
   onTitleChange?: (value: string) => void;
   onLocationChange?: (value: string) => void;
   onDateClick?: () => void;
+  // 넘기면 수정 버튼 왼쪽에 멤버 관리 버튼을 보여줌
+  onManageMembers?: () => void;
   // 위에 다른 요소가 붙는 화면에서 상단 여백을 줄일 때 사용
   topSpacingClassName?: string;
 }
@@ -22,6 +24,7 @@ export default function MeetupSummary({
   onTitleChange,
   onLocationChange,
   onDateClick,
+  onManageMembers,
   topSpacingClassName = "pt-[37px]",
 }: MeetupSummaryProps) {
   const { title, groupName, dDay, startDate, endDate, location } = meetup;
@@ -89,20 +92,35 @@ export default function MeetupSummary({
         </div>
 
         {canEdit && (
-          // 편집 중에는 체크 아이콘을 눌러 저장
-          <button
-            type="button"
-            onClick={onEdit}
-            aria-label={isEditing ? "만남 정보 저장" : "만남 정보 수정"}
-            className="shrink-0"
-          >
-            <Image
-              src={isEditing ? "/icons/edit-done.svg" : "/icons/edit.svg"}
-              alt=""
-              width={40}
-              height={40}
-            />
-          </button>
+          <div className="flex shrink-0 items-center gap-3">
+            {onManageMembers && !isEditing && (
+              <button
+                type="button"
+                onClick={onManageMembers}
+                aria-label="멤버 관리"
+              >
+                <Image
+                  src="/icons/meetup/member-manage.svg"
+                  alt=""
+                  width={40}
+                  height={40}
+                />
+              </button>
+            )}
+            {/* 편집 중에는 체크 아이콘을 눌러 저장 */}
+            <button
+              type="button"
+              onClick={onEdit}
+              aria-label={isEditing ? "만남 정보 저장" : "만남 정보 수정"}
+            >
+              <Image
+                src={isEditing ? "/icons/edit-done.svg" : "/icons/edit.svg"}
+                alt=""
+                width={40}
+                height={40}
+              />
+            </button>
+          </div>
         )}
       </div>
     </div>

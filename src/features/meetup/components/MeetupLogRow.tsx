@@ -5,7 +5,7 @@ interface MeetupLogRowProps {
   iconSrc: string;
   title: string;
   status: string;
-  isCompleted?: boolean;
+  isActive?: boolean;
   description: string;
   onClick?: () => void;
 }
@@ -14,7 +14,7 @@ export default function MeetupLogRow({
   iconSrc,
   title,
   status,
-  isCompleted = false,
+  isActive = false,
   description,
   onClick,
 }: MeetupLogRowProps) {
@@ -33,7 +33,7 @@ export default function MeetupLogRow({
             <p className="pretendard-sb-18 text-main-black">{title}</p>
             <span
               className={`pretendard-m-12 rounded-[8px] border px-2 py-1 ${
-                isCompleted
+                isActive
                   ? "border-main-mint bg-main-mint text-main-white"
                   : "border-sub-gray-3 bg-sub-white text-sub-gray-2"
               }`}
@@ -45,7 +45,13 @@ export default function MeetupLogRow({
         </div>
       </div>
 
-      <ChevronIcon width={18} height={18} scale={0.72} strokeWidth={2.3} className="text-sub-gray-2" />
+      <ChevronIcon
+        width={18}
+        height={18}
+        scale={0.72}
+        strokeWidth={2.3}
+        className="text-sub-gray-2"
+      />
     </button>
   );
 }
