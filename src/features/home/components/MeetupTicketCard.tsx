@@ -54,7 +54,7 @@ export default function MeetupTicketCard({
             />
           </div>
 
-          <div className="relative aspect-[173/95] w-full overflow-hidden rounded-lg bg-main-cool-gray">
+          <div className="relative -mx-3 aspect-[173/95] overflow-hidden bg-main-cool-gray">
             {photoUrl && (
               <Image src={photoUrl} alt="" fill className="object-cover" />
             )}

@@ -5,6 +5,7 @@ import { Suspense, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GOOGLE_REDIRECT_URI } from "@/constants/google";
 import { useGoogleLogin } from "@/features/auth/hooks/useGoogleLogin";
+import { hasPendingInviteCode } from "@/features/group/utils/pendingInviteStorage";
 
 function GoogleCallback() {
   const router = useRouter();
@@ -20,8 +21,11 @@ function GoogleCallback() {
     mutate(
       { authorizationCode: code, redirectUri: GOOGLE_REDIRECT_URI },
       {
-        onSuccess: ({ onboardingRequired }) =>
-          router.replace(onboardingRequired ? "/register/profile" : "/"),
+        onSuccess: ({ onboardingRequired }) => {
+          if (onboardingRequired) router.replace("/register/profile");
+          // 초대 링크로 들어왔다면 로그인 후 바로 참여 화면으로
+          else router.replace(hasPendingInviteCode() ? "/group/join" : "/");
+        },
       },
     );
   }, [code, mutate, router]);

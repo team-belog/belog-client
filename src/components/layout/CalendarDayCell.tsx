@@ -10,27 +10,24 @@ interface CalendarDayCellProps {
 
 function BubbleDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "onSelect">) {
   const hasCircle =
-    day.isToday ||
     day.rangePosition === "single" ||
     day.rangePosition === "start" ||
-    day.rangePosition === "end";
+    day.rangePosition === "end" ||
+    day.rangePosition === "joint";
 
-  const hasBar = day.rangePosition === "middle" || day.rangePosition === "start" || day.rangePosition === "end";
+  // 띠를 왼쪽/오른쪽 절반으로 나눠 그리고, 일정이 겹치는 절반은 더 짙게 칠한다
+  const hasLeftBar = day.rangePosition === "end" || day.rangePosition === "middle" || day.rangePosition === "joint";
+  const hasRightBar = day.rangePosition === "start" || day.rangePosition === "middle" || day.rangePosition === "joint";
+  const barColorClass = (overlapped?: boolean) => (overlapped ? "bg-main-mint/65" : "bg-main-mint/40");
 
-  const barPositionClass =
-    day.rangePosition === "start"
-      ? "left-1/2 right-0"
-      : day.rangePosition === "end"
-        ? "left-0 right-1/2"
-        : "left-0 right-0";
-
-  const circleColorClass = day.isToday ? "bg-main-mint" : "bg-main-black";
-
-  const textColorClass = hasCircle
-    ? "pretendard-sb-15 text-main-white"
-    : day.isCurrentMonth
-      ? "pretendard-m-15 text-main-black"
-      : "pretendard-m-15 text-sub-gray-3";
+  // 오늘은 일정 여부와 관계없이 흰 바탕 + 민트 테두리 원으로 표시한다
+  const textColorClass = day.isToday
+    ? "pretendard-sb-15 text-main-mint"
+    : hasCircle
+      ? "pretendard-m-15 text-main-white"
+      : day.isCurrentMonth
+        ? "pretendard-m-15 text-main-black"
+        : "pretendard-m-15 text-sub-gray-3";
 
   return (
     <button
@@ -39,15 +36,31 @@ function BubbleDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "on
       disabled={!day.isCurrentMonth}
       className="relative flex h-[34px] w-full items-center justify-center disabled:cursor-default"
     >
-      {hasBar && (
-        <span aria-hidden className={`absolute inset-y-0 bg-main-black/25 ${barPositionClass}`} />
-      )}
-
-      {hasCircle && (
+      {hasLeftBar && (
         <span
           aria-hidden
-          className={`absolute left-1/2 top-1/2 size-[34px] -translate-x-1/2 -translate-y-1/2 rounded-full ${circleColorClass}`}
+          className={`absolute inset-y-0 left-0 right-1/2 ${barColorClass(day.overlappedSides?.left)}`}
         />
+      )}
+      {hasRightBar && (
+        <span
+          aria-hidden
+          className={`absolute inset-y-0 left-1/2 right-0 ${barColorClass(day.overlappedSides?.right)}`}
+        />
+      )}
+
+      {day.isToday ? (
+        <span
+          aria-hidden
+          className="absolute left-1/2 top-1/2 size-[36px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-main-mint bg-main-white"
+        />
+      ) : (
+        hasCircle && (
+          <span
+            aria-hidden
+            className="absolute left-1/2 top-1/2 size-[34px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-main-mint"
+          />
+        )
       )}
 
       <p className={`relative z-10 ${textColorClass}`}>{day.date.getDate()}</p>

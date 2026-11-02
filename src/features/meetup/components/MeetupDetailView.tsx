@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
 import Button from "@/components/ui/Button";
+import Toast from "@/components/ui/Toast";
 import TrashIcon from "@/components/ui/TrashIcon";
 import MeetupDeleteModal from "@/features/meetup/components/MeetupDeleteModal";
 import MeetupEndModal from "@/features/meetup/components/MeetupEndModal";
@@ -21,6 +22,7 @@ import type {
   UpdateMeetingRequest,
 } from "@/features/meetup/types";
 import PreLogDateRangeSheet from "@/features/pre-log/components/PreLogDateRangeSheet";
+import { useToast } from "@/hooks/useToast";
 import { formatDateRange } from "@/lib/date";
 
 const API_DATE_FORMAT = "yyyy-MM-dd";
@@ -34,12 +36,10 @@ interface MeetupDetailViewProps {
     options?: { onSuccess?: () => void },
   ) => void;
   isDeleting: boolean;
-  deleteErrorMessage?: string;
-  onDelete: () => void;
+  onDelete: (options?: { onError?: (message: string) => void }) => void;
   onCancelDelete: () => void;
   isEnding: boolean;
-  endErrorMessage?: string;
-  onEnd: () => void;
+  onEnd: (options?: { onError?: (message: string) => void }) => void;
   onCancelEnd: () => void;
 }
 
@@ -58,11 +58,9 @@ export default function MeetupDetailView({
   updateErrorMessage,
   onUpdate,
   isDeleting,
-  deleteErrorMessage,
   onDelete,
   onCancelDelete,
   isEnding,
-  endErrorMessage,
   onEnd,
   onCancelEnd,
 }: MeetupDetailViewProps) {
@@ -72,6 +70,7 @@ export default function MeetupDetailView({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEndModalOpen, setIsEndModalOpen] = useState(false);
   const [draft, setDraft] = useState(() => toDraft(meeting));
+  const { toast, showToast, hideToast } = useToast();
 
   const { name, location, startDate, endDate } = isEditing
     ? draft
@@ -123,9 +122,28 @@ export default function MeetupDetailView({
     onCancelDelete();
   };
 
+  // 모달이 토스트보다 위에 떠서, 실패하면 모달을 닫고 토스트로 에러를 보여줌
+  const handleConfirmDelete = () => {
+    onDelete({
+      onError: (message) => {
+        handleCancelDelete();
+        showToast(message, "error");
+      },
+    });
+  };
+
   const handleCancelEnd = () => {
     setIsEndModalOpen(false);
     onCancelEnd();
+  };
+
+  const handleConfirmEnd = () => {
+    onEnd({
+      onError: (message) => {
+        handleCancelEnd();
+        showToast(message, "error");
+      },
+    });
   };
 
   const handleConfirmDates = (range: { startDate: Date; endDate: Date }) => {
@@ -166,6 +184,9 @@ export default function MeetupDetailView({
           setDraft((prev) => ({ ...prev, location: value }))
         }
         onDateClick={canEditDates ? () => setIsEditDatesOpen(true) : undefined}
+        onManageMembers={() =>
+          router.push(`/meetup/${meeting.meetingId}/members`)
+        }
       />
 
       {isEditing && updateErrorMessage && (
@@ -181,7 +202,7 @@ export default function MeetupDetailView({
           iconSrc="/icons/meetup/pre-log.png"
           title="Pre-log"
           status={PRE_LOG_STATUS_LABEL[logStatuses.preLog]}
-          isCompleted={logStatuses.preLog === "COMPLETED"}
+          isActive={logStatuses.preLog === "IN_PROGRESS"}
           description="만남 일정과 장소를 정해요"
           onClick={() => router.push(`/pre-log?meetingId=${meeting.meetingId}`)}
         />
@@ -189,7 +210,7 @@ export default function MeetupDetailView({
           iconSrc="/icons/meetup/bill-log.png"
           title="Bill-log"
           status={BILL_LOG_STATUS_LABEL[logStatuses.billLog]}
-          isCompleted={logStatuses.billLog === "COMPLETED"}
+          isActive={logStatuses.billLog === "IN_PROGRESS"}
           description="영수증으로 정산해요"
           onClick={() => router.push(`/bill-log?meetingId=${meeting.meetingId}&groupId=${meeting.groupId}`)}
         />
@@ -197,7 +218,7 @@ export default function MeetupDetailView({
           iconSrc="/icons/post-log.png"
           title="Post-log"
           status={POST_LOG_STATUS_LABEL[logStatuses.postLog]}
-          isCompleted={logStatuses.postLog === "COMPLETED"}
+          isActive={logStatuses.postLog === "IN_PROGRESS"}
           description="사진을 기록하고 티켓을 생성해요"
           onClick={() => router.push(`/post-log?meetingId=${meeting.meetingId}`)}
         />
@@ -216,9 +237,8 @@ export default function MeetupDetailView({
         <MeetupDeleteModal
           meetingName={meeting.meetingName}
           isDeleting={isDeleting}
-          errorMessage={deleteErrorMessage}
           onCancel={handleCancelDelete}
-          onConfirm={onDelete}
+          onConfirm={handleConfirmDelete}
         />
       )}
 
@@ -237,11 +257,17 @@ export default function MeetupDetailView({
         <MeetupEndModal
           meetingName={meeting.meetingName}
           isEnding={isEnding}
-          errorMessage={endErrorMessage}
           onCancel={handleCancelEnd}
-          onConfirm={onEnd}
+          onConfirm={handleConfirmEnd}
         />
       )}
+
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        visible={toast.visible}
+        onHide={hideToast}
+      />
     </main>
   );
 }
