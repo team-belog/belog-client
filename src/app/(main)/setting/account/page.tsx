@@ -11,6 +11,7 @@ import BankSelectField from "@/features/auth/components/register/BankSelectField
 import { useGetMyBankAccount } from "@/features/my/hooks/useGetMyBankAccount";
 import { useUpdateMyBankAccount } from "@/features/my/hooks/useUpdateMyBankAccount";
 import type { BankCode } from "@/features/auth/types";
+import { track } from "@/lib/amplitude";
 
 export default function AccountManagePage() {
   const router = useRouter();
@@ -36,7 +37,12 @@ export default function AccountManagePage() {
   const handleSave = () => {
     updateBankAccount(
       { bankCode: bank as BankCode, accountNumber },
-      { onSuccess: () => router.back() }
+      {
+        onSuccess: () => {
+          track("Profile Updated", { updated_field: ["bank_account"] });
+          router.back();
+        },
+      }
     );
   };
 

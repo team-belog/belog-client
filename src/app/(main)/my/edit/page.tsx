@@ -16,6 +16,7 @@ import { useGetProfileImageUploadUrl } from "@/features/auth/hooks/useGetProfile
 import { useGetMyBankAccount } from "@/features/my/hooks/useGetMyBankAccount";
 import { useUpdateMyBankAccount } from "@/features/my/hooks/useUpdateMyBankAccount";
 import type { BankCode } from "@/features/auth/types";
+import { track } from "@/lib/amplitude";
 
 export default function ProfileEditPage() {
   const router = useRouter();
@@ -62,6 +63,13 @@ export default function ProfileEditPage() {
     accountNumber !== (bankAccount?.accountNumber ?? "");
 
   const submitUpdate = (profileImageObjectKey?: string) => {
+    // 입력값은 수집하지 않고 실제로 수정한 필드명만 전송
+    const updatedFields = [
+      nickname !== profile?.nickname && "nickname",
+      profileImageObjectKey && "profile_image",
+      bankChanged && "bank_account",
+    ].filter(Boolean);
+
     updateProfile(
       {
         nickname,
@@ -73,7 +81,14 @@ export default function ProfileEditPage() {
         onSuccess: () => {
           updateBankAccount(
             { bankCode: bank as BankCode, accountNumber },
-            { onSuccess: () => router.back() }
+            {
+              onSuccess: () => {
+                if (updatedFields.length > 0) {
+                  track("Profile Updated", { updated_field: updatedFields });
+                }
+                router.back();
+              },
+            }
           );
         },
       }

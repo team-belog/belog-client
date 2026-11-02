@@ -1,13 +1,18 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { initAmplitude } from "@/lib/amplitude";
 
 export default function Providers({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  useEffect(() => {
+    initAmplitude();
+  }, []);
+
   const [client] = useState(
     () =>
       new QueryClient({

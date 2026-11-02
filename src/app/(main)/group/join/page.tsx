@@ -7,7 +7,10 @@ import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
 import InviteCodeInput from "@/features/group/components/InviteCodeInput";
-import { useJoinGroup } from "@/features/group/hooks/useJoinGroup";
+import {
+  useJoinGroup,
+  type JoinMethod,
+} from "@/features/group/hooks/useJoinGroup";
 import { takePendingInviteCode } from "@/features/group/utils/pendingInviteStorage";
 
 const CODE_LENGTH = 6;
@@ -24,9 +27,9 @@ export default function GroupJoinPage() {
   };
 
   const submit = useCallback(
-    (inviteCode: string) => {
+    (inviteCode: string, joinMethod: JoinMethod) => {
       mutate(
-        { inviteCode },
+        { inviteCode, joinMethod },
         {
           // 뒤로 가기로 코드 입력 화면에 돌아오지 않도록 replace
           onSuccess: ({ groupId }) => router.replace(`/group/${groupId}`),
@@ -41,10 +44,10 @@ export default function GroupJoinPage() {
     const pendingCode = takePendingInviteCode();
     if (!pendingCode) return;
     setCode(pendingCode.slice(0, CODE_LENGTH));
-    submit(pendingCode);
+    submit(pendingCode, "invite_link");
   }, [submit]);
 
-  const handleSubmit = () => submit(code);
+  const handleSubmit = () => submit(code, "invite_code");
 
   return (
     <main className="pb-[114px] pt-[60px]">

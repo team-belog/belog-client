@@ -6,6 +6,7 @@ import {
 import { pinGroup, unpinGroup } from "@/features/group/api/groupApi";
 import { groupKeys } from "@/features/group/hooks/groupKeys";
 import type { ApiError } from "@/lib/apiError";
+import { track } from "@/lib/amplitude";
 import type { GroupListData } from "@/features/group/types";
 
 type GroupListCache = InfiniteData<GroupListData, string | undefined>;
@@ -46,6 +47,12 @@ export function useToggleGroupPin() {
       );
 
       return { previous };
+    },
+    onSuccess: (_data, { groupId, pinned }) => {
+      track("Group Pin Changed", {
+        group_id: String(groupId),
+        is_pinned: pinned,
+      });
     },
     onError: (_error, _input, context) => {
       if (context?.previous) {

@@ -6,6 +6,7 @@ import { usePreLogMain } from "@/features/pre-log/hooks/usePreLogMain";
 import { useTogglePreLogPlanLike } from "@/features/pre-log/hooks/useTogglePreLogPlanLike";
 import { useTogglePreLogPlanPin } from "@/features/pre-log/hooks/useTogglePreLogPlanPin";
 import { useUpdateMeeting } from "@/features/meetup/hooks/useUpdateMeeting";
+import { useTrackView } from "@/hooks/useTrackView";
 
 export default function PreLogContainer({ meetingId }: { meetingId: number }) {
   const { data, isPending, isError, error, refetch } = usePreLogMain(meetingId);
@@ -13,6 +14,17 @@ export default function PreLogContainer({ meetingId }: { meetingId: number }) {
   const deletePlan = useDeletePreLogPlan(meetingId);
   const togglePlanPin = useTogglePreLogPlanPin(meetingId);
   const togglePlanLike = useTogglePreLogPlanLike(meetingId);
+
+  useTrackView(
+    "Page Viewed",
+    data
+      ? {
+          page_name: "prelog",
+          group_id: String(data.groupId),
+          meeting_id: String(meetingId),
+        }
+      : null,
+  );
 
   if (isPending) {
     return (
