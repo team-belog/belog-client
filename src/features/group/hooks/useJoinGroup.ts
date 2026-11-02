@@ -5,15 +5,20 @@ import type { ApiError } from "@/lib/apiError";
 import { setUserProperties, track } from "@/lib/amplitude";
 import type { JoinGroupData, JoinGroupRequest } from "@/features/group/types";
 
+// 초대 링크로 자동 참여했는지, 코드를 직접 입력했는지 (Amplitude 분석용)
+export type JoinMethod = "invite_link" | "invite_code";
+
+type JoinGroupInput = JoinGroupRequest & { joinMethod: JoinMethod };
+
 export function useJoinGroup() {
   const queryClient = useQueryClient();
 
-  return useMutation<JoinGroupData, ApiError, JoinGroupRequest>({
-    mutationFn: joinGroup,
-    onSuccess: (data) => {
+  return useMutation<JoinGroupData, ApiError, JoinGroupInput>({
+    mutationFn: ({ inviteCode }) => joinGroup({ inviteCode }),
+    onSuccess: (data, { joinMethod }) => {
       track("Group Joined", {
         group_id: String(data.groupId),
-        join_method: "invite_code",
+        join_method: joinMethod,
       });
       setUserProperties({ has_joined_group: true });
       queryClient.invalidateQueries({ queryKey: groupKeys.list() });
