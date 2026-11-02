@@ -1,6 +1,7 @@
 import { eachDayOfInterval, endOfMonth, endOfWeek, format, startOfMonth, startOfWeek } from "date-fns";
 
-export type RangePosition = "single" | "start" | "middle" | "end";
+// joint: 겹친 일정에서 한 일정의 시작/종료일이 다른 일정 사이에 있는 날 (원 + 양쪽 띠)
+export type RangePosition = "single" | "start" | "middle" | "end" | "joint";
 
 export type CalendarDay = {
   date: Date;
@@ -9,6 +10,8 @@ export type CalendarDay = {
   isSelected: boolean;
   isPast?: boolean;
   rangePosition: RangePosition | null;
+  // 띠의 왼쪽/오른쪽 절반에 일정이 2개 이상 겹치는지
+  overlappedSides?: { left: boolean; right: boolean };
 };
 
 /** month: 1~12 */

@@ -1,7 +1,6 @@
 interface MeetupDeleteModalProps {
   meetingName: string;
   isDeleting?: boolean;
-  errorMessage?: string;
   onCancel: () => void;
   onConfirm: () => void;
 }
@@ -9,7 +8,6 @@ interface MeetupDeleteModalProps {
 export default function MeetupDeleteModal({
   meetingName,
   isDeleting = false,
-  errorMessage,
   onCancel,
   onConfirm,
 }: MeetupDeleteModalProps) {
@@ -22,12 +20,6 @@ export default function MeetupDeleteModal({
             &quot;{meetingName}&quot; 삭제하기
           </p>
         </div>
-
-        {errorMessage && (
-          <p className="pretendard-m-12 absolute left-5 right-5 top-[106px] text-center text-red-500">
-            {errorMessage}
-          </p>
-        )}
 
         <div className="absolute left-[20px] top-[136px] flex gap-[10px]">
           <button
