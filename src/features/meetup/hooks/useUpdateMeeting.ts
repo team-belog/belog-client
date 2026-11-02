@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateMeeting } from "@/features/meetup/api/meetupApi";
 import { meetupKeys } from "@/features/meetup/hooks/meetupKeys";
 import { groupKeys } from "@/features/group/hooks/groupKeys";
+import { homeKeys } from "@/features/home/hooks/homeKeys";
 import { preLogKeys } from "@/features/pre-log/hooks/preLogKeys";
 import type { UpdateMeetingRequest } from "@/features/meetup/types";
 import type { ApiError } from "@/lib/apiError";
@@ -18,6 +19,7 @@ export function useUpdateMeeting(meetingId: number) {
       queryClient.invalidateQueries({ queryKey: meetupKeys.detail(meetingId) });
       queryClient.invalidateQueries({ queryKey: groupKeys.all });
       queryClient.invalidateQueries({ queryKey: preLogKeys.main(meetingId) });
+      queryClient.invalidateQueries({ queryKey: homeKeys.all });
     },
   });
 }

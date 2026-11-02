@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createMeeting } from "@/features/meetup/api/meetupApi";
 import { groupKeys } from "@/features/group/hooks/groupKeys";
+import { homeKeys } from "@/features/home/hooks/homeKeys";
 import type {
   CreateMeetingData,
   CreateMeetingRequest,
@@ -20,6 +21,7 @@ export function useCreateMeeting(groupId: number) {
       });
       // 그룹 홈의 조율 중·진행 중 만남 목록에 새 만남을 반영
       queryClient.invalidateQueries({ queryKey: groupKeys.detail(groupId) });
+      queryClient.invalidateQueries({ queryKey: homeKeys.all });
     },
   });
 }

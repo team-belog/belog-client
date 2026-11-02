@@ -1,7 +1,6 @@
 interface MeetupEndModalProps {
   meetingName: string;
   isEnding?: boolean;
-  errorMessage?: string;
   onCancel: () => void;
   onConfirm: () => void;
 }
@@ -9,7 +8,6 @@ interface MeetupEndModalProps {
 export default function MeetupEndModal({
   meetingName,
   isEnding = false,
-  errorMessage,
   onCancel,
   onConfirm,
 }: MeetupEndModalProps) {
@@ -22,13 +20,9 @@ export default function MeetupEndModal({
             <br />
             종료하시겠습니까?
           </p>
-          {errorMessage ? (
-            <p className="pretendard-m-12 text-red-500">{errorMessage}</p>
-          ) : (
-            <p className="pretendard-m-15 whitespace-nowrap text-sub-gray-2">
-              종료한 만남은 되돌릴 수 없어요
-            </p>
-          )}
+          <p className="pretendard-m-15 whitespace-nowrap text-sub-gray-2">
+            종료한 만남은 되돌릴 수 없어요
+          </p>
         </div>
 
         <div className="absolute left-[20px] top-[136px] flex gap-[10px]">

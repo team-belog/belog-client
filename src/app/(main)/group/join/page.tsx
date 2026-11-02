@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -8,6 +8,7 @@ import Divider from "@/components/layout/Divider";
 import Button from "@/components/ui/Button";
 import InviteCodeInput from "@/features/group/components/InviteCodeInput";
 import { useJoinGroup } from "@/features/group/hooks/useJoinGroup";
+import { takePendingInviteCode } from "@/features/group/utils/pendingInviteStorage";
 
 const CODE_LENGTH = 6;
 
@@ -22,15 +23,28 @@ export default function GroupJoinPage() {
     if (error) reset();
   };
 
-  const handleSubmit = () => {
-    mutate(
-      { inviteCode: code },
-      {
-        // 뒤로 가기로 코드 입력 화면에 돌아오지 않도록 replace
-        onSuccess: ({ groupId }) => router.replace(`/group/${groupId}`),
-      },
-    );
-  };
+  const submit = useCallback(
+    (inviteCode: string) => {
+      mutate(
+        { inviteCode },
+        {
+          // 뒤로 가기로 코드 입력 화면에 돌아오지 않도록 replace
+          onSuccess: ({ groupId }) => router.replace(`/group/${groupId}`),
+        },
+      );
+    },
+    [mutate, router],
+  );
+
+  // 초대 링크로 들어온 경우 보관해 둔 코드로 바로 참여
+  useEffect(() => {
+    const pendingCode = takePendingInviteCode();
+    if (!pendingCode) return;
+    setCode(pendingCode.slice(0, CODE_LENGTH));
+    submit(pendingCode);
+  }, [submit]);
+
+  const handleSubmit = () => submit(code);
 
   return (
     <main className="pb-[114px] pt-[60px]">

@@ -60,18 +60,18 @@ export default function MeetupDetailContainer({
       updateErrorMessage={updateMeeting.error?.message}
       onUpdate={updateMeeting.mutate}
       isDeleting={deleteMeeting.isPending}
-      deleteErrorMessage={deleteMeeting.error?.message}
-      onDelete={() =>
+      onDelete={(options) =>
         deleteMeeting.mutate(meetingId, {
           onSuccess: () => router.replace(`/group/${data.groupId}`),
+          onError: (error) => options?.onError?.(error.message),
         })
       }
       onCancelDelete={deleteMeeting.reset}
       isEnding={endMeeting.isPending}
-      endErrorMessage={endMeeting.error?.message}
-      onEnd={() =>
+      onEnd={(options) =>
         endMeeting.mutate(meetingId, {
           onSuccess: () => router.replace(`/group/${data.groupId}`),
+          onError: (error) => options?.onError?.(error.message),
         })
       }
       onCancelEnd={endMeeting.reset}
