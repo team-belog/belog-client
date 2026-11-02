@@ -5,47 +5,46 @@ import { useMemo, useState } from "react";
 import BackHeader from "@/components/layout/BackHeader";
 import Button from "@/components/ui/Button";
 import SearchBar from "@/components/ui/SearchBar";
-import { useGroupMembers } from "@/features/group/hooks/useGroupMembers";
 import MeetupCurrentMemberRow from "@/features/meetup/components/MeetupCurrentMemberRow";
 import MeetupMemberRemoveModal from "@/features/meetup/components/MeetupMemberRemoveModal";
 import MeetupMemberRow from "@/features/meetup/components/MeetupMemberRow";
-import type { MeetingMemberDto } from "@/features/meetup/types";
+import type { MeetingMemberOptionDto } from "@/features/meetup/types";
 
 interface MeetupMemberManageViewProps {
-  groupId: number;
-  members: MeetingMemberDto[];
+  options: MeetingMemberOptionDto[];
 }
 
 export default function MeetupMemberManageView({
-  groupId,
-  members,
+  options,
 }: MeetupMemberManageViewProps) {
-  const { data: groupMembers } = useGroupMembers(groupId);
   const [memberIds, setMemberIds] = useState(() =>
-    members.map((member) => member.groupMemberId),
+    options
+      .filter((option) => option.isParticipant)
+      .map((option) => option.groupMemberId),
   );
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [removeTarget, setRemoveTarget] = useState<MeetingMemberDto | null>(
+  const [removeTarget, setRemoveTarget] = useState<MeetingMemberOptionDto | null>(
     null,
   );
 
-  const currentMembers = members.filter((member) =>
+  const currentMembers = options.filter((member) =>
     memberIds.includes(member.groupMemberId),
   );
 
-  // 삭제한 멤버도 그룹 멤버라 추가 목록에 다시 나타남
+  // 삭제한 멤버도 추가 목록에 다시 나타남
   const candidates = useMemo(() => {
     const query = searchQuery.trim();
-    return (groupMembers?.items ?? []).filter(
+    return options.filter(
       (member) =>
         !memberIds.includes(member.groupMemberId) &&
         (!query || member.nickname.includes(query)),
     );
-  }, [groupMembers, memberIds, searchQuery]);
+  }, [options, memberIds, searchQuery]);
 
   const hasChanges =
-    memberIds.length !== members.length || selectedIds.length > 0;
+    memberIds.length !== options.filter((option) => option.isParticipant).length ||
+    selectedIds.length > 0;
 
   const handleConfirmRemove = () => {
     if (!removeTarget) return;
@@ -79,7 +78,7 @@ export default function MeetupMemberManageView({
               key={member.groupMemberId}
               member={member}
               onRemove={
-                member.isMe ? undefined : () => setRemoveTarget(member)
+                member.isRemovable ? () => setRemoveTarget(member) : undefined
               }
             />
           ))}

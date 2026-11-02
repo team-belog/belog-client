@@ -128,3 +128,17 @@ export type MeetingMemberDto = {
   profileImageUrl: string | null;
   isMe: boolean;
 };
+
+export type MeetingMemberOptionsData = {
+  items: MeetingMemberOptionDto[];
+};
+
+export type MeetingMemberOptionDto = {
+  groupMemberId: number;
+  nickname: string;
+  profileImageUrl: string | null;
+  isMe: boolean;
+  isParticipant: boolean;
+  // 방장, 만남 생성자, Bill-log 기록이 있는 참여자와 미참여자는 false
+  isRemovable: boolean;
+};
