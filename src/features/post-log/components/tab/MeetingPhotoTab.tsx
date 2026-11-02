@@ -13,8 +13,8 @@ import { PostLogPhoto } from "@/features/post-log/types/index"
 import { useLikePhoto } from "@/features/post-log/hooks/useLikePhoto"
 import { useUnlikePhoto } from "../../hooks/useUnLikePhoto";
 
-function formatDayLabel(dayNumber: number, date: string) {
-  const num = dayNumber >= 0 ? String(dayNumber).padStart(2, "0") : String(dayNumber);
+function formatDayLabel(dayNumber: string, date: string) {
+  const num = Number(dayNumber) >= 0 ? String(Number(dayNumber)).padStart(2, "0") : dayNumber;
   const [year, month, day] = date.split("-");
   return `Day${num} (${year.slice(2)}.${month}.${day})`;
 }
@@ -47,7 +47,7 @@ export default function MeetingPhotoTab() {
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useGetPostLogPhotoList(meetingId);
 
   const mergedDays = (() => {
-    const map = new Map<number, { dayNumber: number; date: string; photos: PostLogPhoto[] }>();
+    const map = new Map<string, { dayNumber: string; date: string; photos: PostLogPhoto[] }>();
     data?.pages.forEach((page) => {
       page.days.forEach((day) => {
         const existing = map.get(day.dayNumber);
@@ -58,7 +58,7 @@ export default function MeetingPhotoTab() {
         }
       });
     });
-    return Array.from(map.values()).sort((a, b) => a.dayNumber - b.dayNumber);
+    return Array.from(map.values()).sort((a, b) => Number(a.dayNumber) - Number(b.dayNumber));
   })();
 
   const allPhotos = mergedDays.flatMap((day) => day.photos);
