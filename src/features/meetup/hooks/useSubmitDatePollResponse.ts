@@ -4,6 +4,7 @@ import { meetupKeys } from "@/features/meetup/hooks/meetupKeys";
 import { groupKeys } from "@/features/group/hooks/groupKeys";
 import type { SubmitDatePollResponseRequest } from "@/features/meetup/types";
 import type { ApiError } from "@/lib/apiError";
+import { track } from "@/lib/amplitude";
 
 export function useSubmitDatePollResponse(meetingId: number) {
   const queryClient = useQueryClient();
@@ -11,6 +12,9 @@ export function useSubmitDatePollResponse(meetingId: number) {
   return useMutation<void, ApiError, SubmitDatePollResponseRequest>({
     mutationFn: (body) => submitDatePollResponse(meetingId, body),
     onSuccess: () => {
+      track("Date Poll Response Submitted", {
+        meeting_id: String(meetingId),
+      });
       // 응답 인원과 날짜별 가능 멤버가 바뀌므로 조율 현황을 갱신
       queryClient.invalidateQueries({
         queryKey: meetupKeys.datePollResults(meetingId),

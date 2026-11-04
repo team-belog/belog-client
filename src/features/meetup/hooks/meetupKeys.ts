@@ -5,4 +5,6 @@ export const meetupKeys = {
   datePollResults: (id: number) =>
     [...meetupKeys.all, "datePollResults", id] as const,
   members: (id: number) => [...meetupKeys.all, "members", id] as const,
+  memberOptions: (id: number) =>
+    [...meetupKeys.all, "memberOptions", id] as const,
 };

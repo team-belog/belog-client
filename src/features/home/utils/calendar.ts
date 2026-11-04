@@ -45,7 +45,6 @@ export function buildCalendarDay(
   today?: string
 ): HomeCalendarDay {
   const dayMeetings = getMeetingsForDate(date, meetings);
-  const connections = getConnections(date, dayMeetings);
 
   return {
     date,
@@ -54,6 +53,6 @@ export function buildCalendarDay(
     isSelected: selectedDate ? isSameDay(date, selectedDate) : false,
     meetings: dayMeetings,
     rangePosition: getRangePosition(date, dayMeetings),
-    overlappedSides: { left: connections.left >= 2, right: connections.right >= 2 },
+    overlapCount: Math.max(dayMeetings.length - 1, 0),
   };
 }
