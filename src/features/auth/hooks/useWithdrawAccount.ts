@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { withdrawAccount } from "@/features/auth/api/userApi";
 import { setAccessToken } from "@/lib/authToken";
+import { resetAmplitude } from "@/lib/amplitude";
 import type { ApiError } from "@/lib/apiError";
 
 export function useWithdrawAccount() {
@@ -12,6 +13,7 @@ export function useWithdrawAccount() {
         mutationFn: withdrawAccount,
         onSuccess: () => {
             setAccessToken(null);
+            resetAmplitude();
             queryClient.clear();
             router.replace("/login");
         },

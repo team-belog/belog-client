@@ -6,7 +6,7 @@ import Profile from "@/components/ui/Profile";
 import type { GroupMemberDto } from "@/features/group/types";
 
 interface MeetupMemberRowProps {
-  member: GroupMemberDto;
+  member: Pick<GroupMemberDto, "nickname" | "profileImageUrl">;
   selected: boolean;
   onToggle: () => void;
 }

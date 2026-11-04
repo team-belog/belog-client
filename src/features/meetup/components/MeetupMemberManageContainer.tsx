@@ -1,19 +1,22 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import MeetupMemberManageView from "@/features/meetup/components/MeetupMemberManageView";
-import { useMeetingDetail } from "@/features/meetup/hooks/useMeetingDetail";
-import { useMeetingMembers } from "@/features/meetup/hooks/useMeetingMembers";
+import { useMeetingMemberOptions } from "@/features/meetup/hooks/useMeetingMemberOptions";
+import { useUpdateMeetingMembers } from "@/features/meetup/hooks/useUpdateMeetingMembers";
 
 export default function MeetupMemberManageContainer({
   meetingId,
 }: {
   meetingId: number;
 }) {
-  // 추가할 멤버 후보를 그룹 멤버에서 찾으므로 groupId가 필요
-  const meeting = useMeetingDetail(meetingId);
-  const members = useMeetingMembers(meetingId);
+  const { data, isPending, isError, error, refetch } =
+    useMeetingMemberOptions(meetingId);
+  const updateMembers = useUpdateMeetingMembers(meetingId);
+  const router = useRouter();
 
-  if (meeting.isPending || members.isPending) {
+  if (isPending) {
     return (
       <p className="pretendard-m-15 pt-[25px] text-center text-sub-gray-2">
         불러오는 중...
@@ -21,17 +24,13 @@ export default function MeetupMemberManageContainer({
     );
   }
 
-  if (meeting.isError || members.isError) {
-    const error = meeting.error ?? members.error;
+  if (isError) {
     return (
       <div className="flex flex-col items-center gap-3 pt-[25px]">
-        <p className="pretendard-m-15 text-sub-gray-2">{error?.message}</p>
+        <p className="pretendard-m-15 text-sub-gray-2">{error.message}</p>
         <button
           type="button"
-          onClick={() => {
-            meeting.refetch();
-            members.refetch();
-          }}
+          onClick={() => refetch()}
           className="pretendard-m-15 text-main-black underline"
         >
           다시 시도
@@ -42,8 +41,17 @@ export default function MeetupMemberManageContainer({
 
   return (
     <MeetupMemberManageView
-      groupId={meeting.data.groupId}
-      members={members.data.items}
+      options={data.items}
+      isSaving={updateMembers.isPending}
+      onSave={(participantMemberIds, options) =>
+        updateMembers.mutate(
+          { participantMemberIds },
+          {
+            onSuccess: () => router.back(),
+            onError: (error) => options?.onError?.(error.message),
+          },
+        )
+      }
     />
   );
 }
