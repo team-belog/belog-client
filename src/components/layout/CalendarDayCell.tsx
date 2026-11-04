@@ -15,10 +15,10 @@ function BubbleDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "on
     day.rangePosition === "end" ||
     day.rangePosition === "joint";
 
-  // 띠를 왼쪽/오른쪽 절반으로 나눠 그리고, 일정이 겹치는 절반은 더 짙게 칠한다
+  // 띠를 왼쪽/오른쪽 절반으로 나눠 그린다
   const hasLeftBar = day.rangePosition === "end" || day.rangePosition === "middle" || day.rangePosition === "joint";
   const hasRightBar = day.rangePosition === "start" || day.rangePosition === "middle" || day.rangePosition === "joint";
-  const barColorClass = (overlapped?: boolean) => (overlapped ? "bg-main-mint/65" : "bg-main-mint/40");
+  const overlapCount = day.overlapCount ?? 0;
 
   // 오늘은 일정 여부와 관계없이 흰 바탕 + 민트 테두리 원으로 표시한다
   const textColorClass = day.isToday
@@ -39,14 +39,25 @@ function BubbleDayCell({ day, onSelect }: Pick<CalendarDayCellProps, "day" | "on
       {hasLeftBar && (
         <span
           aria-hidden
-          className={`absolute inset-y-0 left-0 right-1/2 ${barColorClass(day.overlappedSides?.left)}`}
+          className="absolute inset-y-0 left-0 right-1/2 bg-main-mint/40"
         />
       )}
       {hasRightBar && (
         <span
           aria-hidden
-          className={`absolute inset-y-0 left-1/2 right-0 ${barColorClass(day.overlappedSides?.right)}`}
+          className="absolute inset-y-0 left-1/2 right-0 bg-main-mint/40"
         />
+      )}
+
+      {/* 일정이 겹치는 날은 날짜 위에 점 + 겹친 일정 수(+N)를 표시한다 (점이 날짜 중앙에 오도록 정렬) */}
+      {overlapCount > 0 && (
+        <span
+          aria-label={`일정 ${overlapCount}개 겹침`}
+          className="absolute bottom-[calc(100%+6px)] left-1/2 flex h-[10px] -translate-x-[3px] items-center gap-[2px]"
+        >
+          <span aria-hidden className="size-[6px] rounded-full bg-main-mint" />
+          <span className="pretendard-sb-8 text-main-mint">+{overlapCount}</span>
+        </span>
       )}
 
       {day.isToday ? (
