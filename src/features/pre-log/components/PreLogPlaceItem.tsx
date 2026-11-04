@@ -60,7 +60,7 @@ export default function PreLogPlaceItem({
             onClick={() => onLike?.(plan)}
             aria-label={likedByMe ? "좋아요 취소" : "좋아요"}
             aria-pressed={likedByMe}
-            className="ml-4 flex items-end gap-px text-[11.429px] font-semibold text-main-mint"
+            className={`ml-4 flex items-end gap-px text-[11.429px] font-semibold ${likedByMe ? "text-main-mint" : "text-sub-gray-2"}`}
           >
             <Image
               src={likedByMe ? "/icons/like-filled.svg" : "/icons/pre-log/like-empty-gray.svg"}

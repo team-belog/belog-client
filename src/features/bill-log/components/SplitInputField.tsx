@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import CurrencyDropdown from "./CurrencyDropdown";
+import CurrencyDropdown, { CURRENCY_SYMBOL_MAP } from "./CurrencyDropdown";
 
 interface InputItem {
   placeholder?: string;
@@ -90,7 +90,7 @@ export default function SplitInputField({
             onPointerDown={(e) => e.stopPropagation()}
             className={`pretendard-sb-15 ml-1 shrink-0 ${currencySelected ? "text-main-black" : "text-sub-gray-2"}`}
           >
-            {currency}
+            {CURRENCY_SYMBOL_MAP[currency] ?? currency}
           </button>
         </div>
       </div>

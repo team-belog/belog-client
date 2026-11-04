@@ -52,7 +52,8 @@ export default function PostLogPhotoPage() {
       const fileName = `photo.${ext}`;
       const file = new File([blob], fileName, { type: blob.type });
 
-      if (navigator.canShare?.({ files: [file] })) {
+      const isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+      if (isMobile && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file] });
         return;
       }

@@ -19,7 +19,7 @@ export default function Step2({ onNext }: Step2Props) {
   const [title, setTitle] = useState("");
   const [items, setItems] = useState<{ item: string; price: string }[]>([{ item: "", price: "" }]);
   const [currency, setCurrency] = useState("KRW");
-  const [currencySelected, setCurrencySelected] = useState(false);
+  const [currencySelected, setCurrencySelected] = useState(true);
   
   const isDisabled = !title.trim() || items.some((i) => !i.item.trim() || !i.price.trim()) || !currencySelected;
 
@@ -78,7 +78,7 @@ export default function Step2({ onNext }: Step2Props) {
 
       <InputField
         label="영수증 제목"
-        placeholder="영수증 제목을 입력해주세요."
+        placeholder="영수증 제목을 입력해주세요"
         value={title}
         onChange={setTitle}
       />
@@ -98,12 +98,12 @@ export default function Step2({ onNext }: Step2Props) {
               currencySelected={currencySelected}
               onCurrencyChange={(c) => { setCurrency(c); setCurrencySelected(true); }}
               left={{
-                placeholder: "ex) 아메리카노",
+                placeholder: "항목명을 입력해주세요",
                 value: it.item ,
                 onChange: (value) => setItems((prev) => prev.map((item,i) => i === index ? {...item, item: value} : item))
               }}
               right={{
-                placeholder: "4,000",
+                placeholder: "0",
                 value: it.price ? Number(it.price).toLocaleString() : "",
                 onChange: (value) => setItems((prev) => prev.map((item,i) => i === index ? {...item, price: value.replace(/\D/g, "")} : item))
               }}

@@ -31,13 +31,35 @@ function TicketContent() {
     const el = document.getElementById("ticket");
     if (!el) return;
     try {
+      // 외부 이미지(S3 등)를 base64로 변환해서 CORS 문제 없이 캡처
+      const imgs = Array.from(el.querySelectorAll("img"));
+      const originalSrcs = imgs.map((img) => img.src);
+      await Promise.all(
+        imgs.map(async (img) => {
+          try {
+            const res = await fetch(img.src, { mode: "cors" });
+            const blob = await res.blob();
+            const base64 = await new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result as string);
+              reader.readAsDataURL(blob);
+            });
+            img.src = base64;
+          } catch {
+            // CORS 실패 시 원본 유지
+          }
+        })
+      );
       const dataUrl = await domtoimage.toPng(el, { scale: 2 });
+      // 원본 src 복원
+      imgs.forEach((img, i) => { img.src = originalSrcs[i]; });
       const res = await fetch(dataUrl);
       const blob = await res.blob();
       const file = new File([blob], "ticket.png", { type: "image/png" });
 
       // iOS PWA: Web Share API로 공유 시트 열기 → "사진 저장"으로 갤러리에 저장
-      if (navigator.canShare?.({ files: [file] })) {
+      const isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+      if (isMobile && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file] });
         return;
       }

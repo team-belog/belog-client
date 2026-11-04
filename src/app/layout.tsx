@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { PT_Sans_Narrow } from "next/font/google";
 import "./globals.css";
@@ -17,13 +17,21 @@ const pretendard = localFont({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   title: "BELOG",
   description: "흩어져 있던 모임의 모든 순간을 하나로",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "BELOG",
   },
   openGraph: {
@@ -51,6 +59,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+      </head>
       <body className={`${pretendard.variable} ${ptSansNarrow.variable} font-pretendard antialiased`}>
         <Providers>{children}</Providers>
       </body>

@@ -2,6 +2,19 @@
 
 const CURRENCIES = ["KRW", "USD", "JPY", "EUR", "GBP", "CNY", "AUD", "CAD", "CHF", "SGD"];
 
+export const CURRENCY_SYMBOL_MAP: Record<string, string> = {
+  KRW: "₩",
+  USD: "$",
+  JPY: "¥",
+  EUR: "€",
+  GBP: "£",
+  CNY: "¥",
+  AUD: "A$",
+  CAD: "C$",
+  CHF: "CHF",
+  SGD: "S$",
+};
+
 interface CurrencyDropdownProps {
   selected: string;
   onSelect: (currency: string) => void;
@@ -19,7 +32,7 @@ export default function CurrencyDropdown({ selected, onSelect }: CurrencyDropdow
             currency === selected ? "bg-main-cool-gray" : ""
           }`}
         >
-          {currency}
+          {CURRENCY_SYMBOL_MAP[currency] ?? currency}
         </button>
       ))}
     </div>
