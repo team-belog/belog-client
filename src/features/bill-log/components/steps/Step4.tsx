@@ -9,6 +9,7 @@ import { useBillFormStore } from "@/features/bill-log/store/useBillFormStore";
 import { createBill } from "@/features/bill-log/api/billLogApi";
 import type { BillShare } from "@/features/bill-log/types";
 import { BILL_SPLIT_LABEL } from "@/features/bill-log/constants/billLog";
+import { track } from "@/lib/amplitude";
 
 interface Step4Props {
   onSubmit: () => void;
@@ -26,6 +27,7 @@ export default function Step4({ onSubmit }: Step4Props) {
   const splitType = useBillFormStore((state) => state.splitType);
   const storeShares = useBillFormStore((state) => state.shares);
   const shareDisplays = useBillFormStore((state) => state.shareDisplays);
+  const entryMethod = useBillFormStore((state) => state.entryMethod);
   const reset = useBillFormStore((state) => state.reset);
 
   const shares: BillShare[] = shareDisplays.map((d) => ({
@@ -36,7 +38,7 @@ export default function Step4({ onSubmit }: Step4Props) {
     payer: d.payer,
   }));
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending } = useMutation<{ billId: number }>({
     mutationFn: () =>
       createBill(meetingId, {
         title,
@@ -46,7 +48,12 @@ export default function Step4({ onSubmit }: Step4Props) {
         items,
         shares: storeShares,
       }),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      track("Expense Created", {
+        meeting_id: String(meetingId),
+        bill_id: String(data.billId),
+        ...(entryMethod && { entry_method: entryMethod }),
+      });
       reset();
       onSubmit();
     },
