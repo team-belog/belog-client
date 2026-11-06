@@ -89,7 +89,7 @@ function TicketContent() {
           </div>
         )}
       </div>
-      <Button variant="primary" disabled={false} onClick={handleSave} className="fixed bottom-0">
+      <Button variant="primary" onClick={handleSave} className="fixed bottom-0">
         갤러리에 저장
       </Button>
     </main>
