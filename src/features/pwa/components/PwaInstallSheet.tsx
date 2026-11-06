@@ -37,7 +37,7 @@ export default function PwaInstallSheet({
         <Button
           bare
           variant="primary"
-          disabled={false}
+         
           onClick={onStart}
           className="mt-8 w-full"
         >

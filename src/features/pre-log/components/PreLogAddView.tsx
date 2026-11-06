@@ -114,7 +114,7 @@ export default function PreLogAddView({
       <div className="fixed bottom-0 left-0 flex w-full items-center gap-3 bg-white px-4 py-[28px]">
         <Button
           variant="tertiary"
-          disabled={false}
+         
           bare
           onClick={handleCancel}
           className="w-[114px] shrink-0"

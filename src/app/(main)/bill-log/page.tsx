@@ -73,7 +73,7 @@ function BillLogContent() {
             </div>
           )}
         </div>
-        <Button variant="primary" disabled={false} onClick={() => router.push(`/bill-log/new?meetingId=${meetingId}&groupId=${groupId}`)} className="fixed bottom-0 left-0 right-0">
+        <Button variant="primary" onClick={() => router.push(`/bill-log/new?meetingId=${meetingId}&groupId=${groupId}`)} className="fixed bottom-0 left-0 right-0">
           결제 내역 등록
         </Button>
       </div>
