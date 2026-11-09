@@ -79,10 +79,10 @@ function TicketContent() {
   if (isLoading) return <div className="flex items-center justify-center h-dvh">로딩 중...</div>;
 
   return (
-    <main className="flex h-dvh flex-col pt-[60px]">
+    <main className="flex h-dvh flex-col">
       <BackHeader title="티켓" onShare={handleShare} />
       <Divider />
-      <div className="mt-[34px] flex items-center justify-center px-[42px]">
+      <div className="flex flex-1 items-center justify-center px-[42px] pb-[80px]">
         {ticket && (
           <div id="ticket" className="w-full">
             <PostLogTicketCard ticket={ticket} />

@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import BelogIcon from "@/components/ui/BelogIcon";
 import type { PostLogTicketDetail } from "@/features/post-log/types";
 
+const DESIGN_WIDTH = 335;
+const DESIGN_HEIGHT = 565;
 const CORNER_RADIUS = 21.5;
 const NOTCH_RADIUS = 9;
 const NOTCH_COUNT = 7;
@@ -46,14 +48,13 @@ interface PostLogTicketCardProps {
 
 export default function PostLogTicketCard({ ticket }: PostLogTicketCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState({ width: 0, height: 0 });
+  const [scale, setScale] = useState(0);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     const observer = new ResizeObserver(([entry]) => {
-      const { width, height } = entry.contentRect;
-      setSize({ width, height });
+      setScale(entry.contentRect.width / DESIGN_WIDTH);
     });
     observer.observe(el);
     return () => observer.disconnect();
@@ -62,71 +63,84 @@ export default function PostLogTicketCard({ ticket }: PostLogTicketCardProps) {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[565px] drop-shadow-[0_0_5px_rgba(0,0,0,0.15)]"
+      style={{ height: scale > 0 ? DESIGN_HEIGHT * scale : undefined }}
+      className="relative w-full drop-shadow-[0_0_5px_rgba(0,0,0,0.15)]"
     >
-      {size.width > 0 && size.height > 0 && (
-        <svg
-          aria-hidden
-          className="absolute inset-0"
-          width={size.width}
-          height={size.height}
-          viewBox={`0 0 ${size.width} ${size.height}`}
+      {scale > 0 && (
+        <div
+          style={{
+            width: DESIGN_WIDTH,
+            height: DESIGN_HEIGHT,
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
         >
-          <path d={buildPath(size.width, size.height)} fill="white" />
-        </svg>
-      )}
-      <div className="relative flex flex-col h-full py-5">
-        <div className="flex min-h-[36px] items-center justify-center gap-[3px] px-4">
-          <BelogIcon width={14} height={12} />
-          <Image src="/icons/belog-wordmark.svg" alt="BELOG" width={58} height={12} />
-        </div>
-
-        <div className="mt-[5px] relative w-full h-[169px] overflow-hidden bg-main-cool-gray shrink-0">
-          <Image src={ticket.coverPhotoUrl ?? "/icons/post-log/ticket-cover.jpg"} alt="" fill className="object-cover" priority crossOrigin="anonymous" />
-        </div>
-
-        <div className="mt-5 flex flex-col px-4">
-          <p className="text-[18px] font-semibold text-main-black">{ticket.meetingName}</p>
-          {ticket.memory && (
-            <p className="mt-4 pt-sans-narrow-regular text-[12px] leading-[20px] text-main-black line-clamp-2 whitespace-pre-line">
-              {ticket.memory}
-            </p>
-          )}
-        </div>
-
-        <div className="mt-[30px] flex items-start px-4">
-          <div className="flex w-1/2 flex-col gap-[10px]">
-            <span className="text-[12px] font-medium text-main-black">Date</span>
-            <span className="pt-sans-narrow-regular text-[15px] leading-[22px] text-main-black">
-              {ticket.startDate === ticket.endDate
-                ? ticket.startDate
-                : `${ticket.startDate} - ${ticket.endDate}`}
-            </span>
-          </div>
-          {ticket.location && (
-            <div className="flex w-1/2 flex-col gap-[10px]">
-              <span className="text-[12px] font-medium text-main-black">Location</span>
-              <span className="pt-sans-narrow-regular text-[15px] leading-[22px] text-main-black">{ticket.location}</span>
+          <svg
+            aria-hidden
+            className="absolute inset-0"
+            width={DESIGN_WIDTH}
+            height={DESIGN_HEIGHT}
+            viewBox={`0 0 ${DESIGN_WIDTH} ${DESIGN_HEIGHT}`}
+          >
+            <path d={buildPath(DESIGN_WIDTH, DESIGN_HEIGHT)} fill="white" />
+          </svg>
+          <div className="relative flex flex-col h-full py-5">
+            <div className="flex min-h-[36px] items-center justify-center gap-[3px] px-4">
+              <BelogIcon width={14} height={12} />
+              <Image src="/icons/belog-wordmark.svg" alt="BELOG" width={58} height={12} />
             </div>
-          )}
-        </div>
 
-        {(ticket.members?.length ?? 0) > 0 && (
-          <div className="mt-[30px] flex flex-col gap-[10px] px-4">
-            <span className="text-[12px] font-medium text-main-black">Member</span>
-            <div className="flex flex-wrap gap-[5px]">
-              {ticket.members?.map((m) => (
-                <span
-                  key={m.groupMemberId}
-                  className="pt-sans-narrow-regular whitespace-nowrap rounded-[5px] bg-[#F7F8F9] px-2 py-[5px] text-[12px] text-sub-gray-2"
-                >
-                  @{m.nickname}
+            <div className="mt-[5px] relative w-full h-[169px] overflow-hidden bg-main-cool-gray shrink-0">
+              <Image src={ticket.coverPhotoUrl ?? "/icons/post-log/ticket-cover.jpg"} alt="" fill className="object-cover" priority crossOrigin="anonymous" />
+            </div>
+
+            <div className="mt-5 flex flex-col px-4">
+              <p className="text-[18px] font-semibold text-main-black">{ticket.meetingName}</p>
+              {ticket.memory && (
+                <p className="mt-4 pt-sans-narrow-regular text-[12px] leading-[20px] text-main-black line-clamp-2 whitespace-pre-line">
+                  {ticket.memory}
+                </p>
+              )}
+            </div>
+
+            <div className="mt-[30px] flex items-start px-4">
+              <div className="flex w-1/2 flex-col gap-[10px]">
+                <span className="text-[12px] font-medium text-main-black">Date</span>
+                <span className="pt-sans-narrow-regular text-[15px] leading-[22px] text-main-black">
+                  {ticket.startDate === ticket.endDate
+                    ? ticket.startDate
+                    : `${ticket.startDate} - ${ticket.endDate}`}
                 </span>
-              ))}
+              </div>
+              {ticket.location && (
+                <div className="flex w-1/2 flex-col gap-[10px]">
+                  <span className="text-[12px] font-medium text-main-black">Location</span>
+                  <span className="pt-sans-narrow-regular text-[15px] leading-[22px] text-main-black">{ticket.location}</span>
+                </div>
+              )}
             </div>
+
+            {(ticket.members?.length ?? 0) > 0 && (
+              <div className="mt-[30px] flex flex-col gap-[10px] px-4">
+                <span className="text-[12px] font-medium text-main-black">Member</span>
+                <div className="flex flex-wrap gap-[5px]">
+                  {ticket.members?.map((m) => (
+                    <span
+                      key={m.groupMemberId}
+                      className="pt-sans-narrow-regular whitespace-nowrap rounded-[5px] bg-[#F7F8F9] px-2 py-[5px] text-[12px] text-sub-gray-2"
+                    >
+                      @{m.nickname}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
