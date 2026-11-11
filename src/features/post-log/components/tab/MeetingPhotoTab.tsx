@@ -14,7 +14,7 @@ import { useLikePhoto } from "@/features/post-log/hooks/useLikePhoto"
 import { useUnlikePhoto } from "../../hooks/useUnLikePhoto";
 
 function formatDayLabel(dayNumber: string, date: string) {
-  const num = Number(dayNumber) >= 0 ? String(Number(dayNumber)).padStart(2, "0") : dayNumber;
+  const num = dayNumber;
   const [year, month, day] = date.split("-");
   return `Day${num} (${year.slice(2)}.${month}.${day})`;
 }

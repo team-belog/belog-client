@@ -63,21 +63,11 @@ export default function PostLogTicketCard({ ticket }: PostLogTicketCardProps) {
   return (
     <div
       ref={containerRef}
-      style={{ height: scale > 0 ? DESIGN_HEIGHT * scale : undefined }}
       className="relative w-full drop-shadow-[0_0_5px_rgba(0,0,0,0.15)]"
     >
       {scale > 0 && (
-        <div
-          style={{
-            width: DESIGN_WIDTH,
-            height: DESIGN_HEIGHT,
-            transform: `scale(${scale})`,
-            transformOrigin: "top left",
-            position: "absolute",
-            top: 0,
-            left: 0,
-          }}
-        >
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        <div style={{ width: DESIGN_WIDTH, zoom: scale } as any} className="relative">
           <svg
             aria-hidden
             className="absolute inset-0"
@@ -87,7 +77,7 @@ export default function PostLogTicketCard({ ticket }: PostLogTicketCardProps) {
           >
             <path d={buildPath(DESIGN_WIDTH, DESIGN_HEIGHT)} fill="white" />
           </svg>
-          <div className="relative flex flex-col h-full py-5">
+          <div className="relative flex flex-col py-5" style={{ height: DESIGN_HEIGHT }}>
             <div className="flex min-h-[36px] items-center justify-center gap-[3px] px-4">
               <BelogIcon width={14} height={12} />
               <Image src="/icons/belog-wordmark.svg" alt="BELOG" width={58} height={12} />
