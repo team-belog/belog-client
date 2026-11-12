@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Profile from "@/components/ui/Profile";
 import { useCompleteSettlement } from "@/features/bill-log/hooks/useCompleteSettlement";
 import { useSendReminder } from "@/features/bill-log/hooks/useSendReminder";
+import { billLogKeys } from "@/features/bill-log/hooks/billLogKeys";
 import { toApiError } from "@/lib/apiError";
 import { type SettlementParticipant, type SettlementRequestAction } from "../types";
 
@@ -47,7 +48,8 @@ export default function SettlementStatusItem({
     if (action === "MARK_COMPLETE") {
       complete(settlementRequestId, {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["settlement", meetingId] });
+          queryClient.invalidateQueries({ queryKey: billLogKeys.settlement(meetingId) });
+          queryClient.invalidateQueries({ queryKey: billLogKeys.summary(meetingId) });
         },
       });
     } else if (action === "SEND_REMINDER") {
