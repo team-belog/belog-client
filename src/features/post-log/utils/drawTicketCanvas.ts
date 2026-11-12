@@ -129,7 +129,10 @@ function drawChip(ctx: CanvasRenderingContext2D, text: string, x: number, y: num
   return chipW;
 }
 
-export async function drawTicketToCanvas(ticket: PostLogTicketDetail): Promise<Blob> {
+export async function drawTicketToCanvas(
+  ticket: PostLogTicketDetail,
+  preloadedCoverImg?: HTMLImageElement | null,
+): Promise<Blob> {
   await document.fonts.ready;
 
   const canvas = document.createElement("canvas");
@@ -151,7 +154,7 @@ export async function drawTicketToCanvas(ticket: PostLogTicketDetail): Promise<B
     : "/icons/post-log/ticket-cover.jpg";
 
   const [coverResult, wordmarkResult, iconResult] = await Promise.allSettled([
-    loadImage(coverSrc),
+    preloadedCoverImg ? Promise.resolve(preloadedCoverImg) : loadImage(coverSrc),
     loadImage("/icons/belog-wordmark.svg"),
     loadImage(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(BELOG_ICON_SVG)}`),
   ]);
