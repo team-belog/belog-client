@@ -13,7 +13,7 @@ export default function GoogleAuthButton() {
     <div className="flex w-full flex-col items-center">
       <Button
         variant="tertiary"
-        disabled={false}
+       
         onClick={handleGoogleLogin}
         className="pb-[20px]"
       >

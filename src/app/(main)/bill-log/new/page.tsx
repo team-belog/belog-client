@@ -23,7 +23,7 @@ function BillNewContent() {
   useEffect(() => {
     reset();
   }, []);
-  const meetingId = searchParams.get("meetingId");
+  const meetingId = Number(searchParams.get("meetingId"));
   const groupId = searchParams.get("groupId");
 
   const handleBack = () => {
@@ -49,10 +49,10 @@ function BillNewContent() {
       <BackHeader title="결제 내역 등록" onBack={handleBack} />
       <Divider />
       <StepProgressBar current={step} total={TOTAL_STEPS} />
-      {step === 1 && <Step1 onNext={handleNext} />}
+      {step === 1 && <Step1 meetingId={meetingId} onNext={handleNext} />}
       {step === 2 && <Step2 onNext={handleNext} />}
-      {step === 3 && <Step3 onNext={handleNext} />}
-      {step === 4 && <Step4 onSubmit={handleSubmit} />}
+      {step === 3 && <Step3 meetingId={meetingId} onNext={handleNext} />}
+      {step === 4 && <Step4 meetingId={meetingId} onSubmit={handleSubmit} />}
     </main>
   );
 }

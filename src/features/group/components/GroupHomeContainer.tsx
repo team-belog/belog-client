@@ -8,6 +8,7 @@ import { useDeleteGroup } from "@/features/group/hooks/useDeleteGroup";
 import { useGroupDetail } from "@/features/group/hooks/useGroupDetail";
 import { usePastMeetings } from "@/features/group/hooks/usePastMeetings";
 import { useUpdateGroupCoverImage } from "@/features/group/hooks/useUpdateGroupCoverImage";
+import { useTrackView } from "@/hooks/useTrackView";
 
 export default function GroupHomeContainer({ groupId }: { groupId: number }) {
   const { data, isPending, isError, error, refetch } = useGroupDetail(groupId);
@@ -21,6 +22,13 @@ export default function GroupHomeContainer({ groupId }: { groupId: number }) {
   const updateCoverImage = useUpdateGroupCoverImage(groupId);
   const deleteGroup = useDeleteGroup();
   const router = useRouter();
+
+  const viewProperties = data ? { group_id: String(groupId) } : null;
+  useTrackView("Group Viewed", viewProperties);
+  useTrackView(
+    "Page Viewed",
+    viewProperties && { page_name: "group_detail", ...viewProperties },
+  );
 
   const handleDeleteGroup = () => {
     deleteGroup.mutate(groupId, {

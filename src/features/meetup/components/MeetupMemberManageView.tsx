@@ -5,47 +5,56 @@ import { useMemo, useState } from "react";
 import BackHeader from "@/components/layout/BackHeader";
 import Button from "@/components/ui/Button";
 import SearchBar from "@/components/ui/SearchBar";
-import { useGroupMembers } from "@/features/group/hooks/useGroupMembers";
+import Toast from "@/components/ui/Toast";
 import MeetupCurrentMemberRow from "@/features/meetup/components/MeetupCurrentMemberRow";
 import MeetupMemberRemoveModal from "@/features/meetup/components/MeetupMemberRemoveModal";
 import MeetupMemberRow from "@/features/meetup/components/MeetupMemberRow";
-import type { MeetingMemberDto } from "@/features/meetup/types";
+import type { MeetingMemberOptionDto } from "@/features/meetup/types";
+import { useToast } from "@/hooks/useToast";
 
 interface MeetupMemberManageViewProps {
-  groupId: number;
-  members: MeetingMemberDto[];
+  options: MeetingMemberOptionDto[];
+  isSaving: boolean;
+  onSave: (
+    participantMemberIds: number[],
+    options?: { onError?: (message: string) => void },
+  ) => void;
 }
 
 export default function MeetupMemberManageView({
-  groupId,
-  members,
+  options,
+  isSaving,
+  onSave,
 }: MeetupMemberManageViewProps) {
-  const { data: groupMembers } = useGroupMembers(groupId);
+  const { toast, showToast, hideToast } = useToast();
   const [memberIds, setMemberIds] = useState(() =>
-    members.map((member) => member.groupMemberId),
+    options
+      .filter((option) => option.isParticipant)
+      .map((option) => option.groupMemberId),
   );
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [removeTarget, setRemoveTarget] = useState<MeetingMemberDto | null>(
+  const [removeTarget, setRemoveTarget] = useState<MeetingMemberOptionDto | null>(
     null,
   );
 
-  const currentMembers = members.filter((member) =>
+  const currentMembers = options.filter((member) =>
     memberIds.includes(member.groupMemberId),
   );
 
-  // 삭제한 멤버도 그룹 멤버라 추가 목록에 다시 나타남
+  // 삭제한 멤버도 추가 목록에 다시 나타남
   const candidates = useMemo(() => {
     const query = searchQuery.trim();
-    return (groupMembers?.items ?? []).filter(
+    return options.filter(
       (member) =>
         !memberIds.includes(member.groupMemberId) &&
         (!query || member.nickname.includes(query)),
     );
-  }, [groupMembers, memberIds, searchQuery]);
+  }, [options, memberIds, searchQuery]);
 
   const hasChanges =
-    memberIds.length !== members.length || selectedIds.length > 0;
+    memberIds.length !== options.filter((option) => option.isParticipant).length ||
+    selectedIds.length > 0;
 
   const handleConfirmRemove = () => {
     if (!removeTarget) return;
@@ -63,8 +72,16 @@ export default function MeetupMemberManageView({
     );
   };
 
-  // TODO: 멤버 추가·삭제 API가 나오면 memberIds, selectedIds로 저장
-  const handleSave = () => {};
+  // 방장은 항상 참여자로 유지되므로 본인(방장)은 목록에서 제외
+  const handleSave = () => {
+    const myId = options.find((option) => option.isMe)?.groupMemberId;
+    const participantMemberIds = [...memberIds, ...selectedIds].filter(
+      (id) => id !== myId,
+    );
+    onSave(participantMemberIds, {
+      onError: (message) => showToast(message, "error"),
+    });
+  };
 
   return (
     <main className="pb-[114px] pt-[60px]">
@@ -79,7 +96,7 @@ export default function MeetupMemberManageView({
               key={member.groupMemberId}
               member={member}
               onRemove={
-                member.isMe ? undefined : () => setRemoveTarget(member)
+                member.isRemovable ? () => setRemoveTarget(member) : undefined
               }
             />
           ))}
@@ -111,7 +128,7 @@ export default function MeetupMemberManageView({
 
       <Button
         variant="primary"
-        disabled={!hasChanges}
+        disabled={!hasChanges || isSaving}
         onClick={handleSave}
         className="fixed bottom-0 left-0 right-0"
       >
@@ -125,6 +142,14 @@ export default function MeetupMemberManageView({
           onConfirm={handleConfirmRemove}
         />
       )}
+
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        visible={toast.visible}
+        onHide={hideToast}
+      />
+
     </main>
   );
 }

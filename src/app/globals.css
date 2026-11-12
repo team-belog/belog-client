@@ -39,6 +39,9 @@
 }
 
 @layer components {
+  .pretendard-sb-8 {
+    @apply font-pretendard text-[8px] font-semibold leading-normal;
+  }
   .pretendard-sb-10 {
     @apply font-pretendard text-[10px] font-semibold leading-normal;
   }

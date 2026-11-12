@@ -10,8 +10,8 @@ export type CalendarDay = {
   isSelected: boolean;
   isPast?: boolean;
   rangePosition: RangePosition | null;
-  // 띠의 왼쪽/오른쪽 절반에 일정이 2개 이상 겹치는지
-  overlappedSides?: { left: boolean; right: boolean };
+  // 그날 겹친 일정 수 (일정 2개면 1, 3개면 2)
+  overlapCount?: number;
 };
 
 /** month: 1~12 */
