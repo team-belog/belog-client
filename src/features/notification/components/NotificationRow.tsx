@@ -7,7 +7,7 @@ import {
 import type { NotificationItem } from "@/features/notification/types";
 import { formatRelativeTime } from "@/lib/date";
 
-const MAX_MESSAGE_LENGTH = 20;
+const MAX_MESSAGE_LENGTH = 25;
 
 function truncateMessage(message: string) {
   const chars = Array.from(message);

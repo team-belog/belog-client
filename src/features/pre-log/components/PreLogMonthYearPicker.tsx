@@ -110,7 +110,7 @@ export default function PreLogMonthYearPicker({
       <div className="flex w-full items-center gap-3 px-4 pb-[28px] pt-[10px]">
         <Button
           variant="tertiary"
-          disabled={false}
+         
           bare
           onClick={onCancel}
           className="w-[114px] shrink-0"
@@ -119,7 +119,7 @@ export default function PreLogMonthYearPicker({
         </Button>
         <Button
           variant="primary"
-          disabled={false}
+         
           bare
           onClick={() => onConfirm(new Date(year, month - 1, 1))}
           className="flex-1"

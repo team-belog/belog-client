@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import SelectableToggle from "../SelectableToggle";
 import TextLayout from "@/components/ui/TextLayout";
 import ReadOnlyField from "@/features/bill-log/components/ReadOnlyField";
@@ -12,11 +11,11 @@ import type { BillSplitType } from "@/features/bill-log/types";
 import { SETTLEMENT_METHODS } from "@/features/bill-log/constants/billLog";
 
 interface Step3Props {
+  meetingId: number;
   onNext: () => void;
 }
 
-export default function Step3({ onNext }: Step3Props) {
-  const meetingId = Number(useSearchParams().get("meetingId"));
+export default function Step3({ meetingId, onNext }: Step3Props) {
 
   const { data: meetingMembersData } = useMeetingMembers(meetingId);
 
@@ -170,10 +169,16 @@ export default function Step3({ onNext }: Step3Props) {
       <Button
         onClick={handleNext}
         variant="primary"
-        disabled={selectedMemberIds.length === 0 || !settlementMethod || remainingAmount !== 0}
+        disabled={
+          selectedMemberIds.length === 0 ||
+          !settlementMethod ||
+          (settlementMethod === "MANUAL" && remainingAmount !== 0) ||
+          (settlementMethod === "ITEM_TAG" && remainingAmount > 1)
+        }
         className="fixed bottom-0 left-0 right-0"
       >
-        {(settlementMethod === "ITEM_TAG" || settlementMethod === "MANUAL") && remainingAmount > 0
+        {(settlementMethod === "ITEM_TAG" && remainingAmount > 1) ||
+        (settlementMethod === "MANUAL" && remainingAmount > 0)
           ? `남은 정산금 ${remainingAmount.toLocaleString()}원`
           : "다음"
         }

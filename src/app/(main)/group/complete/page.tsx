@@ -27,7 +27,7 @@ function GroupCompleteContent() {
       <Button
         onClick={() => router.push("/group")}
         variant="primary"
-        disabled={false}
+       
         className="fixed bottom-0 left-0 right-0"
       >
         그룹 홈으로 이동

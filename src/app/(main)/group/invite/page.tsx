@@ -39,7 +39,7 @@ function GroupInviteContent() {
           router.push(`/group/complete?name=${encodeURIComponent(groupName)}`)
         }
         variant="primary"
-        disabled={false}
+       
         className="fixed bottom-0 left-0 right-0"
       >
         다음

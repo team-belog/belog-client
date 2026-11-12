@@ -54,7 +54,8 @@ export default function NicknameField({
             maxLength={NICKNAME_MAX}
             onChange={(e) => handleChange(e.target.value)}
             placeholder="닉네임을 입력하세요"
-            className="pretendard-m-15 h-[50px] w-full rounded-[12px] bg-[#F7F8F9] px-[15px] pr-12 text-main-black placeholder:text-sub-gray-2 outline-none focus:ring-1 focus:ring-main-mint"
+            disabled={isPending}
+            className="pretendard-m-15 h-[50px] w-full rounded-[12px] bg-[#F7F8F9] px-[15px] pr-12 text-main-black placeholder:text-sub-gray-2 outline-none focus:ring-1 focus:ring-main-mint disabled:opacity-50"
           />
           <span className="pretendard-m-12 absolute bottom-2 right-3 text-sub-gray-2">
             {value.length}/{NICKNAME_MAX}

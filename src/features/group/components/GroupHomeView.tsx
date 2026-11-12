@@ -182,7 +182,7 @@ export default function GroupHomeView({
         <Button
           variant="primary"
           onClick={() => router.push(`/meetup/new?groupId=${group.groupId}`)}
-          disabled={false}
+         
         >
           새 만남 시작하기
         </Button>

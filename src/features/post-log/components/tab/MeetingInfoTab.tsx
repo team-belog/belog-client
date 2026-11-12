@@ -85,7 +85,7 @@ export default function MeetingInfoTab() {
       <div className="fixed bottom-0 left-0 right-0 flex h-[114px] gap-[9px] bg-white px-4 py-[28px]">
         {meetingInfo?.ticketCreated ? (
           <Button bare variant="primary"
-            disabled={false}
+           
             onClick={() => router.push(`/post-log/ticket?ticketId=${meetingInfo.ticketId}`)}
             className="flex-1">
             티켓 조회

@@ -1,7 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Receipt from "@/features/bill-log/components/Receipt";
 import Button from "@/components/ui/Button";
@@ -9,14 +8,14 @@ import { useBillFormStore } from "@/features/bill-log/store/useBillFormStore";
 import { createBill } from "@/features/bill-log/api/billLogApi";
 import type { BillShare } from "@/features/bill-log/types";
 import { BILL_SPLIT_LABEL } from "@/features/bill-log/constants/billLog";
+import { billLogKeys } from "@/features/bill-log/hooks/billLogKeys";
 
 interface Step4Props {
+  meetingId: number;
   onSubmit: () => void;
 }
 
-export default function Step4({ onSubmit }: Step4Props) {
-  const searchParams = useSearchParams();
-  const meetingId = Number(searchParams.get("meetingId"));
+export default function Step4({ meetingId, onSubmit }: Step4Props) {
 
   const title = useBillFormStore((state) => state.title);
   const items = useBillFormStore((state) => state.items);
@@ -36,6 +35,8 @@ export default function Step4({ onSubmit }: Step4Props) {
     payer: d.payer,
   }));
 
+  const queryClient = useQueryClient();
+
   const { mutate, isPending } = useMutation({
     mutationFn: () =>
       createBill(meetingId, {
@@ -47,6 +48,9 @@ export default function Step4({ onSubmit }: Step4Props) {
         shares: storeShares,
       }),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: billLogKeys.settlement(meetingId) });
+      queryClient.invalidateQueries({ queryKey: billLogKeys.summary(meetingId) });
+      queryClient.invalidateQueries({ queryKey: billLogKeys.bills(meetingId) });
       reset();
       onSubmit();
     },

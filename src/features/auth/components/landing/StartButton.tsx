@@ -11,7 +11,7 @@ export default function StartButton() {
     <div className="flex w-full flex-col items-center">
       <Button
         variant="primary"
-        disabled={false}
+       
         onClick={() => router.push("/register")}
         className="pb-[20px]"
       >

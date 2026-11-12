@@ -1,4 +1,3 @@
-import { useSearchParams } from "next/navigation";
 import ImageUploadField from "@/components/ui/ImageUploadField";
 import Button from "@/components/ui/Button";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
@@ -7,12 +6,11 @@ import { useAnalyzeReceipt } from "../../hooks/useAnalyzeReceipt";
 import { useBillFormStore } from "@/features/bill-log/store/useBillFormStore";
 
 interface Step1Props {
+  meetingId: number;
   onNext: () => void;
 }
 
-export default function Step1({ onNext }: Step1Props) {
-  const searchParams = useSearchParams();
-  const meetingId = Number(searchParams.get("meetingId"));
+export default function Step1({ meetingId, onNext }: Step1Props) {
   const { mutate: getUploadUrl, isPending: isUploading } = useGetReceiptImageUploadUrl(meetingId);
   const { mutate: analyzeReceipt, isPending: isAnalyzing } = useAnalyzeReceipt(meetingId);
   const isLoading = isUploading || isAnalyzing;

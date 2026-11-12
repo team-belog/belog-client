@@ -51,10 +51,20 @@ export function useTogglePreLogPlanPin(meetingId: number) {
 
       return { previous };
     },
-    onError: (_error, _input, context) => {
-      context?.previous.forEach(([key, data]) => {
-        queryClient.setQueryData(key, data);
-      });
+    onError: (_error, { planId, pinned }) => {
+      queryClient.setQueriesData<PreLogPlansCache>(
+        { queryKey: plansKey },
+        (old) =>
+          old && {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              items: page.items.map((item) =>
+                item.planId === planId ? { ...item, pinned: !pinned } : item,
+              ),
+            })),
+          },
+      );
     },
     // 고정 계획이 맨 앞으로 정렬되고 고정 탭 구성도 바뀌므로 다시 조회
     onSettled: () => {

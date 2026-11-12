@@ -34,6 +34,7 @@ function TicketContent() {
       // 외부 이미지(S3 등)를 base64로 변환해서 CORS 문제 없이 캡처
       const imgs = Array.from(el.querySelectorAll("img"));
       const originalSrcs = imgs.map((img) => img.src);
+      const originalSrcsets = imgs.map((img) => img.srcset);
       await Promise.all(
         imgs.map(async (img) => {
           try {
@@ -44,15 +45,25 @@ function TicketContent() {
               reader.onload = () => resolve(reader.result as string);
               reader.readAsDataURL(blob);
             });
-            img.src = base64;
+            // srcset을 비워야 브라우저가 base64 src를 사용함
+            img.srcset = "";
+            // 이미지가 실제로 로드된 후 domtoimage 캡처 진행
+            await new Promise<void>((resolve) => {
+              img.onload = () => resolve();
+              img.onerror = () => resolve();
+              img.src = base64;
+            });
           } catch {
-            // CORS 실패 시 원본 유지
+            // 변환 실패 시 원본 유지
           }
         })
       );
       const dataUrl = await domtoimage.toPng(el, { scale: 2 });
-      // 원본 src 복원
-      imgs.forEach((img, i) => { img.src = originalSrcs[i]; });
+      // 원본 src, srcset 복원
+      imgs.forEach((img, i) => {
+        img.src = originalSrcs[i];
+        img.srcset = originalSrcsets[i];
+      });
       const res = await fetch(dataUrl);
       const blob = await res.blob();
       const file = new File([blob], "ticket.png", { type: "image/png" });
@@ -79,17 +90,17 @@ function TicketContent() {
   if (isLoading) return <div className="flex items-center justify-center h-dvh">로딩 중...</div>;
 
   return (
-    <main className="flex h-dvh flex-col pt-[60px]">
+    <main className="flex h-dvh flex-col">
       <BackHeader title="티켓" onShare={handleShare} />
       <Divider />
-      <div className="mt-[34px] flex items-center justify-center px-[42px]">
+      <div className="flex flex-1 items-center justify-center px-[42px] pb-[80px]">
         {ticket && (
           <div id="ticket" className="w-full">
             <PostLogTicketCard ticket={ticket} />
           </div>
         )}
       </div>
-      <Button variant="primary" disabled={false} onClick={handleSave} className="fixed bottom-0">
+      <Button variant="primary" onClick={handleSave} className="fixed bottom-0">
         갤러리에 저장
       </Button>
     </main>

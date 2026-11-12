@@ -131,7 +131,7 @@ export default function PreLogMemoDetailView({
         memo.canEdit && (
           <Button
             variant="primary"
-            disabled={false}
+           
             onClick={() => setIsEditing(true)}
             className="fixed bottom-0 left-0 right-0"
           >

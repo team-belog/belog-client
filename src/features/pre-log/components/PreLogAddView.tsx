@@ -31,7 +31,6 @@ export default function PreLogAddView({
 }: PreLogAddViewProps) {
   const router = useRouter();
   const [modeIndex, setModeIndex] = useState(0);
-  // 위치와 메모는 서로 다른 계획이므로 태그·제목도 탭마다 따로 입력받음
   const [locationCategory, setLocationCategory] = useState<PreLogCategory>("RESTAURANT");
   const [locationTitle, setLocationTitle] = useState("");
   const [url, setUrl] = useState("");
@@ -82,7 +81,12 @@ export default function PreLogAddView({
       <div className="mt-5 flex flex-col gap-[30px]">
         <PreLogTagSelector value={category} onChange={setCategory} />
 
-        <InputField label="제목" placeholder="예) 식당 링크" value={title} onChange={setTitle} />
+        <InputField
+          label="제목"
+          placeholder={isLinkMode ? "장소 이름" : "메모 제목"}
+          value={title}
+          onChange={setTitle}
+        />
 
         {isLinkMode ? (
           <InputField
@@ -114,7 +118,7 @@ export default function PreLogAddView({
       <div className="fixed bottom-0 left-0 flex w-full items-center gap-3 bg-white px-4 py-[28px]">
         <Button
           variant="tertiary"
-          disabled={false}
+         
           bare
           onClick={handleCancel}
           className="w-[114px] shrink-0"
