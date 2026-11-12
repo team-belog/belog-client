@@ -62,37 +62,45 @@ export default function ProfileEditPage() {
     bank !== (bankAccount?.bankCode ?? "") ||
     accountNumber !== (bankAccount?.accountNumber ?? "");
 
+  const nicknameChanged = nicknameStatus === "available" && nickname !== profile?.nickname;
+
   const submitUpdate = (profileImageObjectKey?: string) => {
-    // 입력값은 수집하지 않고 실제로 수정한 필드명만 전송
     const updatedFields = [
-      nickname !== profile?.nickname && "nickname",
+      nicknameChanged && "nickname",
       profileImageObjectKey && "profile_image",
       bankChanged && "bank_account",
     ].filter(Boolean);
 
-    updateProfile(
-      {
-        nickname,
-        ...(profileImageObjectKey
-          ? { profileImageObjectKey, profileImageType: "CUSTOM" }
-          : {}),
-      },
-      {
-        onSuccess: () => {
-          updateBankAccount(
-            { bankCode: bank as BankCode, accountNumber },
-            {
-              onSuccess: () => {
-                if (updatedFields.length > 0) {
-                  track("Profile Updated", { updated_field: updatedFields });
-                }
-                router.back();
-              },
-            }
-          );
-        },
+    const profileChanged = nicknameChanged || !!profileImageObjectKey;
+
+    const afterProfileUpdate = () => {
+      if (bankChanged) {
+        updateBankAccount(
+          { bankCode: bank as BankCode, accountNumber },
+          {
+            onSuccess: () => {
+              if (updatedFields.length > 0) track("Profile Updated", { updated_field: updatedFields });
+              router.back();
+            },
+          }
+        );
+      } else {
+        if (updatedFields.length > 0) track("Profile Updated", { updated_field: updatedFields });
+        router.back();
       }
-    );
+    };
+
+    if (profileChanged) {
+      updateProfile(
+        {
+          nickname: nicknameChanged ? nickname : (profile?.nickname ?? nickname),
+          ...(profileImageObjectKey ? { profileImageObjectKey, profileImageType: "CUSTOM" } : {}),
+        },
+        { onSuccess: afterProfileUpdate }
+      );
+    } else {
+      afterProfileUpdate();
+    }
   };
 
   const handleSave = () => {
