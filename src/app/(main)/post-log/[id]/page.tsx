@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
 
 import BackHeader from "@/components/layout/BackHeader";
 import Divider from "@/components/layout/Divider";
@@ -12,18 +13,25 @@ import { useDeletePhoto } from "@/features/post-log/hooks/useDeletePhoto";
 import PostLogLikeButton from "@/features/post-log/components/PostLogLikeButton";
 import { useLikePhoto } from "@/features/post-log/hooks/useLikePhoto";
 import { useUnlikePhoto } from "@/features/post-log/hooks/useUnLikePhoto";
+import type { PostLogPhotoListResponse } from "@/features/post-log/types";
 
 export default function PostLogPhotoPage() {
   const { id } = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const photoId = Number(id);
   const photoUrl = searchParams.get("photoUrl");
   const meetingId = Number(searchParams.get("meetingId"));
 
-  const [likedByMe, setLikedByMe] = useState(searchParams.get("likedByMe") === "true");
-  const [likeCount, setLikeCount] = useState(Number(searchParams.get("likeCount") ?? 0));
+  const cachedPhoto = queryClient
+    .getQueriesData<InfiniteData<PostLogPhotoListResponse>>({ queryKey: ["postLogPhotoList", meetingId] })
+    .flatMap(([, data]) => data?.pages.flatMap((p) => p.days.flatMap((d) => d.photos)) ?? [])
+    .find((photo) => photo.photoId === photoId);
+
+  const [likedByMe, setLikedByMe] = useState(cachedPhoto?.likedByMe ?? false);
+  const [likeCount, setLikeCount] = useState(cachedPhoto?.likeCount ?? 0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { mutate: deletePhoto, isPending: isDeleting } = useDeletePhoto(meetingId);

@@ -169,10 +169,16 @@ export default function Step3({ meetingId, onNext }: Step3Props) {
       <Button
         onClick={handleNext}
         variant="primary"
-        disabled={selectedMemberIds.length === 0 || !settlementMethod || remainingAmount !== 0}
+        disabled={
+          selectedMemberIds.length === 0 ||
+          !settlementMethod ||
+          (settlementMethod === "MANUAL" && remainingAmount !== 0) ||
+          (settlementMethod === "ITEM_TAG" && remainingAmount > 1)
+        }
         className="fixed bottom-0 left-0 right-0"
       >
-        {(settlementMethod === "ITEM_TAG" || settlementMethod === "MANUAL") && remainingAmount > 0
+        {(settlementMethod === "ITEM_TAG" && remainingAmount > 1) ||
+        (settlementMethod === "MANUAL" && remainingAmount > 0)
           ? `남은 정산금 ${remainingAmount.toLocaleString()}원`
           : "다음"
         }
