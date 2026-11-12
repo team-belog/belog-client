@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -8,19 +8,19 @@ import Divider from "@/components/layout/Divider";
 import TabBar from "@/components/ui/TabBar";
 import MeetingPhotoTab from "@/features/post-log/components/tab/MeetingPhotoTab";
 import MeetingInfoTab from "@/features/post-log/components/tab/MeetingInfoTab";
-import { useTrackView } from "@/hooks/useTrackView";
+import { track, setUserProperty } from "@/lib/amplitude";
 
 function PostLogContent() {
   const [activeTab, setActiveTab] = useState(0);
   const searchParams = useSearchParams();
-  const meetingId = Number(searchParams.get("meetingId"));
-  const groupId = Number(searchParams.get("groupId"));
+  const meetingId = searchParams.get("meetingId");
 
-  useTrackView("Page Viewed", {
-    page_name: "postlog",
-    meeting_id: String(meetingId),
-    ...(groupId > 0 && { group_id: String(groupId) }),
-  });
+  useEffect(() => {
+    if (meetingId) {
+      track("Postlog Viewed", { meeting_id: meetingId });
+      setUserProperty({ has_used_postlog: true });
+    }
+  }, [meetingId]);
 
   return (
     <main className="flex flex-col pt-[60px]">

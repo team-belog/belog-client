@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { joinGroup } from "@/features/group/api/groupApi";
 import { groupKeys } from "@/features/group/hooks/groupKeys";
 import type { ApiError } from "@/lib/apiError";
-import { setUserProperties, track } from "@/lib/amplitude";
+import { setUserProperty, track } from "@/lib/amplitude";
 import type { JoinGroupData, JoinGroupRequest } from "@/features/group/types";
 
 // 초대 링크로 자동 참여했는지, 코드를 직접 입력했는지 (Amplitude 분석용)
@@ -20,7 +20,7 @@ export function useJoinGroup() {
         group_id: String(data.groupId),
         join_method: joinMethod,
       });
-      setUserProperties({ has_joined_group: true });
+      setUserProperty({ has_joined_group: true });
       queryClient.invalidateQueries({ queryKey: groupKeys.list() });
     },
   });

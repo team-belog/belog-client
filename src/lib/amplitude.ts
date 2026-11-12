@@ -29,7 +29,7 @@ export function setAmplitudeUserId(userId: string | number) {
   amplitude.setUserId(String(userId));
 }
 
-export function setUserProperties(
+export function setUserProperty(
   properties: Record<string, string | number | boolean>,
 ) {
   if (!ensureInitialized()) return;

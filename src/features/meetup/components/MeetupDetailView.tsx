@@ -220,7 +220,7 @@ export default function MeetupDetailView({
           status={POST_LOG_STATUS_LABEL[logStatuses.postLog]}
           isActive={logStatuses.postLog === "IN_PROGRESS"}
           description="사진을 기록하고 티켓을 생성해요"
-          onClick={() => router.push(`/post-log?meetingId=${meeting.meetingId}&groupId=${meeting.groupId}`)}
+          onClick={() => router.push(`/post-log?meetingId=${meeting.meetingId}`)}
         />
       </div>
 
