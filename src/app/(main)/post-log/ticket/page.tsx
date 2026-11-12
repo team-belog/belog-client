@@ -48,6 +48,7 @@ function TicketContent() {
   const handleSave = async () => {
     if (!ticket || isSaving) return;
     setIsSaving(true);
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
     try {
       const blob = await drawTicketToCanvas(ticket, coverImgRef.current);
       const file = new File([blob], "ticket.png", { type: "image/png" });
@@ -80,7 +81,7 @@ function TicketContent() {
     <main className="flex h-dvh flex-col">
       <BackHeader title="티켓" onShare={handleShare} />
       <Divider />
-      <div className="mt-[102px] flex items-center justify-center px-[42px] pb-[80px]">
+      <div className="mt-[161px] flex items-center justify-center px-[42px] pb-[80px]">
         {ticket && (
           <div className="w-full">
             <PostLogTicketCard ticket={ticket} />
