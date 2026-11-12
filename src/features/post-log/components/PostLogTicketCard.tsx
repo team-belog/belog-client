@@ -6,6 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import BelogIcon from "@/components/ui/BelogIcon";
 import type { PostLogTicketDetail } from "@/features/post-log/types";
 
+function proxiedUrl(url: string | null | undefined): string {
+  if (!url) return "/icons/post-log/ticket-cover.jpg";
+  return `/api/image-proxy?url=${encodeURIComponent(url)}`;
+}
+
 const DESIGN_WIDTH = 335;
 const DESIGN_HEIGHT = 565;
 const CORNER_RADIUS = 21.5;
@@ -26,16 +31,23 @@ function buildPath(width: number, height: number): string {
   const arc = (r: number, x: number, y: number) => `A ${r} ${r} 0 0 0 ${x} ${y}`;
   const parts: string[] = [`M ${cr} 0`];
 
+  // Top edge
   for (const cx of centers) {
     parts.push(`L ${cx - nr} 0`, arc(nr, cx + nr, 0));
   }
   parts.push(`L ${width - cr} 0`, arc(cr, width, cr));
+
+  // Right edge (straight)
   parts.push(`L ${width} ${height - cr}`);
   parts.push(arc(cr, width - cr, height));
+
+  // Bottom edge (reversed)
   for (const cx of [...centers].reverse()) {
     parts.push(`L ${cx + nr} ${height}`, arc(nr, cx - nr, height));
   }
   parts.push(`L ${cr} ${height}`, arc(cr, 0, height - cr));
+
+  // Left edge (straight)
   parts.push(`L 0 ${cr}`);
   parts.push(arc(cr, cr, 0));
   parts.push("Z");
@@ -64,10 +76,21 @@ export default function PostLogTicketCard({ ticket }: PostLogTicketCardProps) {
     <div
       ref={containerRef}
       className="relative w-full drop-shadow-[0_0_5px_rgba(0,0,0,0.15)]"
+      style={{ height: scale > 0 ? DESIGN_HEIGHT * scale : undefined }}
     >
       {scale > 0 && (
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        <div style={{ width: DESIGN_WIDTH, zoom: scale } as any} className="relative">
+        <div
+          style={{
+            width: DESIGN_WIDTH,
+            height: DESIGN_HEIGHT,
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+          className="relative"
+        >
           <svg
             aria-hidden
             className="absolute inset-0"
@@ -84,7 +107,12 @@ export default function PostLogTicketCard({ ticket }: PostLogTicketCardProps) {
             </div>
 
             <div className="mt-[5px] relative w-full h-[169px] overflow-hidden bg-main-cool-gray shrink-0">
-              <Image src={ticket.coverPhotoUrl ?? "/icons/post-log/ticket-cover.jpg"} alt="" fill className="object-cover" priority crossOrigin="anonymous" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={proxiedUrl(ticket.coverPhotoUrl)}
+                alt=""
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
             </div>
 
             <div className="mt-5 flex flex-col px-4">
