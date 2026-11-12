@@ -1,6 +1,7 @@
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import { likePhoto } from "@/features/post-log/api/postLogApi";
 import type { LikePhotoResponse, PostLogPhotoListResponse } from "@/features/post-log/types";
+import { track } from "@/lib/amplitude";
 
 export function useLikePhoto(meetingId: number) {
     const queryClient = useQueryClient();
@@ -8,6 +9,7 @@ export function useLikePhoto(meetingId: number) {
     return useMutation({
         mutationFn: (photoId: number) => likePhoto(photoId),
         onSuccess: (data: LikePhotoResponse) => {
+            track("Photo Liked", { photo_id: String(data.photoId) });
             queryClient.setQueryData<InfiniteData<PostLogPhotoListResponse>>(
                 ["postLogPhotoList", meetingId],
                 (old) => {

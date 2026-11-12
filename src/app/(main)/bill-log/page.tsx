@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -17,7 +17,7 @@ import PaymentHistoryTab from "@/features/bill-log/components/tab/PaymentHistory
 import { useGetBillLogSummary } from "@/features/bill-log/hooks/useGetBillLogSummary";
 import Toast from "@/components/ui/Toast";
 import { useToast } from "@/hooks/useToast";
-import { useTrackView } from "@/hooks/useTrackView";
+import { track, setUserProperty } from "@/lib/amplitude";
 
 function BillLogContent() {
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -29,18 +29,16 @@ function BillLogContent() {
 
   const { data, isLoading } = useGetBillLogSummary(meetingId);
   const { toast, showToast, hideToast } = useToast();
-  const totalParticipantCount = (data?.completedParticipantCount ?? 0) + (data?.pendingParticipantCount ?? 0)
 
-  useTrackView(
-    "Page Viewed",
-    isLoading
-      ? null
-      : {
-          page_name: "billlog",
-          meeting_id: String(meetingId),
-          ...(groupId > 0 && { group_id: String(groupId) }),
-        },
-  );
+  useEffect(() => {
+    track("Billlog Viewed", { meeting_id: String(meetingId) });
+    setUserProperty({ has_used_billlog: true });
+  }, [meetingId]);
+
+  useEffect(() => {
+    if (activeTab === 0) track("Settlement Status Viewed", { meeting_id: String(meetingId) });
+  }, [activeTab, meetingId]);
+  const totalParticipantCount = (data?.completedParticipantCount ?? 0) + (data?.pendingParticipantCount ?? 0)
 
   if (isLoading) return <div className="flex min-h-screen items-center justify-center">로딩 중...</div>;
 
