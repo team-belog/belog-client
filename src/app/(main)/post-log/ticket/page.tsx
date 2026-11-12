@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -17,6 +17,7 @@ function TicketContent() {
   const ticketId = searchParams.get("ticketId") ? Number(searchParams.get("ticketId")) : null;
 
   const { data: ticket, isLoading } = useGetPostLogTicket(ticketId);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (ticket) {
@@ -35,7 +36,8 @@ function TicketContent() {
   };
 
   const handleSave = async () => {
-    if (!ticket) return;
+    if (!ticket || isSaving) return;
+    setIsSaving(true);
     try {
       const blob = await drawTicketToCanvas(ticket);
       const file = new File([blob], "ticket.png", { type: "image/png" });
@@ -57,6 +59,8 @@ function TicketContent() {
     } catch (err) {
       const isAbort = err instanceof Error && (err.name === "AbortError" || err.message.includes("cancel"));
       if (!isAbort) console.error("[handleSave]", err);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -66,15 +70,15 @@ function TicketContent() {
     <main className="flex h-dvh flex-col">
       <BackHeader title="티켓" onShare={handleShare} />
       <Divider />
-      <div className="flex flex-1 items-center justify-center px-[42px] pb-[80px]">
+      <div className="mt-[102px] flex items-center justify-center px-[42px] pb-[80px]">
         {ticket && (
           <div className="w-full">
             <PostLogTicketCard ticket={ticket} />
           </div>
         )}
       </div>
-      <Button variant="primary" onClick={handleSave} className="fixed bottom-0">
-        갤러리에 저장
+      <Button variant="primary" onClick={handleSave} disabled={isSaving} className="fixed bottom-0">
+        {isSaving ? "저장 중..." : "갤러리에 저장"}
       </Button>
     </main>
   );
