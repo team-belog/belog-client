@@ -36,8 +36,8 @@ export default function MeetingInfoTab() {
 
   const dateRange = meetingInfo
     ? meetingInfo.startDate === meetingInfo.endDate
-      ? meetingInfo.startDate
-      : `${meetingInfo.startDate} - ${meetingInfo.endDate}`
+      ? (meetingInfo.startDate ?? "")
+      : `${meetingInfo.startDate ?? ""} - ${meetingInfo.endDate ?? ""}`
     : "";
   const totalAmount = meetingInfo?.settlement?.totalAmounts?.map((a) => `${a.amount.toLocaleString()} ${a.currency}`).join(" / ") ?? "-";
 
