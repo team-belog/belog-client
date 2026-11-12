@@ -9,7 +9,7 @@ import Button from "@/components/ui/Button";
 import PostLogTicketCard from "@/features/post-log/components/PostLogTicketCard";
 
 import { useGetPostLogTicket } from "@/features/post-log/hooks/useGetPostLogTicket";
-import domtoimage from "dom-to-image-more";
+import { drawTicketToCanvas } from "@/features/post-log/utils/drawTicketCanvas";
 import { track } from "@/lib/amplitude";
 
 function TicketContent() {
@@ -35,47 +35,28 @@ function TicketContent() {
   };
 
   const handleSave = async () => {
-    const el = document.getElementById("ticket");
-    if (!el) return;
+    if (!ticket) return;
     try {
-      // 외부 이미지를 프록시 URL로 교체해서 same-origin으로 만들어 canvas taint 방지
-      const imgs = Array.from(el.querySelectorAll("img"));
-      const originalSrcs = imgs.map((img) => img.src);
-      const originalSrcsets = imgs.map((img) => img.srcset);
-      await Promise.all(
-        imgs.map((img) => new Promise<void>((resolve) => {
-          img.srcset = "";
-          img.onload = () => resolve();
-          img.onerror = () => resolve();
-          img.src = `/api/image-proxy?url=${encodeURIComponent(img.src)}`;
-        }))
-      );
-      const dataUrl = await domtoimage.toPng(el, { scale: 2 });
-      // 원본 src, srcset 복원
-      imgs.forEach((img, i) => {
-        img.src = originalSrcs[i];
-        img.srcset = originalSrcsets[i];
-      });
-      const res = await fetch(dataUrl);
-      const blob = await res.blob();
+      const blob = await drawTicketToCanvas(ticket);
       const file = new File([blob], "ticket.png", { type: "image/png" });
 
-      // iOS PWA: Web Share API로 공유 시트 열기 → "사진 저장"으로 갤러리에 저장
       const isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
       if (isMobile && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file] });
         return;
       }
 
-      // 데스크톱 fallback
+      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.download = "ticket.png";
-      link.href = dataUrl;
+      link.href = url;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    } catch {
-      // 사용자가 공유 취소하거나 오류 발생 시 무시
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      const isAbort = err instanceof Error && (err.name === "AbortError" || err.message.includes("cancel"));
+      if (!isAbort) console.error("[handleSave]", err);
     }
   };
 
@@ -87,7 +68,7 @@ function TicketContent() {
       <Divider />
       <div className="flex flex-1 items-center justify-center px-[42px] pb-[80px]">
         {ticket && (
-          <div id="ticket" className="w-full">
+          <div className="w-full">
             <PostLogTicketCard ticket={ticket} />
           </div>
         )}
