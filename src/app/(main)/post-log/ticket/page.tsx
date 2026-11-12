@@ -48,6 +48,7 @@ function TicketContent() {
   const handleSave = async () => {
     if (!ticket || isSaving) return;
     setIsSaving(true);
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
     try {
       const blob = await drawTicketToCanvas(ticket, coverImgRef.current);
       const file = new File([blob], "ticket.png", { type: "image/png" });
@@ -80,14 +81,14 @@ function TicketContent() {
     <main className="flex h-dvh flex-col">
       <BackHeader title="티켓" onShare={handleShare} />
       <Divider />
-      <div className="mt-[102px] flex items-center justify-center px-[42px] pb-[80px]">
+      <div className="mt-[161px] flex items-center justify-center px-[42px] pb-[80px]">
         {ticket && (
           <div className="w-full">
             <PostLogTicketCard ticket={ticket} />
           </div>
         )}
       </div>
-      <Button variant="primary" onClick={handleSave} disabled={isSaving} className="fixed bottom-0">
+      <Button variant="primary" onClick={handleSave} disabled={isSaving} className="fixed bottom-0 hover:bg-black">
         {isSaving ? "저장 중..." : "갤러리에 저장"}
       </Button>
     </main>
