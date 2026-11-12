@@ -68,10 +68,11 @@ export function useTogglePreLogPlanLike(meetingId: number) {
 
       return { previous };
     },
-    onError: (_error, _input, context) => {
-      context?.previous.forEach(([key, data]) => {
-        queryClient.setQueryData(key, data);
-      });
+    onError: (_error, { planId, liked }) => {
+      updatePlan(planId, (plan) => ({
+        likedByMe: !liked,
+        likeCount: plan.likeCount + (liked ? -1 : 1),
+      }));
     },
     // 다른 멤버의 좋아요까지 반영된 서버 값으로 맞춤
     onSuccess: ({ planId, likedByMe, likeCount }, { liked }) => {

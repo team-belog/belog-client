@@ -16,6 +16,7 @@ import { useGetProfileImageUploadUrl } from "@/features/auth/hooks/useGetProfile
 import { useGetMyBankAccount } from "@/features/my/hooks/useGetMyBankAccount";
 import { useUpdateMyBankAccount } from "@/features/my/hooks/useUpdateMyBankAccount";
 import type { BankCode } from "@/features/auth/types";
+import { track } from "@/lib/amplitude";
 
 export default function ProfileEditPage() {
   const router = useRouter();
@@ -61,23 +62,45 @@ export default function ProfileEditPage() {
     bank !== (bankAccount?.bankCode ?? "") ||
     accountNumber !== (bankAccount?.accountNumber ?? "");
 
+  const nicknameChanged = nicknameStatus === "available" && nickname !== profile?.nickname;
+
   const submitUpdate = (profileImageObjectKey?: string) => {
-    updateProfile(
-      {
-        nickname,
-        ...(profileImageObjectKey
-          ? { profileImageObjectKey, profileImageType: "CUSTOM" }
-          : {}),
-      },
-      {
-        onSuccess: () => {
-          updateBankAccount(
-            { bankCode: bank as BankCode, accountNumber },
-            { onSuccess: () => router.back() }
-          );
-        },
+    const updatedFields = [
+      nicknameChanged && "nickname",
+      profileImageObjectKey && "profile_image",
+      bankChanged && "bank_account",
+    ].filter(Boolean);
+
+    const profileChanged = nicknameChanged || !!profileImageObjectKey;
+
+    const afterProfileUpdate = () => {
+      if (bankChanged) {
+        updateBankAccount(
+          { bankCode: bank as BankCode, accountNumber },
+          {
+            onSuccess: () => {
+              if (updatedFields.length > 0) track("Profile Updated", { updated_field: updatedFields });
+              router.back();
+            },
+          }
+        );
+      } else {
+        if (updatedFields.length > 0) track("Profile Updated", { updated_field: updatedFields });
+        router.back();
       }
-    );
+    };
+
+    if (profileChanged) {
+      updateProfile(
+        {
+          nickname: nicknameChanged ? nickname : (profile?.nickname ?? nickname),
+          ...(profileImageObjectKey ? { profileImageObjectKey, profileImageType: "CUSTOM" } : {}),
+        },
+        { onSuccess: afterProfileUpdate }
+      );
+    } else {
+      afterProfileUpdate();
+    }
   };
 
   const handleSave = () => {

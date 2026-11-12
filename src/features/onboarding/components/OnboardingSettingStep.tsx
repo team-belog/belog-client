@@ -68,7 +68,7 @@ export default function OnboardingSettingStep({ onNext }: OnboardingSettingStepP
 
       <Button
         variant="secondary"
-        disabled={false}
+       
         onClick={handleStart}
         bare
         className="absolute bottom-[29px] left-4 right-4"

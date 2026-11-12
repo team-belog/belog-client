@@ -87,7 +87,7 @@ export default function PreLogDateRangeSheet({
             <div className="flex w-full items-center gap-3 px-4 pb-[28px]">
               <Button
                 variant="tertiary"
-                disabled={false}
+               
                 bare
                 onClick={onCancel}
                 className="w-[114px] shrink-0"

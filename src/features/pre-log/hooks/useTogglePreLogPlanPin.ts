@@ -52,10 +52,20 @@ export function useTogglePreLogPlanPin(meetingId: number) {
 
       return { previous };
     },
-    onError: (_error, _input, context) => {
-      context?.previous.forEach(([key, data]) => {
-        queryClient.setQueryData(key, data);
-      });
+    onError: (_error, { planId, pinned }) => {
+      queryClient.setQueriesData<PreLogPlansCache>(
+        { queryKey: plansKey },
+        (old) =>
+          old && {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              items: page.items.map((item) =>
+                item.planId === planId ? { ...item, pinned: !pinned } : item,
+              ),
+            })),
+          },
+      );
     },
     onSuccess: (_, { planId, pinned }) => {
       track("Plan Pin Changed", { plan_id: String(planId), pinned });

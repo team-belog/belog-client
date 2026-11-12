@@ -5,7 +5,7 @@ import type { MeetingMemberDto } from "@/features/meetup/types";
 
 interface MeetupCurrentMemberRowProps {
   member: MeetingMemberDto;
-  // 넘기지 않으면 삭제 버튼을 숨김 (본인)
+  // 넘기지 않으면 삭제 버튼을 숨김 (isRemovable이 false인 멤버)
   onRemove?: () => void;
 }
 

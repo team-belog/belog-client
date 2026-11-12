@@ -6,6 +6,7 @@ import MeetupCoordinationView from "@/features/meetup/components/MeetupCoordinat
 import { useConfirmMeetingDate } from "@/features/meetup/hooks/useConfirmMeetingDate";
 import { useDatePollResults } from "@/features/meetup/hooks/useDatePollResults";
 import { useSendDatePollReminder } from "@/features/meetup/hooks/useSendDatePollReminder";
+import { useTrackView } from "@/hooks/useTrackView";
 
 export default function MeetupCoordinationContainer({
   meetingId,
@@ -19,6 +20,11 @@ export default function MeetupCoordinationContainer({
   const confirmDate = useConfirmMeetingDate(meetingId);
   const sendReminder = useSendDatePollReminder(meetingId);
   const router = useRouter();
+
+  useTrackView(
+    "Date Poll Results Viewed",
+    data ? { meeting_id: String(meetingId) } : null,
+  );
 
   if (isPending) {
     return (

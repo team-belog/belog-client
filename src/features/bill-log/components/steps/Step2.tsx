@@ -110,7 +110,7 @@ export default function Step2({ onNext }: Step2Props) {
             />
           ))}
         </div>
-        <Button className="pt-0" variant="secondary" disabled={false} onClick={addItem}>
+        <Button className="pt-0" variant="secondary" onClick={addItem}>
           항목 추가
         </Button>
       </div>

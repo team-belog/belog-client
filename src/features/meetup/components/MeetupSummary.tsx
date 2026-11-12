@@ -27,7 +27,7 @@ export default function MeetupSummary({
   onManageMembers,
   topSpacingClassName = "pt-[37px]",
 }: MeetupSummaryProps) {
-  const { title, groupName, dDay, startDate, endDate, location } = meetup;
+  const { title, groupName, dDay, startDate, endDate, location = "" } = meetup;
   const dateText = endDate ? `${startDate} - ${endDate}` : startDate;
 
   return (

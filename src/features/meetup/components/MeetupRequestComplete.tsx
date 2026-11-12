@@ -31,7 +31,7 @@ export default function MeetupRequestComplete({
 
       <Button
         variant="primary"
-        disabled={false}
+       
         onClick={onGoGroupHome}
         className="fixed bottom-0 left-0 right-0"
       >

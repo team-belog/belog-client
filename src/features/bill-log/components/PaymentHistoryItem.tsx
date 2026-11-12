@@ -22,9 +22,9 @@ export default function PaymentHistoryItem({
       className="flex w-full items-center justify-between px-[18px] py-[17px]"
     >
       <div className="flex items-center gap-2">
-        <div className="relative size-[53px] bg-gray-100 shrink-0 overflow-hidden rounded-[9px]">
+        {/* <div className="relative size-[53px] bg-gray-100 shrink-0 overflow-hidden rounded-[9px]">
           {thumbnailUrl && <Image src={thumbnailUrl} alt={name} fill className="object-cover" />}
-        </div>
+        </div> */}
         <div className="flex flex-col items-start gap-[7px]">
           <p className="pretendard-sb-16 text-main-black">{name}</p>
           <div className="flex items-center gap-[5px] text-sub-gray-1">

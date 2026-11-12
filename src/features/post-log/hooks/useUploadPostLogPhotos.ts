@@ -17,18 +17,19 @@ export function useUploadPostLogPhotos(meetingId: number) {
                 }))
             );
 
-            await Promise.all(
-                uploads.map((upload, i) =>
-                    uploadPhotoToS3(upload.uploadUrl, files[i], upload.requiredHeaders)
-                )
-            );
-
-            const capturedAts = await Promise.all(
-                files.map(async (file) => {
-                    const exif = await exifr.parse(file).catch(() => null);
-                    return exif?.DateTimeOriginal?.toISOString() ?? new Date(file.lastModified).toISOString();
-                })
-            );
+            const [, capturedAts] = await Promise.all([
+                Promise.all(
+                    uploads.map((upload, i) =>
+                        uploadPhotoToS3(upload.uploadUrl, files[i], upload.requiredHeaders)
+                    )
+                ),
+                Promise.all(
+                    files.map(async (file) => {
+                        const exif = await exifr.parse(file).catch(() => null);
+                        return exif?.DateTimeOriginal?.toISOString() ?? new Date(file.lastModified).toISOString();
+                    })
+                ),
+            ]);
 
             return registerPhotoMetadata(
                 meetingId,

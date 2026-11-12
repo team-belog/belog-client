@@ -10,7 +10,9 @@ import type {
   SubmitDatePollResponseRequest,
   MeetingDetailData,
   MeetingMembersData,
+  MeetingMemberOptionsData,
   UpdateMeetingRequest,
+  UpdateMeetingMembersRequest,
 } from "@/features/meetup/types";
 
 export async function getMeetingDetail(meetingId: number) {
@@ -81,6 +83,20 @@ export async function endMeeting(meetingId: number) {
 export async function getMeetingMembers(meetingId: number) {
   const { data } = await api.get<ApiResponse<MeetingMembersData>>(
     ENDPOINTS.meeting.members(meetingId),
+  );
+  return data.data;
+}
+
+export async function updateMeetingMembers(
+  meetingId: number,
+  body: UpdateMeetingMembersRequest,
+) {
+  await api.put(ENDPOINTS.meeting.members(meetingId), body);
+}
+
+export async function getMeetingMemberOptions(meetingId: number) {
+  const { data } = await api.get<ApiResponse<MeetingMemberOptionsData>>(
+    ENDPOINTS.meeting.memberOptions(meetingId),
   );
   return data.data;
 }

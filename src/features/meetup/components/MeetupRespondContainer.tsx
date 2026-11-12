@@ -4,6 +4,7 @@ import MeetupRespondView from "@/features/meetup/components/MeetupRespondView";
 import { useDatePoll } from "@/features/meetup/hooks/useDatePoll";
 import { useDatePollResults } from "@/features/meetup/hooks/useDatePollResults";
 import { useSubmitDatePollResponse } from "@/features/meetup/hooks/useSubmitDatePollResponse";
+import { useTrackView } from "@/hooks/useTrackView";
 
 export default function MeetupRespondContainer({
   meetingId,
@@ -14,6 +15,11 @@ export default function MeetupRespondContainer({
   // 응답 인원 표시용
   const results = useDatePollResults(meetingId);
   const submitResponse = useSubmitDatePollResponse(meetingId);
+
+  useTrackView(
+    "Date Poll Viewed",
+    datePoll.data ? { meeting_id: String(meetingId) } : null,
+  );
 
   if (datePoll.isPending || results.isPending) {
     return (

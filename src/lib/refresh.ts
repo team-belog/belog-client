@@ -6,6 +6,7 @@ import { setAccessToken } from "@/lib/authToken";
 type RefreshData = {
   accessToken: string;
   expiresIn: number;
+  onboardingRequired: boolean;
 };
 
 const refreshClient = axios.create({
@@ -14,14 +15,14 @@ const refreshClient = axios.create({
   withCredentials: true,
 });
 
-let pending: Promise<string> | null = null;
+let pending: Promise<RefreshData> | null = null;
 
 export function refreshAccessToken() {
   pending ??= refreshClient
     .post<ApiResponse<RefreshData>>(ENDPOINTS.auth.refresh)
     .then(({ data }) => {
       setAccessToken(data.data.accessToken);
-      return data.data.accessToken;
+      return data.data;
     })
     .catch((error) => {
       throw toApiError(error);
