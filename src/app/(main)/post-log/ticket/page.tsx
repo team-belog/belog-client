@@ -88,7 +88,7 @@ function TicketContent() {
           </div>
         )}
       </div>
-      <Button variant="primary" onClick={handleSave} disabled={isSaving} className="fixed bottom-0 hover:bg-black">
+      <Button variant="primary" onClick={handleSave} disabled={isSaving} className="fixed bottom-0">
         {isSaving ? "저장 중..." : "갤러리에 저장"}
       </Button>
     </main>
