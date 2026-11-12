@@ -57,7 +57,8 @@ export default function MeetingInfoTab() {
             value={memo}
             onChange={(e) => setMemo(e.target.value.slice(0, MAX_MEMO))}
             placeholder="티켓에 들어갈 우리의 추억을 기록해 보세요"
-            className="pretendard-m-14 h-[60px] w-full resize-none bg-transparent text-main-black outline-none placeholder:text-sub-gray-2"
+            disabled={meetingInfo?.ticketCreated}
+            className="pretendard-m-14 h-[60px] w-full resize-none bg-transparent text-main-black outline-none placeholder:text-sub-gray-2 disabled:cursor-not-allowed disabled:opacity-50"
           />
           <p className="pretendard-m-12 absolute bottom-4 right-4 text-sub-gray-2">
             {memo.length}/{MAX_MEMO}
