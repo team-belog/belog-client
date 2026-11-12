@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import BackHeader from "@/components/layout/BackHeader";
@@ -18,12 +18,22 @@ function TicketContent() {
 
   const { data: ticket, isLoading } = useGetPostLogTicket(ticketId);
   const [isSaving, setIsSaving] = useState(false);
+  const coverImgRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     if (ticket) {
       track("Postlog Ticket Viewed", { ticket_id: String(ticket.ticketId) });
     }
   }, [ticket]);
+
+  useEffect(() => {
+    if (!ticket?.coverPhotoUrl) return;
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = `/api/image-proxy?url=${encodeURIComponent(ticket.coverPhotoUrl)}`;
+    img.onload = () => { coverImgRef.current = img; };
+    return () => { coverImgRef.current = null; };
+  }, [ticket?.coverPhotoUrl]);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -39,7 +49,7 @@ function TicketContent() {
     if (!ticket || isSaving) return;
     setIsSaving(true);
     try {
-      const blob = await drawTicketToCanvas(ticket);
+      const blob = await drawTicketToCanvas(ticket, coverImgRef.current);
       const file = new File([blob], "ticket.png", { type: "image/png" });
 
       const isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
