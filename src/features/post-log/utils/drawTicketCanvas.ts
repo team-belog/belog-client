@@ -254,7 +254,7 @@ export async function drawTicketToCanvas(
   cy += dateLocRows * 22;
 
   // Members
-  if ((ticket.members?.length ?? 0) > 0) {
+  if ((ticket.participants?.length ?? 0) > 0) {
     cy += 30; // mt-[30px]
     ctx.font = `500 12px ${PRE}, sans-serif`;
     ctx.fillStyle = COLOR_BLACK;
@@ -266,7 +266,7 @@ export async function drawTicketToCanvas(
     const GAP = 6;
     let chipX = ox + PX;
 
-    for (const member of (ticket.members ?? [])) {
+    for (const member of (ticket.participants ?? [])) {
       const text = `@${member.nickname}`;
       const chipW = ctx.measureText(text).width + 8 * 2;
       if (chipX + chipW > ox + W - PX) {

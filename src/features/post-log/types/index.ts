@@ -11,7 +11,7 @@ export type PostLogTicketDetail = {
     startDate: string;
     endDate: string;
     location: string;
-    members: TicketMember[];
+    participants: TicketMember[];
 };
 
 export type PostLogParticipant = {
