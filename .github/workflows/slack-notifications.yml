@@ -1,0 +1,110 @@
+name: Slack notifications
+
+on:
+  pull_request_target:
+    types: [opened, ready_for_review]
+  pull_request_review:
+    types: [submitted]
+  repository_dispatch:
+    types: [vercel.deployment.promoted, vercel.deployment.error, vercel.deployment.failed]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  notify:
+    if: >-
+      (github.event_name == 'pull_request_target' && !github.event.pull_request.draft) ||
+      github.event_name == 'pull_request_review' ||
+      (github.event_name == 'repository_dispatch' &&
+       github.event.client_payload.git.ref == 'main' &&
+       github.event.client_payload.environment == 'production' &&
+       github.event.client_payload.project.name == 'belog-client')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        uses: actions/github-script@v7
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          script: |
+            const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+            if (!webhookUrl) {
+              throw new Error('SLACK_WEBHOOK_URL is not configured or is unavailable for this event');
+            }
+
+            const escape = (value) => String(value ?? '')
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;');
+            const { eventName, payload, repo } = context;
+            let text;
+
+            if (eventName === 'pull_request_target') {
+              const pr = payload.pull_request;
+              text = [
+                '📬 *[FE] PR이 등록됐어요*',
+                `*제목*  ${escape(pr.title)} (#${pr.number})`,
+                `*작성자*  ${escape(pr.user.login)}`,
+                `*대상 브랜치*  ${escape(pr.base.ref)}`,
+                `<${pr.html_url}|PR 확인하기>`,
+              ].join('\n');
+            } else if (eventName === 'pull_request_review') {
+              const pr = payload.pull_request;
+              const review = payload.review;
+              const labels = { approved: '승인', changes_requested: '변경 요청', commented: '의견' };
+              let commentCount = '확인 불가';
+              try {
+                const comments = await github.paginate(github.rest.pulls.listCommentsForReview, {
+                  owner: repo.owner,
+                  repo: repo.repo,
+                  pull_number: pr.number,
+                  review_id: review.id,
+                  per_page: 100,
+                });
+                commentCount = `${comments.length}개`;
+              } catch (error) {
+                core.warning(`인라인 댓글 수를 조회하지 못했습니다: ${error.message}`);
+              }
+              text = [
+                '💬 *[FE] PR 리뷰가 등록됐어요*',
+                `*PR*  ${escape(pr.title)} (#${pr.number})`,
+                `*리뷰어*  ${escape(review.user.login)}`,
+                `*결과*  ${escape(labels[review.state.toLowerCase()] ?? review.state)}`,
+                `*인라인 댓글*  ${commentCount}`,
+                `<${review.html_url || pr.html_url}|리뷰 확인하기>`,
+              ].join('\n');
+            } else {
+              const deployment = payload.client_payload;
+              const success = payload.action === 'vercel.deployment.promoted';
+              const commitUrl = `https://github.com/${repo.owner}/${repo.repo}/commit/${deployment.git.sha}`;
+              text = [
+                `${success ? '✅' : '🚨'} *[FE] 운영 배포 ${success ? '성공' : '실패'}*`,
+                '*브랜치*  main',
+                `*커밋*  <${commitUrl}|${escape(deployment.git.shortSha || deployment.git.sha.slice(0, 7))}>`,
+              ].join('\n');
+            }
+
+            const maxAttempts = 3;
+            for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+              const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text }),
+                signal: AbortSignal.timeout(10000),
+              });
+              if (response.ok) break;
+
+              const retryable = response.status === 429 || response.status >= 500;
+              if (!retryable || attempt === maxAttempts) {
+                throw new Error(`Slack 알림 전송 실패 (HTTP ${response.status})`);
+              }
+
+              const retryAfter = response.headers.get('retry-after');
+              const seconds = retryAfter === null ? 2 ** (attempt - 1) : Number(retryAfter);
+              if (!Number.isFinite(seconds) || seconds < 0 || seconds > 60) {
+                throw new Error(`Slack 재시도 대기 시간이 유효 범위를 벗어났습니다 (HTTP ${response.status})`);
+              }
+              await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+            }
