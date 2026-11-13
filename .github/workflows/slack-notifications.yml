@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-    concurrency:
+    concurrency: &pr-notification-queue
       group: slack-pr-${{ github.event.pull_request.number }}
       queue: max
     steps:
@@ -31,14 +31,19 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID: ${{ vars.SLACK_CHANNEL_ID }}
         with:
-          script: |
-            const { payload, repo } = context;
+          script: &notify-pr-script |
+            const { eventName, payload, repo } = context;
             const pr = payload.pull_request;
             const closed = payload.action === 'closed';
+            const reviewing = eventName === 'pull_request_review';
             const issue = { ...repo, issue_number: pr.number };
             const marker = /^<!-- belog-slack-thread: ([CG][A-Z0-9]+) ([0-9]+\.[0-9]+) -->$/m;
             const mergeMarker = '<!-- belog-slack-merge-notified -->';
             const wait = (seconds) => new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+            const escape = (value) => String(value ?? '')
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;');
 
             const retryGitHub = async (request) => {
               for (let attempt = 1; attempt <= 3; attempt++) {
@@ -64,11 +69,24 @@ jobs:
               );
             };
             let saved = await retryGitHub(findThreadComment);
+            if (process.env.WAIT_FOR_SLACK_THREAD === 'true') {
+              // Wait outside the PR queue so the opening job can save the thread.
+              for (const seconds of [5, 10, 15]) {
+                if (saved || pr.draft) break;
+                await wait(seconds);
+                saved = await retryGitHub(findThreadComment);
+              }
+              return;
+            }
+            if (reviewing && !saved) {
+              core.warning('원본 Slack 스레드 정보가 없어 리뷰 알림을 건너뜁니다.');
+              return;
+            }
             if (closed && !saved) {
               core.info('원본 Slack 스레드 정보가 없어 머지 알림을 건너뜁니다.');
               return;
             }
-            if (saved?.body.includes(mergeMarker)) {
+            if (!reviewing && saved?.body.includes(mergeMarker)) {
               core.info('이미 머지 답글을 발송한 PR입니다.');
               return;
             }
@@ -99,13 +117,37 @@ jobs:
               }
             };
 
+            if (reviewing) {
+              const review = payload.review;
+              const labels = { approved: '승인', changes_requested: '변경 요청', commented: '의견' };
+              let commentCount = '확인 불가';
+              try {
+                const comments = await github.paginate(github.rest.pulls.listCommentsForReview, {
+                  ...repo,
+                  pull_number: pr.number,
+                  review_id: review.id,
+                  per_page: 100,
+                });
+                commentCount = comments.length + '개';
+              } catch (error) {
+                core.warning('인라인 댓글 수를 조회하지 못했습니다: ' + error.message);
+              }
+              const text = [
+                '💬 *[FE] PR 리뷰가 등록됐어요*',
+                '*PR*  ' + escape(pr.title) + ' (#' + pr.number + ')',
+                '*리뷰어*  ' + escape(review.user.login),
+                '*결과*  ' + escape(labels[review.state.toLowerCase()] ?? review.state),
+                '*인라인 댓글*  ' + commentCount,
+                '<' + (review.html_url || pr.html_url) + '|리뷰 확인하기>',
+              ].join('\n');
+              const [, channel, threadTs] = saved.body.match(marker);
+              await postMessage({ channel, thread_ts: threadTs, text });
+              return;
+            }
+
             if (!saved) {
               const channelId = process.env.SLACK_CHANNEL_ID;
               if (!channelId) throw new Error('SLACK_CHANNEL_ID is not configured');
-              const escape = (value) => String(value ?? '')
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
               const text = [
                 '📬 *[FE] PR이 등록됐어요*',
                 '*제목*  ' + escape(pr.title) + ' (#' + pr.number + ')',
@@ -169,13 +211,41 @@ jobs:
               throw error;
             }
 
+  wait-for-pr-thread:
+    if: >-
+      github.event_name == 'pull_request_review' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Wait for the PR Slack thread
+        uses: actions/github-script@v7
+        env:
+          WAIT_FOR_SLACK_THREAD: 'true'
+        with:
+          script: *notify-pr-script
+
+  notify-review:
+    needs: wait-for-pr-thread
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    concurrency: *pr-notification-queue
+    steps:
+      - name: Reply to the PR Slack thread
+        uses: actions/github-script@v7
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          script: *notify-pr-script
+
   notify:
     if: >-
-      github.event_name == 'pull_request_review' ||
-      (github.event_name == 'repository_dispatch' &&
-       github.event.client_payload.git.ref == 'main' &&
-       github.event.client_payload.environment == 'production' &&
-       github.event.client_payload.project.name == 'belog-client')
+      github.event_name == 'repository_dispatch' &&
+      github.event.client_payload.git.ref == 'main' &&
+      github.event.client_payload.environment == 'production' &&
+      github.event.client_payload.project.name == 'belog-client'
     runs-on: ubuntu-latest
     steps:
       - name: Send Slack notification
@@ -193,44 +263,15 @@ jobs:
               .replace(/&/g, '&amp;')
               .replace(/</g, '&lt;')
               .replace(/>/g, '&gt;');
-            const { eventName, payload, repo } = context;
-            let text;
-
-            if (eventName === 'pull_request_review') {
-              const pr = payload.pull_request;
-              const review = payload.review;
-              const labels = { approved: '승인', changes_requested: '변경 요청', commented: '의견' };
-              let commentCount = '확인 불가';
-              try {
-                const comments = await github.paginate(github.rest.pulls.listCommentsForReview, {
-                  owner: repo.owner,
-                  repo: repo.repo,
-                  pull_number: pr.number,
-                  review_id: review.id,
-                  per_page: 100,
-                });
-                commentCount = `${comments.length}개`;
-              } catch (error) {
-                core.warning(`인라인 댓글 수를 조회하지 못했습니다: ${error.message}`);
-              }
-              text = [
-                '💬 *[FE] PR 리뷰가 등록됐어요*',
-                `*PR*  ${escape(pr.title)} (#${pr.number})`,
-                `*리뷰어*  ${escape(review.user.login)}`,
-                `*결과*  ${escape(labels[review.state.toLowerCase()] ?? review.state)}`,
-                `*인라인 댓글*  ${commentCount}`,
-                `<${review.html_url || pr.html_url}|리뷰 확인하기>`,
-              ].join('\n');
-            } else {
-              const deployment = payload.client_payload;
-              const success = payload.action === 'vercel.deployment.promoted';
-              const commitUrl = `https://github.com/${repo.owner}/${repo.repo}/commit/${deployment.git.sha}`;
-              text = [
-                `${success ? '✅' : '🚨'} *[FE] 운영 배포 ${success ? '성공' : '실패'}*`,
-                '*브랜치*  main',
-                `*커밋*  <${commitUrl}|${escape(deployment.git.shortSha || deployment.git.sha.slice(0, 7))}>`,
-              ].join('\n');
-            }
+            const { payload, repo } = context;
+            const deployment = payload.client_payload;
+            const success = payload.action === 'vercel.deployment.promoted';
+            const commitUrl = `https://github.com/${repo.owner}/${repo.repo}/commit/${deployment.git.sha}`;
+            const text = [
+              `${success ? '✅' : '🚨'} *[FE] 운영 배포 ${success ? '성공' : '실패'}*`,
+              '*브랜치*  main',
+              `*커밋*  <${commitUrl}|${escape(deployment.git.shortSha || deployment.git.sha.slice(0, 7))}>`,
+            ].join('\n');
 
             const maxAttempts = 3;
             for (let attempt = 1; attempt <= maxAttempts; attempt++) {
