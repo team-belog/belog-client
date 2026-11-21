@@ -23,7 +23,7 @@ export default function BackHeader({ title, onBack, onShare, right }: BackHeader
   };
 
   return (
-    <header className="fixed z-50 top-[env(safe-area-inset-top)] flex h-[60px] w-full items-center bg-white">
+    <header className="fixed top-0 z-50 flex h-[calc(60px+env(safe-area-inset-top))] w-full items-center bg-white pt-[env(safe-area-inset-top)]">
       <button
         onClick={handleBack}
         className="absolute left-4 flex size-6 items-center justify-center"

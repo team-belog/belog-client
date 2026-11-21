@@ -50,7 +50,7 @@ export default function ImageCropModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex flex-col bg-white">
+    <div className="fixed inset-0 z-[200] flex flex-col bg-white pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
       <div className="flex h-[56px] items-center justify-between px-4">
         <button
           type="button"
