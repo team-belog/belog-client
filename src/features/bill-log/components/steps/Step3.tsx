@@ -55,15 +55,20 @@ export default function Step3({ meetingId, onNext }: Step3Props) {
     });
   };
 
-  // 항목을 선택한 멤버 수로 나눠 개별 정산 금액 계산
+  // 항목을 선택한 멤버 수로 나눠 개별 정산 금액 계산 (나머지는 순서대로 1씩 배분)
   const getMemberTagAmount = (memberId: number): string => {
     const selected = memberItemSelections[memberId] ?? [];
     const total = selected.reduce((sum, itemName) => {
       const item = items.find((i) => i.name === itemName);
-      const count = selectedMemberIds.filter((id) =>
+      const itemAmount = item?.amount ?? 0;
+      const taggedMembers = selectedMemberIds.filter((id) =>
         (memberItemSelections[id] ?? []).includes(itemName)
-      ).length;
-      return sum + Math.floor((item?.amount ?? 0) / Math.max(count, 1));
+      );
+      const count = Math.max(taggedMembers.length, 1);
+      const base = Math.floor(itemAmount / count);
+      const remainder = itemAmount - base * count;
+      const idx = taggedMembers.indexOf(memberId);
+      return sum + base + (idx < remainder ? 1 : 0);
     }, 0);
     return String(total);
   };
@@ -72,7 +77,11 @@ export default function Step3({ meetingId, onNext }: Step3Props) {
     if (!settlementMethod) return "";
     if (!selectedMemberIds.includes(memberId)) return "0";
     if (settlementMethod === "EQUAL_SPLIT") {
-      return String(Math.floor(totalAmount / selectedMemberIds.length));
+      const count = selectedMemberIds.length;
+      const base = Math.floor(totalAmount / count);
+      const remainder = totalAmount - base * count;
+      const idx = selectedMemberIds.indexOf(memberId);
+      return String(idx < remainder ? base + 1 : base);
     }
     if (settlementMethod === "ITEM_TAG") {
       return getMemberTagAmount(memberId);
