@@ -45,6 +45,7 @@ export default function SettlementStatusTab({ pendingParticipantCount, onCopyAcc
             receiver={item.receiver}
             currency={item.currency}
             amount={item.amount}
+            status={item.status}
             action={item.action}
             onCopyAccount={onCopyAccount}
             onSendReminder={onSendReminder}

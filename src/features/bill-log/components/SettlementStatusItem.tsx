@@ -7,7 +7,7 @@ import { useCompleteSettlement } from "@/features/bill-log/hooks/useCompleteSett
 import { useSendReminder } from "@/features/bill-log/hooks/useSendReminder";
 import { billLogKeys } from "@/features/bill-log/hooks/billLogKeys";
 import { toApiError } from "@/lib/apiError";
-import { type SettlementParticipant, type SettlementRequestAction } from "../types";
+import { type SettlementParticipant, type SettlementRequestAction, type SettlementRequestStatus } from "../types";
 
 interface SettlementStatusItemProps {
   settlementRequestId: number;
@@ -16,6 +16,7 @@ interface SettlementStatusItemProps {
   receiver: SettlementParticipant;
   currency: string;
   amount: number;
+  status: SettlementRequestStatus;
   action: SettlementRequestAction;
   onCopyAccount: () => void;
   onSendReminder: () => void;
@@ -35,6 +36,7 @@ export default function SettlementStatusItem({
   receiver,
   currency,
   amount,
+  status,
   action,
   onCopyAccount,
   onSendReminder,
@@ -43,6 +45,9 @@ export default function SettlementStatusItem({
   const queryClient = useQueryClient();
   const { mutate: complete, isPending: isCompleting } = useCompleteSettlement();
   const { mutate: remind, isPending: isReminding } = useSendReminder();
+
+  const buttonLabel =
+    action === "NONE" && status === "PENDING" ? "정산 중" : buttonStyleByAction[action].label;
 
   const handleClick = () => {
     if (action === "MARK_COMPLETE") {
@@ -87,7 +92,7 @@ export default function SettlementStatusItem({
         disabled={action === "NONE" || isCompleting || isReminding}
         className={`flex shrink-0 items-center rounded-[18px] px-[14px] py-[6px] ${buttonStyleByAction[action].bg}`}
       >
-        <p className="pretendard-m-15 font-semibold text-main-white">{buttonStyleByAction[action].label}</p>
+        <p className="pretendard-m-15 font-semibold text-main-white">{buttonLabel}</p>
       </button>
     </div>
   );
