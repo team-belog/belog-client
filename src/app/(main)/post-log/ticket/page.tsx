@@ -81,9 +81,9 @@ function TicketContent() {
     <main className="pt-[60px] flex h-dvh flex-col">
       <BackHeader title="티켓" onShare={handleShare} />
       <Divider />
-      <div className="flex flex-1 min-h-0 items-center justify-center px-[42px] pb-[80px]">
+      <div className="flex flex-col flex-1 min-h-0 overflow-y-auto px-[42px] py-[24px]">
         {ticket && (
-          <div className="w-full">
+          <div className="w-full my-auto pb-[100px]">
             <PostLogTicketCard ticket={ticket} />
           </div>
         )}
