@@ -91,7 +91,7 @@ export default function PostLogPhotoPage() {
     <main className="flex h-dvh flex-col pt-[60px]">
       <BackHeader title="Post-log" />
       <Divider />
-      <div className="relative flex flex-1 items-center justify-center overflow-hidden">
+      <div className="relative flex flex-1 min-h-0 items-center justify-center overflow-hidden">
         {photoUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={photoUrl} alt="사진" className="max-h-full max-w-full object-contain" />
