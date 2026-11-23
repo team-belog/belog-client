@@ -1,0 +1,4 @@
+interface:
+  display_name: "기능 구현"
+  short_description: "기능 내부의 컴포넌트와 훅 및 상태의 소유 경계를 정합니다"
+  default_prompt: "$domain-feature-workflow 이 기능을 기존 기능 폴더 구조에 맞춰 구현해 줘"

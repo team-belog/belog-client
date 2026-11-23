@@ -1,0 +1,4 @@
+interface:
+  display_name: "페이지 기능 구현"
+  short_description: "라우트와 레이아웃 경계를 확인하고 화면 진입점을 구현합니다"
+  default_prompt: "$page-feature-workflow 이 페이지의 라우트와 화면 흐름을 구현해 줘"

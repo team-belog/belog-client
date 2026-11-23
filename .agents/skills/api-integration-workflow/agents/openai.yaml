@@ -1,0 +1,4 @@
+interface:
+  display_name: "API 연동"
+  short_description: "엔드포인트와 응답 타입 및 변경 후 쿼리 갱신을 연결합니다"
+  default_prompt: "$api-integration-workflow 이 API를 화면과 연결하고 데이터 갱신을 확인해 줘"

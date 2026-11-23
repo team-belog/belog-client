@@ -1,0 +1,4 @@
+interface:
+  display_name: "공용 UI와 레이아웃"
+  short_description: "공용 컴포넌트의 props와 실제 사용 화면의 호환성을 확인합니다"
+  default_prompt: "$shared-component-workflow 공용 UI 변경과 기존 사용 화면의 호환성을 확인해 줘"
