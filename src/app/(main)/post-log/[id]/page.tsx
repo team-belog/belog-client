@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient, type InfiniteData } from "@tanstack/react-query";
@@ -92,15 +91,18 @@ export default function PostLogPhotoPage() {
     <main className="flex h-dvh flex-col pt-[60px]">
       <BackHeader title="Post-log" />
       <Divider />
-      <div className="flex flex-1 items-center justify-center">
-        <div className="relative aspect-square w-full">
-          {photoUrl && (
-            <Image src={photoUrl} alt="사진" fill className="object-cover" />
-          )}
-          <div className="absolute bottom-[18px] right-[16px]">
-            <PostLogLikeButton likeCount={likeCount} likedByMe={likedByMe} onLike={handleLike} />
+      <div className="flex flex-1 min-h-0 items-center justify-center overflow-hidden">
+        {photoUrl && (
+          <div className="grid grid-cols-1 grid-rows-1 max-h-full max-w-full">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={photoUrl} alt="사진" className="col-start-1 row-start-1 max-h-full max-w-full object-contain" />
+            <div className="col-start-1 row-start-1 flex items-end justify-end pb-[18px] pr-[16px] pointer-events-none">
+              <div className="pointer-events-auto">
+                <PostLogLikeButton likeCount={likeCount} likedByMe={likedByMe} onLike={handleLike} />
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <div className="flex gap-[8px] px-4 pb-4">
         <Button bare variant="light"
