@@ -22,12 +22,7 @@
 
 - [로컬 개발](workflows/local-development.md)
 - [기능 개발](workflows/feature-development.md)
-- [의존성 관리](workflows/dependency-maintenance.md)
 - [검증](workflows/verification.md)
-
-## 분석
-
-- [Amplitude 이벤트](analytics/amplitude.md)
 
 ## 문서 관리
 

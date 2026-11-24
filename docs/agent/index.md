@@ -18,7 +18,6 @@ docs/
   architecture/
   conventions/
   workflows/
-  analytics/
 ```
 
 | 파일 | 역할 |
