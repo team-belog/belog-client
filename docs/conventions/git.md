@@ -7,13 +7,12 @@
 
 ## 브랜치
 
-`develop`에서 기능을 통합하고 `main`에서 운영 배포합니다. 팀 브랜치는 작업 유형과 관련 이슈가
-드러나게 이름을 붙입니다.
+`develop`에서 기능을 통합하고 `main`에서 운영 배포합니다. 브랜치명에는 Linear 이슈 키를 사용합니다.
+이슈 키만 쓰거나 작업 설명과 함께 포함할 수 있습니다.
 
 ```text
-feat/#116-amplitude
-fix/#111-mobile-viewport
-fix/132-post-log-photo-upload
+DEV-7
+DEV-7-agent-harness
 ```
 
 ## 커밋
