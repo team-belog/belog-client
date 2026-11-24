@@ -7,11 +7,14 @@ Agent Harness는 사람과 에이전트가 Belog의 같은 개발 기준을 참�
 
 ```text
 AGENTS.md
+CLAUDE.md
 .agents/
   skills/
     <skill>/
       SKILL.md
       agents/openai.yaml
+.claude/
+  skills -> ../.agents/skills
 docs/
   index.md
   agent/
@@ -23,8 +26,10 @@ docs/
 | 파일 | 역할 |
 | --- | --- |
 | `AGENTS.md` | 저장소 기준, 기본 작업 순서와 스킬 선택 |
+| `CLAUDE.md` | Claude Code에서 `AGENTS.md`를 가져오는 진입점 |
 | `SKILL.md` | 작업별 확인 순서와 완료 조건 |
-| `agents/openai.yaml` | 스킬 표시 이름, 설명과 기본 호출 프롬프트 |
+| `.claude/skills` | 공통 스킬 폴더 전체를 Claude Code에 연결하는 심볼릭 링크 |
+| `agents/openai.yaml` | Codex의 스킬 표시 이름, 설명과 기본 호출 프롬프트 |
 | `docs/` | 프로젝트 구조, 컨벤션과 개발 절차 |
 
 ## 스킬
@@ -53,7 +58,7 @@ docs/
 PR 전에 변경한 결제 등록 흐름을 검증해 줘
 ```
 
-스킬 호출을 지원하는 도구에서는 다음처럼 적용할 절차를 지정할 수 있습니다.
+Codex에서는 `$스킬명`으로 적용할 절차를 지정할 수 있습니다.
 
 ```text
 $page-feature-workflow 그룹 상세 화면에 새 탭을 추가해 줘
@@ -61,6 +66,20 @@ $api-integration-workflow Post-log 사진 삭제를 API에 연결해 줘
 $architecture-review 이 변경의 기능 경계와 의존 방향을 검토해 줘
 $verify-frontend 이 변경을 PR 전에 검증해 줘
 ```
+
+Claude Code에서는 `/스킬명`을 사용합니다. 스킬 본문은 Codex와 같은 파일을 읽습니다.
+
+```text
+/page-feature-workflow 그룹 상세 화면에 새 탭을 추가해 줘
+/verify-frontend 이 변경을 PR 전에 검증해 줘
+```
+
+Claude Code는 `CLAUDE.md`의 `@AGENTS.md`를 통해 공통 지침을 가져옵니다.
+프로젝트 규칙은 `AGENTS.md`, 스킬 본문은 `.agents/skills`에서 수정합니다.
+스킬 폴더 전체를 연결하므로 스킬을 추가하거나 제거해도 링크를 바꿀 필요가 없습니다.
+새 세션에서 `/memory`로 지침 파일을, `/` 메뉴에서 프로젝트 스킬을 확인할 수 있습니다.
+가져오기와 스킬 연결 방식은 [Claude Code 지침 문서](https://code.claude.com/docs/en/memory#share-one-file-with-other-coding-tools)와
+[스킬 문서](https://code.claude.com/docs/en/skills#choose-where-skills-load)를 따릅니다.
 
 저장소 루트에서 에이전트를 사용합니다. 지침을 직접 지정하는 도구에는 [AGENTS.md](../../AGENTS.md)를
 작업 맥락으로 제공합니다. 스킬을 직접 호출하는 기능이 없다면 작업에 해당하는 `SKILL.md`도 함께

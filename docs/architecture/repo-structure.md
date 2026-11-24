@@ -6,19 +6,23 @@ Belog는 단일 Next.js 앱입니다. 모임 전 계획을 기록하는 Pre-log,
 
 ```text
 .agents/
+.claude/
 .github/
 docs/
 public/
 src/
 AGENTS.md
+CLAUDE.md
 ```
 
 - `.agents`에 에이전트가 작업 유형별로 사용하는 스킬을 둡니다.
+- `.claude/skills`는 `.agents/skills` 폴더 전체를 가리키는 심볼릭 링크입니다.
 - `.github`에 이슈·PR 템플릿과 Slack 알림 워크플로를 둡니다.
 - `docs`에 아키텍처, 컨벤션, 개발 절차를 둡니다.
 - `public`에 URL로 제공하는 아이콘, 이미지, PWA 매니페스트와 Firebase Messaging 워커를 둡니다.
 - `src`에 화면, 제품 기능, 공용 코드와 외부 연동을 둡니다.
 - `AGENTS.md`는 작업 흐름과 스킬, 세부 문서를 안내하는 진입점입니다.
+- `CLAUDE.md`는 Claude Code가 공통 지침을 읽도록 `AGENTS.md`를 가져옵니다.
 
 ## 파일을 찾는 방법
 
