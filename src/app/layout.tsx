@@ -1,8 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { PT_Sans_Narrow } from "next/font/google";
+import { Suspense } from "react";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import "./globals.css";
 import Providers from "./providers";
+
+const measurementId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
+const googleAnalyticsId =
+  process.env.VERCEL_ENV === "production" &&
+  measurementId &&
+  /^G-[A-Z0-9]+$/.test(measurementId)
+    ? measurementId
+    : null;
 
 const ptSansNarrow = PT_Sans_Narrow({
   subsets: ["latin"],
@@ -60,10 +70,20 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+        />
       </head>
-      <body className={`${pretendard.variable} ${ptSansNarrow.variable} font-pretendard antialiased`}>
+      <body
+        className={`${pretendard.variable} ${ptSansNarrow.variable} font-pretendard antialiased`}
+      >
         <Providers>{children}</Providers>
+        {googleAnalyticsId && (
+          <Suspense fallback={null}>
+            <GoogleAnalytics measurementId={googleAnalyticsId} />
+          </Suspense>
+        )}
       </body>
     </html>
   );
