@@ -1,4 +1,0 @@
-interface:
-  display_name: "프론트엔드 작업 흐름"
-  short_description: "요청을 구현 위치와 검증 절차로 연결해 변경 범위를 정합니다"
-  default_prompt: "$frontend-task-workflow 이 프론트엔드 요청의 변경 범위를 정하고 진행해 줘"
