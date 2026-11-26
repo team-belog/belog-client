@@ -1,0 +1,4 @@
+interface:
+  display_name: "아키텍처 리뷰"
+  short_description: "라우트와 기능 및 공용 코드의 소유권과 의존 관계를 검토합니다"
+  default_prompt: "$architecture-review 이 변경의 파일 배치와 의존 관계를 리뷰해 줘"
